@@ -11,7 +11,8 @@ var request = require('request');
 var app = express();
 var session = require('express-session');
 app.use(session({
-    secret: 'iomeansio'
+    //Change if security problem is detected!
+    secret: 'BrilliantMindsoftheTPTservers'
 }));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -364,5 +365,10 @@ app.use(function (err, req, res, next) {
     });
 });
 
+var port = process.env.PORT || 3001;
+
+app.listen(port, function () {
+  console.log('Server listening at port %d', port);
+});
 
 module.exports = app;
