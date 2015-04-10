@@ -1,0 +1,1 @@
+UserID!EOL!Hash!EOL!ID!EOL!Elevation

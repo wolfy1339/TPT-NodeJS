@@ -1,0 +1,33 @@
+html
+  head
+    title Login
+    link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+    script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js')
+    script.
+      $(document).ready(function(){
+      var user,pass;
+      $("#submit").click(function(){
+      user=$("#user").val();
+      pass=$("#password").val();
+      /*
+      * Perform some validation here.
+      */
+      $.post("/login.html",{user:user,pass:pass},function(data){
+      if(data==='done')
+      {
+      window.location.href="/admin.html";
+      } else {
+      alert("Username or password invalid!");
+      }
+      });
+      });
+      });
+  body
+.container
+      h2 Vertical (basic) form
+      form(role='form')
+        .form-group
+          label(for='pass') Password:
+          input#pass.form-control(type='password', placeholder='Enter password')
+        button#submit.btn.btn-default(type='submit') Submit

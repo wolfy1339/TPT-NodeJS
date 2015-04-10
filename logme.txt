@@ -1,0 +1,12 @@
+
+> TPT@0.0.0 start C:\Users\Alumno\Downloads\others\TPT
+> node ./bin/www
+
+'io'
+'d2606cb146687c926de030011d0b3b39'
+{ [Error: ENOENT, open 'C:\Users\Alumno\Downloads\others\TPT\Users\undefined.txt']
+  errno: 34,
+  code: 'ENOENT',
+  path: 'C:\\Users\\Alumno\\Downloads\\others\\TPT\\Users\\undefined.txt' }
+[0mPOST /Login.json [32m- [0m- ms - -[0m
+¨Desea terminar el trabajo por lotes (S/N)? 
