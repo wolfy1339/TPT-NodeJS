@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-islogedin = false;
+var islogedin = false;
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var request = require('request');
@@ -27,7 +27,7 @@ var path = require('path');
 app.use(express.static(__dirname + '/Saves_bin'));
 
 app.get('/', function (req, res) {
-sess=req.session;
+var sess = req.session;
 console.log(islogedin);
   res.redirect('http://localhost:3000');
 });
