@@ -115,7 +115,6 @@ app.all("/Browse.json", function (req, res) {
         }
     }
 });
-app.use("/avatars", express.static(__dirname + '/avatars'));
 
 app.all("/Browse/View.json", function (req, res) {
     var sess = req.session;
