@@ -26,6 +26,8 @@ var path = require('path');
 
 app.use(express.static(__dirname + '/Saves_bin'));
 
+app.use("/avatars", express.static(__dirname + '/avatars'));
+
 app.get('/', function (req, res) {
 var sess = req.session;
 console.log(islogedin);
