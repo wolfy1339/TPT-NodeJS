@@ -141,6 +141,7 @@ app.all("/Browse/View.json", function (req, res) {
     });
 });
 
+/* 
 app.all("/Browse/Comments.json", function (req, res) {
     var sess = req.session;
     res.writeHead(200, {
@@ -148,6 +149,31 @@ app.all("/Browse/Comments.json", function (req, res) {
     });
     res.write('[{"Username": "Io", "UserID": "1", "Gravatar": "", "Text": "Sorry, comments are disabled.", "Timestamp":  "1428177544", "FormattedUsername": "Io"}]');
     res.end();
+});
+*/
+// I'm not completely sure this will work, but it should
+app.all("/Browse/Comments.json", function (req, res) {
+    var sess = req.session;
+    var fs = require('fs');
+    var path = require('path');
+
+    var filePath = path.join(__dirname, 'Comments', 'id_' + req.query.ID + '.txt');
+
+    fs.readFile(filePath, {
+        encoding: 'utf-8'
+    }, function (err, data) {
+        if (!err) {
+            console.log('received data: ' + data);
+            res.writeHead(200, {
+                'Content-Type': 'text/html'
+            });
+            res.write(data);
+            res.end();
+        } else {
+            console.log(err);
+        }
+
+    });
 });
 
 app.get('/', function (req, res) {
