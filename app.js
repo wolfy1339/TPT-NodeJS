@@ -240,7 +240,7 @@ app.post('/Login.json', function (req, res) {
         request.post({
             url: 'http://powdertoy.co.uk/Login.json',
             formData: formData
-        }, function optionalCallback(err, httpResponse, /*body*/) {
+        }, function optionalCallback(err, httpResponse, body) {
             if (err) {
                 return console.error('upload failed:', err);
             }
