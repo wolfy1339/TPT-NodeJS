@@ -65,7 +65,6 @@ function des(key, message, encrypt, mode, iv, padding) {
         var endloop, loopinc;
         var len = message.length;
         var chunk = 0;
-        var left, right;
         //set up the loops for single and triple des
         var iterations = keys.length == 32 ? 3 : 9; //single or triple des
         if (iterations == 3) {
@@ -75,13 +74,16 @@ function des(key, message, encrypt, mode, iv, padding) {
         }
 
         //pad the message depending on the padding parameter
-        if (padding == 2) message += "        "; //pad the message with spaces
-        else if (padding == 1) {
+        if (padding == 2){
+            message += "        "; //pad the message with spaces
+        } else if (padding == 1) {
             temp = 8 - (len % 8);
             message += String.fromCharCode(temp, temp, temp, temp, temp, temp, temp, temp);
             if (temp == 8) len += 8;
         } //PKCS7 padding
-        else if (!padding) message += "\0\0\0\0\0\0\0\0"; //pad the message out with null bytes
+        else if (!padding){
+            message += "\0\0\0\0\0\0\0\0"; //pad the message out with null bytes
+        }
 
         //store the result here
         result = "";
@@ -289,8 +291,8 @@ function des_createKeys(key) {
 
 ////////////////////////////// TEST //////////////////////////////
 function stringToHex(s) {
-    var r = "0x";
-    var hexes = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
+    var r = '0x';
+    var hexes = new Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
     for (var i = 0; i < s.length; i++) {
         r += hexes[s.charCodeAt(i) >> 4] + hexes[s.charCodeAt(i) & 0xf];
     }
@@ -298,8 +300,8 @@ function stringToHex(s) {
 }
 
 function hexToString(h) {
-    var r = "";
-    for (var i = (h.substr(0, 2) == "0x") ? 2 : 0; i < h.length; i += 2) {
+    var r = '';
+    for (var i = (h.substr(0, 2) == '0x') ? 2 : 0; i < h.length; i += 2) {
         r += String.fromCharCode(parseInt(h.substr(i, 2), 16));
     }
     return r;
