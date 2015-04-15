@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.all("/Startup.json", function (req, res) {
+app.all('/Startup.json', function (req, res) {
     var fs = require('fs');
     var path = require('path');
 
@@ -55,17 +55,17 @@ app.all("/Startup.json", function (req, res) {
     });
 });
 
-app.all("/Browse/Tags.json", function (req, res) {
+app.all('/Browse/Tags.json', function (req, res) {
     var sess = req.session;
     res.writeHead(200, {
         'Content-Type': 'text/html'
     });
-    res.write("{'TagTotal': 1, 'Results': 1, 'Tags': [{'Tag': 'Tags', 'Count': 1}, {'Tag': 'are', 'Count': 1}, {'Tag': 'not', 'Count': 1}, {'Tag': 'yet', 'Count': 1}, {'Tag': 'implemented.', 'Count': 1}");
+    res.write('{"TagTotal": 1, "Results": 1, "Tags": [{"Tag": "Tags", "Count": 1}, {"Tag": "are", "Count": 1}, {"Tag": "not", "Count": 1}, {"Tag": "yet", "Count": 1}, {"Tag": "implemented.", "Count": 1}');
     res.end();
 });
 
 var filePath;
-app.all("/Browse.json", function (req, res) {
+app.all('/Browse.json', function (req, res) {
     var sess = req.session;
     var fs = require('fs');
     var path = require('path');
@@ -199,7 +199,7 @@ app.post('/motd.html', function (req, res) {
                 res.end(err);
                 return console.log(err);
             }
-            console.log("The file was saved!");
+            console.log('The file was saved!');
         });
         res.end('done');
     } else {
