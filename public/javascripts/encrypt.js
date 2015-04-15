@@ -75,19 +75,19 @@ function des(key, message, encrypt, mode, iv, padding) {
 
         //pad the message depending on the padding parameter
         if (padding == 2){
-            message += "        "; //pad the message with spaces
+            message += '        '; //pad the message with spaces
         } else if (padding == 1) {
             temp = 8 - (len % 8);
             message += String.fromCharCode(temp, temp, temp, temp, temp, temp, temp, temp);
             if (temp == 8) len += 8;
         } //PKCS7 padding
         else if (!padding){
-            message += "\0\0\0\0\0\0\0\0"; //pad the message out with null bytes
+            message += '\0\0\0\0\0\0\0\0'; //pad the message out with null bytes
         }
 
         //store the result here
-        result = "";
-        tempresult = "";
+        result = '';
+        tempresult = '';
 
         if (mode == 1) { //CBC mode
             cbcleft = (iv.charCodeAt(m++) << 24) | (iv.charCodeAt(m++) << 16) | (iv.charCodeAt(m++) << 8) | iv.charCodeAt(m++);
@@ -187,7 +187,7 @@ function des(key, message, encrypt, mode, iv, padding) {
             chunk += 8;
             if (chunk == 512) {
                 result += tempresult;
-                tempresult = "";
+                tempresult = '';
                 chunk = 0;
             }
         } //for every 8 characters, or 64 bits in the message
