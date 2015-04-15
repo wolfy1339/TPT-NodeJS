@@ -64,12 +64,13 @@ app.all("/Browse/Tags.json", function (req, res) {
     res.end();
 });
 
+var filePath;
 app.all("/Browse.json", function (req, res) {
     var sess = req.session;
     var fs = require('fs');
     var path = require('path');
     if (!req.query.Search_Query) {
-        var filePath = path.join(__dirname, 'saves.txt');
+        filePath = path.join(__dirname, 'saves.txt');
         fs.readFile(filePath, {
             encoding: 'utf-8'
         }, function (err, data) {
@@ -95,7 +96,7 @@ app.all("/Browse.json", function (req, res) {
                 }
             }
             //end of query proc.
-            var filePath = path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt');
+            filePath = path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt');
 
             fs.readFile(filePath, {
                 encoding: 'utf-8'
@@ -239,7 +240,7 @@ app.post('/Login.json', function (req, res) {
         request.post({
             url: 'http://powdertoy.co.uk/Login.json',
             formData: formData
-        }, function optionalCallback(err, httpResponse, //body) {
+        }, function optionalCallback(err, httpResponse, /*body*/) {
             if (err) {
                 return console.error('upload failed:', err);
             }
