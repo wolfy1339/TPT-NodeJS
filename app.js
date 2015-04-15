@@ -166,7 +166,6 @@ app.get('/login.html', function (req, res) {
     }
 });
 
-
 app.post('/login.html', function (req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
@@ -229,28 +228,39 @@ app.post('/Login.json', function (req, res) {
     var fs = require('fs');
     /*var formidable = require('formidable');
     var util = require('util');
-     var form = new formidable.IncomingForm();
-        form.parse(req, function(err, Data) {
-    console.log("Username: "+Data.Hash);
-    var formData = {
-      // Pass a simple key-value pair
-      Username: util.inspect(Data),
-      Hash: 'redacted'
-    };
-    //request.post({url:'http://powdertoy.co.uk/Login.json', formData: formData}, function optionalCallback(err, httpResponse, //body) {
-    //  if (err) {
-    //    return console.error('upload failed:', err);
-    //  }
-    //  console.log('Upload successful!  Server responded with:', body);
-    //  res.writeHead(200, {'Content-Type': 'text/json'});
-    //  res.write(body);
-    //});
-    request.post({url:'http://powdertoy.co.uk/Login.json', form: {Username:'io', Hash: 'redacted'}}, function(err,httpResponse,body){
-    console.log(body);
-    res.writeHead(200, {'Content-Type': 'text/json'});
-    res.write(body);
-    res.end();
-    });
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, Data) {
+        console.log("Username: " + Data.Hash);
+        var formData = {
+            // Pass a simple key-value pair
+            Username: util.inspect(Data),
+            Hash: 'redacted'
+        };
+        request.post({
+            url: 'http://powdertoy.co.uk/Login.json',
+            formData: formData
+        }, function optionalCallback(err, httpResponse, //body) {
+            if (err) {
+                return console.error('upload failed:', err);
+            }
+            console.log('Upload successful!  Server responded with:', body); res.writeHead(200, {
+                'Content-Type': 'text/json'
+            }); res.write(body);
+        });
+        request.post({
+            url: 'http://powdertoy.co.uk/Login.json',
+            form: {
+                Username: 'io',
+                Hash: 'redacted'
+            }
+        }, function (err, httpResponse, body) {
+            console.log(body);
+            res.writeHead(200, {
+                'Content-Type': 'text/json'
+            });
+            res.write(body);
+            res.end();
+        });
     });*/
     var formidable = require('formidable');
     var util = require('util');
@@ -367,7 +377,7 @@ app.use(function (err, req, res, next) {
 var port = process.env.PORT || 3001;
 
 app.listen(port, function () {
-  console.log('Server listening at port %d', port);
+    console.log('Server listening at port %d', port);
 });
 
 module.exports = app;
