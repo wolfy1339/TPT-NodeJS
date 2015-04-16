@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use('/', routes);
 var fs = require('fs');
 
-app.use(express.static(__dirname + '/Saves_bin'));
+app.use(express.staticServer(__dirname + '/Saves_bin'));
 
 app.use('/avatars', express.static(__dirname + '/avatars'));
 
