@@ -1,0 +1,62 @@
+doctype html
+html
+title Home
+script(src='//fast.eager.io/4d631U5YZd.js')
+    script#insertjshere(src='includes.js')
+    link(href='stylesheets/bootstrap.min.css', rel='stylesheet')
+    link(href='stylesheets/bootstrap-theme.min.css', rel='stylesheet')
+    // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
+    // WARNING: Respond.js doesn't work if you view the page via file://
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')
+      script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+    // jQuery (necessary for Bootstrap's JavaScript plugins)
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
+    script(src='javascripts/bootstrap.min.js')
+script.
+      $(document).ready(function(){
+      var fp;
+      $("#submit").click(function(){
+      fp=$("#fp").val();
+      $.post("/fp.html",{fp:fp},function(data){
+      if(data=='done')
+      {
+      window.location.href="/motd.html";
+      } else {
+      alert("Error!");
+      }
+      });
+      });
+      });
+
+body
+    .container
+
+if islogedin
+ nav.navbar.navbar-default
+        .container-fluid
+          .navbar-header
+            a.navbar-brand(href='/') Home
+          div
+            ul.nav.navbar-nav
+              li
+                a(href='motd.html') MOTD changer
+              li.active
+                a(href='fp.html') FP changer
+              li
+                a(href='reserved.html') RESERVED 
+      form(role='form')
+        .form-group
+          label(for='fp') FrontPage JSON:
+          input#fp.form-control(type='text', placeholder='Enter JSON here.')
+        button#submit.btn.btn-default(type='submit') Submit
+
+else
+ nav.navbar.navbar-default
+        .container-fluid
+          .navbar-header
+            a.navbar-brand(href='/') Home
+          div
+            ul.nav.navbar-nav
+              li 
+                a(href='login.html') Manager log in

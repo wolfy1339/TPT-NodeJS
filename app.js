@@ -176,6 +176,52 @@ app.all("/Browse/Comments.json", function (req, res) {
     });
 });
 
+app.get('/fp.html', function (req, res) {
+    var sess = req.session;
+    if (islogedin) {
+        res.render('fp', {});
+    } else {
+        res.redirect("/");
+    }
+});
+
+app.get('/profile.html', function (req, res) {
+    var sess = req.session;
+    var fs = require('fs');
+    var path = require('path');
+// req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
+        var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
+        fs.readFile(filePath, {
+            encoding: 'utf-8'
+        }, function (err, data) {
+            if (!err) {
+        var dataa=data.split('!EOL!');
+        res.render('profile', {id: dataa[2], username: dataa[0], elev: dataa[3], reg: dataa[4], bib: dataa[5]});
+        } else {
+        console.log(err);
+        }
+});
+});
+
+app.post('/fp.html', function (req, res) {
+    var sess = req.session;
+    //In this we are assigning user to sess.user variable.
+    //user comes from HTML page.
+    if (islogedin) {
+        var fs = require('fs');
+        fs.writeFile('saves.txt', req.body.fp, function (err) {
+            if (err) {
+                res.end(err);
+                return console.log(err);
+            }
+            console.log("The file was saved!");
+        });
+        res.end('done');
+    } else {
+        res.end('ERR_NOT_LOGED_IN');
+    }
+});
+
 app.get('/', function (req, res) {
     var sess = req.session;
     console.log(islogedin);
