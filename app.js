@@ -212,6 +212,24 @@ app.post('/fp.html', function (req, res) {
     }
 });
 
+app.get('/User.json', function (req, res) {
+    var sess = req.session;
+    var fs = require('fs');
+    var path = require('path');
+// req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
+        var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
+        fs.readFile(filePath, {
+            encoding: 'utf-8'
+        }, function (err, data) {
+            if (!err) {
+        var dataa=data.split('!EOL!');
+        console.log('{"User":{ "Username": "'+dataa[0]+'", "ID": '+dataa[2]+', "Elevation": "'+dataa[3]+'", "Saves":{}, "Forum":{}, "Registered": "'+dataa[4]+'", "Biography": '"+dataa[5]+'"}}');
+        } else {
+        console.log(err);
+        }
+});
+});
+
 app.get('/', function (req, res) {
     var sess = req.session;
     console.log(islogedin);
