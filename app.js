@@ -210,7 +210,7 @@ app.get('/motd.html', function (req, res) {
     if (islogedin) {
         res.render('motd', {});
     } else {
-        res.redirect("/");
+        res.redirect('/');
     }
 });
 
