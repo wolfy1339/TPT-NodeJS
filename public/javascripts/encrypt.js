@@ -79,7 +79,9 @@ function des(key, message, encrypt, mode, iv, padding) {
         } else if (padding == 1) {
             temp = 8 - (len % 8);
             message += String.fromCharCode(temp, temp, temp, temp, temp, temp, temp, temp);
-            if (temp == 8) len += 8;
+            if (temp == 8){
+                len += 8;
+            }
         } //PKCS7 padding
         else if (!padding){
             message += '\0\0\0\0\0\0\0\0'; //pad the message out with null bytes
