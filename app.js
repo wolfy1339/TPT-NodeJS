@@ -334,20 +334,20 @@ app.post('/Save.api', function (req, res) {
         if (!err) {
             var util = require('util');
             var fs = require('fs');
-            var sID = fs.readFileSync('cID.txt', "utf8");
+            var sID = fs.readFileSync('cID.txt', 'utf8');
             fs.writeFile(path.join(__dirname, 'cID.txt'), parseInt(sID) + 1, function (err) {
                 if (err) {
                     return console.log(err);
                 }
 
-                console.log("Current ID was updated!");
+                console.log('Current ID was updated!');
             });
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), '{"ID":' + sID + ',"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + TPT.user + '","Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}', function (err) {
                 if (err) {
                     return console.log(err);
                 }
 
-                console.log("Save data saved!");
+                console.log('Save data saved!');
             });
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), '{"ID":' + sID + ',"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"' + sData.Name + '", "Username":"' + TPT.User + '","Comments":1,"Published": "' + sData.Publish + '"}', function (err) {
                 if (err) {
