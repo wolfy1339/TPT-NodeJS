@@ -141,16 +141,6 @@ app.all("/Browse/View.json", function (req, res) {
     });
 });
 
-/* 
-app.all("/Browse/Comments.json", function (req, res) {
-    var sess = req.session;
-    res.writeHead(200, {
-        'Content-Type': 'text/html'
-    });
-    res.write('[{"Username": "Io", "UserID": "1", "Gravatar": "", "Text": "Sorry, comments are disabled.", "Timestamp":  "1428177544", "FormattedUsername": "Io"}]');
-    res.end();
-});
-*/
 // I'm not completely sure this will work, but it should
 app.all("/Browse/Comments.json", function (req, res) {
     var sess = req.session;
@@ -190,17 +180,17 @@ app.get('/profile.html', function (req, res) {
     var fs = require('fs');
     var path = require('path');
 // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
-        var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
-        fs.readFile(filePath, {
-            encoding: 'utf-8'
-        }, function (err, data) {
-            if (!err) {
-        var dataa=data.split('!EOL!');
-        res.render('profile', {id: dataa[2], username: dataa[0], elev: dataa[3], reg: dataa[4], bib: dataa[5]});
+    var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
+    fs.readFile(filePath, {
+        encoding: 'utf-8'
+    }, function (err, data) {
+        if (!err) {
+            var dataa=data.split('!EOL!');
+            res.render('profile', {id: dataa[2], username: dataa[0], elev: dataa[3], reg: dataa[4], bib: dataa[5]});
         } else {
-        console.log(err);
+            console.log(err);
         }
-});
+    });
 });
 
 app.post('/fp.html', function (req, res) {
