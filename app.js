@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.staticServer(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
@@ -354,7 +354,7 @@ app.post('/Save.api', function (req, res) {
                     return console.log(err);
                 }
 
-                console.log("Save data part 2 saved!");
+                console.log('Save data part 2 saved!');
             });
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '.cps')));
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.cps')));
