@@ -117,7 +117,7 @@ app.all('/Browse.json', function (req, res) {
     }
 });
 
-app.all("/Browse/View.json", function (req, res) {
+app.all('/Browse/View.json', function (req, res) {
     var sess = req.session;
     var fs = require('fs');
     var path = require('path');
