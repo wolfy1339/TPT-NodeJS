@@ -179,14 +179,20 @@ app.get('/profile.html', function (req, res) {
     var sess = req.session;
     var fs = require('fs');
     var path = require('path');
-// req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
+    // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
     var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
         if (!err) {
-            var dataa=data.split('!EOL!');
-            res.render('profile', {id: dataa[2], username: dataa[0], elev: dataa[3], reg: dataa[4], bib: dataa[5]});
+            var dataa = data.split('!EOL!');
+            res.render('profile', {
+                id: dataa[2],
+                username: dataa[0],
+                elev: dataa[3],
+                reg: dataa[4],
+                bib: dataa[5]
+            });
         } else {
             console.log(err);
         }
@@ -216,18 +222,18 @@ app.get('/User.json', function (req, res) {
     var sess = req.session;
     var fs = require('fs');
     var path = require('path');
-// req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
-        var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
-        fs.readFile(filePath, {
+    // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
+    var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
+    fs.readFile(filePath, {
             encoding: 'utf-8'
         }, function (err, data) {
             if (!err) {
-        var dataa=data.split('!EOL!');
-        console.log('{"User":{ "Username": "'+dataa[0]+'", "ID": '+dataa[2]+', "Elevation": "'+dataa[3]+'", "Saves":{}, "Forum":{}, "Registered": "'+dataa[4]+'", "Biography": '"+dataa[5]+'"}}');
+                var dataa = data.split('!EOL!');
+                console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
         } else {
-        console.log(err);
+            console.log(err);
         }
-});
+    });
 });
 
 app.get('/', function (req, res) {
@@ -243,7 +249,7 @@ app.get('/login.html', function (req, res) {
     if (!islogedin) {
         res.render('login', {});
     } else {
-        res.redirect("/");
+        res.redirect('/');
     }
 });
 
@@ -251,7 +257,7 @@ app.post('/login.html', function (req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
-    if (req.body.pass == "pass") {
+    if (req.body.pass == 'pass') {
         islogedin = true;
         res.end('done');
     } else {
