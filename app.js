@@ -93,10 +93,10 @@ app.all('/Browse.json', function (req, res) {
                 if (req.query.Search_Query.indexOf('ID:') != -1) {
                     var sID = req.query.Search_Query.split('ID:')[1];
                     console.log(sID);
+                    filePath = path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt');
                 }
             }
             //end of query proc.
-            filePath = path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt');
 
             fs.readFile(filePath, {
                 encoding: 'utf-8'
