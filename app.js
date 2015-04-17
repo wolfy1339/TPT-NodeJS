@@ -229,7 +229,7 @@ app.get('/User.json', function (req, res) {
         }, function (err, data) {
             if (!err) {
                 var dataa = data.split('!EOL!');
-                console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
+                console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
         } else {
             console.log(err);
         }
