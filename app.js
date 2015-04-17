@@ -171,7 +171,7 @@ app.get('/fp.html', function (req, res) {
     if (islogedin) {
         res.render('fp', {});
     } else {
-        res.redirect("/");
+        res.redirect('/');
     }
 });
 
