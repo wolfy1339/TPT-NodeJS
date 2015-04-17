@@ -20,7 +20,7 @@ app.set('view engine', 'jade');
 var TPT = {};
 TPT.islogedin = false;
 // uncomment after placing your favicon in /public
-app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.png'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
