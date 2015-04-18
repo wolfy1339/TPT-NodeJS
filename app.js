@@ -301,21 +301,21 @@ var md5sum = crypto.createHash('md5');
             });
     if (req.body.erc == 'BMNNET++') {
                     var sanitize = require("sanitize-filename");
-if (!fs.existsSync((sanitize(path.join(__dirname, 'Users', req.body.user + '.txt')))) {
-            fs.writeFile(path.join(__dirname, 'Users', req.body.user + '.txt'), req.body.user+'!EOL!'+ crypto.createHash('md5').update(req.body.user+'-'+req.body.pass).digest('hex') +'!EOL!'+ uID +'!EOL!None', function (err) {
+if (!fs.existsSync((sanitize(path.join(__dirname, 'Users', req.body.user + '.txt'))))) {
+            fs.writeFile(path.join(__dirname, 'Users', req.body.user + '.txt'), req.body.user+'!EOL!'+ crypto.createHash('md5').update(req.body.user+'-'+crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex') +'!EOL!'+ uID +'!EOL!None', function (err) {
                 if (err) {
                     return console.log(err);
                 }
 
-                console.log('User'+  +'Registered!');
+                console.log('User'+ req.body.user +'Registered!');
             });
 } else {
 req.end('ERR_USER_EXISTS');
 }
         res.end('done');
-    } else {
-        res.end('ERROR');
-    }
+ //   } else {
+//        res.end('ERROR');
+//    }
 });
 
 app.get('/motd.html', function (req, res) {
