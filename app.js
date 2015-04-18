@@ -93,7 +93,9 @@ app.all('/Browse.json', function (req, res) {
                 if (req.query.Search_Query.indexOf('ID:') != -1) {
                     var sID = req.query.Search_Query.split('ID:')[1];
                     console.log(sID);
+                    var sanitize = require("sanitize-filename");
                     filePath = path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt');
+                    filePath = sanitize(filePath);
                 }
             }
             //end of query proc.
@@ -123,7 +125,8 @@ app.all('/Browse/View.json', function (req, res) {
     var path = require('path');
 
     var filePath = path.join(__dirname, 'Saves', 'save_' + req.query.ID + '.txt');
-
+var sanitize = require("sanitize-filename");
+filePath = sanitize(filePath);
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
@@ -148,7 +151,8 @@ app.all('/Browse/Comments.json', function (req, res) {
     var path = require('path');
 
     var filePath = path.join(__dirname, 'Comments', 'id_' + req.query.ID + '.txt');
-
+var sanitize = require("sanitize-filename");
+filePath = sanitize(filePath);
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
@@ -181,6 +185,8 @@ app.get('/profile.html', function (req, res) {
     var path = require('path');
     // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
     var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
+    var sanitize = require("sanitize-filename");
+filePath = sanitize(filePath);
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
@@ -224,6 +230,8 @@ app.get('/User.json', function (req, res) {
     var path = require('path');
     // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
     var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
+    var sanitize = require("sanitize-filename");
+filePath = sanitize(filePath);
     fs.readFile(filePath, {
             encoding: 'utf-8'
         }, function (err, data) {
@@ -292,7 +300,8 @@ var md5sum = crypto.createHash('md5');
                 console.log('Current uID was updated!');
             });
     if (req.body.erc == 'BMNNET++') {
-if (!fs.existsSync(path.join(__dirname, 'Users', req.body.user + '.txt'))) {
+                    var sanitize = require("sanitize-filename");
+if (!fs.existsSync((sanitize(path.join(__dirname, 'Users', req.body.user + '.txt')))) {
             fs.writeFile(path.join(__dirname, 'Users', req.body.user + '.txt'), req.body.user+'!EOL!'+ crypto.createHash('md5').update(req.body.user+'-'+req.body.pass).digest('hex') +'!EOL!'+ uID +'!EOL!None', function (err) {
                 if (err) {
                     return console.log(err);
@@ -398,6 +407,8 @@ app.post('/Login.json', function (req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, Data) {
         var filePath = path.join(__dirname, 'Users', Data.Username + '.txt');
+            var sanitize = require("sanitize-filename");
+filePath = sanitize(filePath);
         fs.readFile(filePath, {
             encoding: 'utf-8'
         }, function (err, data) {
