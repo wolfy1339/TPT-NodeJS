@@ -1,1 +1,1 @@
-UserID!EOL!Hash!EOL!ID!EOL!Elevation
+UserName!EOL!Hash!EOL!ID!EOL!Elevation!RegistratonDate!EOL!Bibliography

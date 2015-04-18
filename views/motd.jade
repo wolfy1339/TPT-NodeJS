@@ -1,6 +1,6 @@
 doctype html
 html
-title Home
+title Motd Changer
 script(src='//fast.eager.io/4d631U5YZd.js')
     script#insertjshere(src='includes.js')
     link(href='stylesheets/bootstrap.min.css', rel='stylesheet')
@@ -32,7 +32,6 @@ script.
 body
     .container
 
-if islogedin
  nav.navbar.navbar-default
         .container-fluid
           .navbar-header
@@ -51,13 +50,3 @@ if islogedin
           label(for='motd') MOTD:
           input#motd.form-control(type='text', placeholder='Enter MOTD')
         button#submit.btn.btn-default(type='submit') Submit
-
-else
- nav.navbar.navbar-default
-        .container-fluid
-          .navbar-header
-            a.navbar-brand(href='/') Home
-          div
-            ul.nav.navbar-nav
-              li 
-                a(href='login.html') Manager log in

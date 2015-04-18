@@ -265,6 +265,50 @@ app.post('/login.html', function (req, res) {
     }
 });
 
+app.get('/register.html', function (req, res) {
+    var sess = req.session;
+    if (!islogedin) {
+        res.render('register', {});
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.post('/register.html', function (req, res) {
+var crypto = require('crypto');
+var fs = require('fs');
+
+var md5sum = crypto.createHash('md5');
+
+    var sess = req.session;
+    //In this we are assigning user to sess.user variable.
+    //user comes from HTML page.
+            var uID = fs.readFileSync('uID.txt', 'utf8');
+            fs.writeFile(path.join(__dirname, 'uID.txt'), parseInt(uID) + 1, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+
+                console.log('Current uID was updated!');
+            });
+    if (req.body.erc == 'BMNNET++') {
+if (!fs.existsSync(path.join(__dirname, 'Users', req.body.user + '.txt'))) {
+            fs.writeFile(path.join(__dirname, 'Users', req.body.user + '.txt'), req.body.user+'!EOL!'+ crypto.createHash('md5').update(req.body.user+'-'+req.body.pass).digest('hex') +'!EOL!'+ uID +'!EOL!None', function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+
+                console.log('User'+  +'Registered!');
+            });
+} else {
+req.end('ERR_USER_EXISTS');
+}
+        res.end('done');
+    } else {
+        res.end('ERROR');
+    }
+});
+
 app.get('/motd.html', function (req, res) {
     var sess = req.session;
     if (islogedin) {
