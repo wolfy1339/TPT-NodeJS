@@ -313,9 +313,9 @@ if (!fs.existsSync((sanitize(path.join(__dirname, 'Users', req.body.user + '.txt
 req.end('ERR_USER_EXISTS');
 }
         res.end('done');
- //   } else {
-//        res.end('ERROR');
-//    }
+   } else {
+        res.end('ERROR');
+    }
 });
 
 app.get('/motd.html', function (req, res) {
