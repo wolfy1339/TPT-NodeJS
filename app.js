@@ -210,7 +210,7 @@ app.post('/fp.html', function (req, res) {
                 res.end(err);
                 return console.log(err);
             }
-            console.log("The file was saved!");
+            console.log('The file was saved!');
         });
         res.end('done');
     } else {
