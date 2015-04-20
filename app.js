@@ -18,7 +18,9 @@ app.use(session({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 var TPT = {};
+var wTPTUser = "";
 TPT.islogedin = false;
+var wTPTislogedin = false
 // uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/favicon.png'));
 app.use(logger('dev'));
@@ -29,7 +31,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+//app.use('/', routes);
 app.use('/users', users);
 app.all('/Startup.json', function (req, res) {
     var fs = require('fs');
@@ -94,8 +96,7 @@ app.all('/Browse.json', function (req, res) {
                     var sID = req.query.Search_Query.split('ID:')[1];
                     console.log(sID);
                     var sanitize = require("sanitize-filename");
-                    filePath = path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt');
-                    filePath = sanitize(filePath);
+                    filePath = path.join(__dirname, 'Saves_1', 'save_' + sanitize(sID) + '.txt');
                 }
             }
             //end of query proc.
@@ -124,9 +125,8 @@ app.all('/Browse/View.json', function (req, res) {
     var fs = require('fs');
     var path = require('path');
 
-    var filePath = path.join(__dirname, 'Saves', 'save_' + req.query.ID + '.txt');
+    var filePath = path.join(__dirname, 'Saves', 'save_' + sanitize(req.query.ID) + '.txt');
 var sanitize = require("sanitize-filename");
-filePath = sanitize(filePath);
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
@@ -149,10 +149,8 @@ app.all('/Browse/Comments.json', function (req, res) {
     var sess = req.session;
     var fs = require('fs');
     var path = require('path');
-
-    var filePath = path.join(__dirname, 'Comments', 'id_' + req.query.ID + '.txt');
 var sanitize = require("sanitize-filename");
-filePath = sanitize(filePath);
+    var filePath = path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt');
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
@@ -184,9 +182,8 @@ app.get('/profile.html', function (req, res) {
     var fs = require('fs');
     var path = require('path');
     // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
-    var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
     var sanitize = require("sanitize-filename");
-filePath = sanitize(filePath);
+    var filePath = path.join(__dirname, 'Users', sanitize(req.query.Name) + '.txt');
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
@@ -229,9 +226,8 @@ app.get('/User.json', function (req, res) {
     var fs = require('fs');
     var path = require('path');
     // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
-    var filePath = path.join(__dirname, 'Users', req.query.Name + '.txt');
+    var filePath = path.join(__dirname, 'Users', sanitize(req.query.Name) + '.txt');
     var sanitize = require("sanitize-filename");
-filePath = sanitize(filePath);
     fs.readFile(filePath, {
             encoding: 'utf-8'
         }, function (err, data) {
@@ -246,10 +242,8 @@ filePath = sanitize(filePath);
 
 app.get('/', function (req, res) {
     var sess = req.session;
-    console.log(islogedin);
     res.render('index', {
-        islogedin: islogedin
-    });
+        islogedin: islogedin, wtptislogedin: wTPTislogedin, wtptusr: wTPTUser});
 });
 
 app.get('/login.html', function (req, res) {
@@ -271,6 +265,52 @@ app.post('/login.html', function (req, res) {
     } else {
         res.end('ERR_USER_OR_PASS_WRONG');
     }
+});
+
+app.get('/usr_login.html', function (req, res) {
+    var sess = req.session;
+    if (!wTPTislogedin) {
+        res.render('usr_login', {});
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.post('/usr_login.html', function (req, res) {
+    var fs = require('fs');
+    var path = require('path');
+    var sess = req.session;
+    //In this we are assigning user to sess.user variable.
+    //user comes from HTML page.
+            var sanitize = require("sanitize-filename");
+        var filePath = path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt');
+        fs.readFile(filePath, {
+            encoding: 'utf-8'
+        }, function (err, data) {
+            if (!err) {
+                //Separate data in an array.
+                var dataa = data.split('!EOL!');
+var crypto = require('crypto');
+                if (dataa[1] == crypto.createHash('md5').update(req.body.user+'-'+crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex')) {
+                    res.writeHead(200, {
+                        'Content-Type': 'text/html'
+                    });
+                    wTPTislogedin = true;
+                    wTPTUser = req.body.user;
+                    res.write('done');
+                    res.end();
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'text/html'
+                    });
+                    res.write('Incorrect username or password');
+                    res.end();
+                }
+                //}
+            } else {
+                console.log(err);
+            }
+    });
 });
 
 app.get('/register.html', function (req, res) {
@@ -301,7 +341,7 @@ var md5sum = crypto.createHash('md5');
             });
     if (req.body.erc == 'BMNNET++') {
                     var sanitize = require("sanitize-filename");
-if (!fs.existsSync((sanitize(path.join(__dirname, 'Users', req.body.user + '.txt'))))) {
+if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
             fs.writeFile(path.join(__dirname, 'Users', req.body.user + '.txt'), req.body.user+'!EOL!'+ crypto.createHash('md5').update(req.body.user+'-'+crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex') +'!EOL!'+ uID +'!EOL!None', function (err) {
                 if (err) {
                     return console.log(err);
@@ -406,9 +446,8 @@ app.post('/Login.json', function (req, res) {
     var util = require('util');
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, Data) {
-        var filePath = path.join(__dirname, 'Users', Data.Username + '.txt');
             var sanitize = require("sanitize-filename");
-filePath = sanitize(filePath);
+        var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
         fs.readFile(filePath, {
             encoding: 'utf-8'
         }, function (err, data) {

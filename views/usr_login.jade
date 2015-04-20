@@ -1,6 +1,6 @@
 html
   head
-    title Register
+    title Login
 script(src='//fast.eager.io/4d631U5YZd.js')
     script#insertjshere(src='includes.js')
     link(href='stylesheets/bootstrap.min.css', rel='stylesheet')
@@ -21,28 +21,25 @@ body
             a.navbar-brand(href='/') Home
     script.
       $(document).ready(function(){
-      var user, pass, erc;
+      var user, pass;
       $("#submit").click(function(){
       user=$("#user").val();
       pass=$("#pass").val();
-      erc=$("#erc").val();
-      $.post("/register.html",{user:user, pass:pass, erc:erc},function(data){
+      $.post("/usr_login.html",{user:user, pass:pass},function(data){
       if(data=='done')
       {
       window.location.href="/";
       } else {
-      alert("Something went wrong...");
+      alert("Invalid username or password!");
       }
       });
       });
       });
   body
 .container
-      h2 Register
+      h2 Login
       form(role='form')
         .form-group
-label(for='user') ERC:
-          input#erc.form-control(type='text', placeholder='Early Access Key')
 label(for='user') Username:
           input#user.form-control(type='text', placeholder='Username')
 label(for='pass') Password:
