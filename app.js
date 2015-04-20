@@ -497,10 +497,11 @@ app.post('/Login.json', function (req, res) {
             res.write(body);
             res.end();
         });
-            }
+/*            }
                 console.log(err);
                                     res.write('{Error: "Incorrect username or password"}');
                     res.end();
+*/
             }
         });
     });
