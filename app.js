@@ -144,25 +144,61 @@ app.all('/Browse/View.json', function (req, res) {
 });
 
 // I'm not completely sure this will work, but it should
-app.all('/Browse/Comments.json', function (req, res) {
+app.get('/Browse/Comments.json', function (req, res) {
     var sess = req.session;
     var fs = require('fs');
     var path = require('path');
     var filePath = path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt');
+/*    if(!readFileSync(filePath)==""){
+res.writeHead(200, {
+                'Content-Type': 'text/html'
+            });
+req.end('[]');
+} else {
+*/
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
         if (!err) {
-            console.log('received data: ' + data);
             res.writeHead(200, {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/json'
             });
-            res.write(data);
+            res.write(data+'{"Username": "Io", "UserID": "1", "Gravatar": "", "Text":".", "Timestamp":"1428177544","FormattedUsername": "Io"}]');
             res.end();
         } else {
             console.log(err);
         }
+    });
+//}
+});
 
+// I'm not completely sure this will work, but it should
+app.post('/Browse/Comments.json', function (req, res) {
+    var sess = req.session;
+    var fs = require('fs');
+    var formidable = require('formidable');
+    var util = require('util');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, Data) {
+        if (!err) {
+            var util = require('util');
+console.log(util.inspect(TPT));
+            var fs = require('fs');
+var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), "utf8");
+            fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +'{"Username":"' + TPT.User+ '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment +'","Timestamp":"1","FormattedUsername":"' + TPT.User +'"}, ', function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log('Comment data saved!');
+            });
+            res.writeHead(200, {
+                'Content-Type': 'text/json'
+            });
+            res.write('{"Status":1}');
+            res.end();
+        } else {
+            console.log(err);
+        }
     });
 });
 
@@ -462,6 +498,7 @@ app.post('/Login.json', function (req, res) {
                     var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
                     TPT.islogedin = true;
                     TPT.User = Data.Username;
+                    TPT.ID = dataa[2];
                     res.write(datats);
                     res.end();
                 } else {
@@ -535,6 +572,13 @@ app.post('/Save.api', function (req, res) {
                 }
 
                 console.log('Save data saved!');
+            });
+fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sID + '.txt'), '[', function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+
+                console.log('Save\'s Initial Comment data saved!');
             });
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), '{"ID":' + sID + ',"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"' + sData.Name + '", "Username":"' + TPT.User + '","Comments":1,"Published": "' + sData.Publish + '"}', function (err) {
                 if (err) {
