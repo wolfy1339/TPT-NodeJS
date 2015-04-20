@@ -441,6 +441,7 @@ app.post('/Login.json', function (req, res) {
     });*/
     var formidable = require('formidable');
     var util = require('util');
+    var request = require('request');
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, Data) {
         var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
@@ -463,12 +464,43 @@ app.post('/Login.json', function (req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/json'
                     });
-                    res.write('{Error: "Incorrect username or password"}');
-                    res.end();
+                    request.post({
+            url: 'http://powdertoy.co.uk/Login.json',
+            form: {
+                Username: Data.Username,
+                Hash: Data.Hash
+            }
+        }, function (err, httpResponse, body) {
+            console.log(body);
+            res.writeHead(200, {
+                'Content-Type': 'text/json'
+            });
+            res.write(body);
+            res.end();
+        });
                 }
                 //}
             } else {
+                                    res.write('{Error: "Incorrect username or password"}');
+                    res.end();
+                    request.post({
+            url: 'http://powdertoy.co.uk/Login.json',
+            form: {
+                Username: Data.Username,
+                Hash: Data.Hash
+            }
+        }, function (err, httpResponse, body) {
+            console.log(body);
+            res.writeHead(200, {
+                'Content-Type': 'text/json'
+            });
+            res.write(body);
+            res.end();
+        });
+            }
                 console.log(err);
+                                    res.write('{Error: "Incorrect username or password"}');
+                    res.end();
             }
         });
     });
