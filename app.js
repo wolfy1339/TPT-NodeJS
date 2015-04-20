@@ -460,7 +460,8 @@ app.post('/Login.json', function (req, res) {
             if (err) {
                 return console.error('upload failed:', err);
             }
-            console.log('Upload successful!  Server responded with:', body); res.writeHead(200, {
+            console.log('Upload successful!  Server responded with:', body);
+ res.writeHead(200, {
                 'Content-Type': 'text/json'
             }); res.write(body);
         });
@@ -502,9 +503,9 @@ app.post('/Login.json', function (req, res) {
                     res.write(datats);
                     res.end();
                 } else {
-                    res.writeHead(200, {
-                        'Content-Type': 'text/json'
-                    });
+//                    res.writeHead(200, {
+//                       'Content-Type': 'text/json'
+//                    });
                     request.post({
             url: 'http://powdertoy.co.uk/Login.json',
             form: {
@@ -516,14 +517,17 @@ app.post('/Login.json', function (req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
+                    TPT.islogedin = true;
+                    TPT.User = Data.Username;
+                    //TPT.ID = dataa[2];
             res.write(body);
             res.end();
         });
                 }
                 //}
             } else {
-                                    res.write('{Error: "Incorrect username or password"}');
-                    res.end();
+ //                                   res.write('{Error: "Incorrect username or password"}');
+ //                   res.end();
                     request.post({
             url: 'http://powdertoy.co.uk/Login.json',
             form: {
@@ -535,6 +539,9 @@ app.post('/Login.json', function (req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
+                    TPT.islogedin = true;
+                    TPT.User = Data.Username;
+                    //TPT.ID = dataa[2];
             res.write(body);
             res.end();
         });
