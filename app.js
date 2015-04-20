@@ -18,7 +18,7 @@ app.use(session({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 var TPT = {};
-var wTPTUser = "";
+var wTPTUser = '';
 TPT.islogedin = false;
 var wTPTislogedin = false;
 var sanitize = require('sanitize-filename');
