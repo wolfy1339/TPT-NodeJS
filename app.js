@@ -20,7 +20,8 @@ app.set('view engine', 'jade');
 var TPT = {};
 var wTPTUser = "";
 TPT.islogedin = false;
-var wTPTislogedin = false
+var wTPTislogedin = false;
+var sanitize = require('sanitize-filename');
 // uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/favicon.png'));
 app.use(logger('dev'));
@@ -95,7 +96,6 @@ app.all('/Browse.json', function (req, res) {
                 if (req.query.Search_Query.indexOf('ID:') != -1) {
                     var sID = req.query.Search_Query.split('ID:')[1];
                     console.log(sID);
-                    var sanitize = require("sanitize-filename");
                     filePath = path.join(__dirname, 'Saves_1', 'save_' + sanitize(sID) + '.txt');
                 }
             }
@@ -126,7 +126,6 @@ app.all('/Browse/View.json', function (req, res) {
     var path = require('path');
 
     var filePath = path.join(__dirname, 'Saves', 'save_' + sanitize(req.query.ID) + '.txt');
-var sanitize = require("sanitize-filename");
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
@@ -149,7 +148,6 @@ app.all('/Browse/Comments.json', function (req, res) {
     var sess = req.session;
     var fs = require('fs');
     var path = require('path');
-var sanitize = require("sanitize-filename");
     var filePath = path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt');
     fs.readFile(filePath, {
         encoding: 'utf-8'
@@ -182,7 +180,6 @@ app.get('/profile.html', function (req, res) {
     var fs = require('fs');
     var path = require('path');
     // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
-    var sanitize = require("sanitize-filename");
     var filePath = path.join(__dirname, 'Users', sanitize(req.query.Name) + '.txt');
     fs.readFile(filePath, {
         encoding: 'utf-8'
@@ -227,13 +224,12 @@ app.get('/User.json', function (req, res) {
     var path = require('path');
     // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
     var filePath = path.join(__dirname, 'Users', sanitize(req.query.Name) + '.txt');
-    var sanitize = require("sanitize-filename");
     fs.readFile(filePath, {
-            encoding: 'utf-8'
-        }, function (err, data) {
-            if (!err) {
-                var dataa = data.split('!EOL!');
-                console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
+        encoding: 'utf-8'
+    }, function (err, data) {
+        if (!err) {
+            var dataa = data.split('!EOL!');
+            console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
         } else {
             console.log(err);
         }
@@ -243,7 +239,10 @@ app.get('/User.json', function (req, res) {
 app.get('/', function (req, res) {
     var sess = req.session;
     res.render('index', {
-        islogedin: islogedin, wtptislogedin: wTPTislogedin, wtptusr: wTPTUser});
+        islogedin: islogedin,
+        wtptislogedin: wTPTislogedin,
+        wtptusr: wTPTUser
+    });
 });
 
 app.get('/login.html', function (req, res) {
@@ -282,34 +281,33 @@ app.post('/usr_login.html', function (req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
-            var sanitize = require("sanitize-filename");
-        var filePath = path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt');
-        fs.readFile(filePath, {
-            encoding: 'utf-8'
-        }, function (err, data) {
-            if (!err) {
-                //Separate data in an array.
-                var dataa = data.split('!EOL!');
-var crypto = require('crypto');
-                if (dataa[1] == crypto.createHash('md5').update(req.body.user+'-'+crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex')) {
-                    res.writeHead(200, {
-                        'Content-Type': 'text/html'
-                    });
-                    wTPTislogedin = true;
-                    wTPTUser = req.body.user;
-                    res.write('done');
-                    res.end();
-                } else {
-                    res.writeHead(200, {
-                        'Content-Type': 'text/html'
-                    });
-                    res.write('Incorrect username or password');
-                    res.end();
-                }
-                //}
+    var filePath = path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt');
+    fs.readFile(filePath, {
+        encoding: 'utf-8'
+    }, function (err, data) {
+        if (!err) {
+            //Separate data in an array.
+            var dataa = data.split('!EOL!');
+            var crypto = require('crypto');
+            if (dataa[1] == crypto.createHash('md5').update(req.body.user + '-' + crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex')) {
+                res.writeHead(200, {
+                    'Content-Type': 'text/html'
+                });
+                wTPTislogedin = true;
+                wTPTUser = req.body.user;
+                res.write('done');
+                res.end();
             } else {
-                console.log(err);
+                res.writeHead(200, {
+                    'Content-Type': 'text/html'
+                });
+                res.write('Incorrect username or password');
+                res.end();
             }
+            //}
+        } else {
+            console.log(err);
+        }
     });
 });
 
@@ -323,37 +321,36 @@ app.get('/register.html', function (req, res) {
 });
 
 app.post('/register.html', function (req, res) {
-var crypto = require('crypto');
-var fs = require('fs');
+    var crypto = require('crypto');
+    var fs = require('fs');
 
-var md5sum = crypto.createHash('md5');
+    var md5sum = crypto.createHash('md5');
 
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
-            var uID = fs.readFileSync('uID.txt', 'utf8');
-            fs.writeFile(path.join(__dirname, 'uID.txt'), parseInt(uID) + 1, function (err) {
-                if (err) {
-                    return console.log(err);
-                }
+    var uID = fs.readFileSync('uID.txt', 'utf8');
+    fs.writeFile(path.join(__dirname, 'uID.txt'), parseInt(uID) + 1, function (err) {
+        if (err) {
+            return console.log(err);
+        }
 
-                console.log('Current uID was updated!');
-            });
+        console.log('Current uID was updated!');
+    });
     if (req.body.erc == 'BMNNET++') {
-                    var sanitize = require("sanitize-filename");
-if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
-            fs.writeFile(path.join(__dirname, 'Users', req.body.user + '.txt'), req.body.user+'!EOL!'+ crypto.createHash('md5').update(req.body.user+'-'+crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex') +'!EOL!'+ uID +'!EOL!None', function (err) {
+        if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
+            fs.writeFile(path.join(__dirname, 'Users', req.body.user + '.txt'), req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!None', function (err) {
                 if (err) {
                     return console.log(err);
                 }
 
-                console.log('User'+ req.body.user +'Registered!');
+                console.log('User' + req.body.user + 'Registered!');
             });
-} else {
-req.end('ERR_USER_EXISTS');
-}
+        } else {
+            req.end('ERR_USER_EXISTS');
+        }
         res.end('done');
-   } else {
+    } else {
         res.end('ERROR');
     }
 });
@@ -446,7 +443,6 @@ app.post('/Login.json', function (req, res) {
     var util = require('util');
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, Data) {
-            var sanitize = require("sanitize-filename");
         var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
         fs.readFile(filePath, {
             encoding: 'utf-8'
