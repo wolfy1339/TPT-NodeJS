@@ -58,6 +58,27 @@ app.all('/Startup.json', function (req, res) {
     });
 });
 
+// I'm not completely sure this will work, but it should
+app.get('/GetScript.api', function (req, res) {
+    var sess = req.session;
+    var fs = require('fs');
+    var path = require('path');
+    var filePath = path.join(__dirname, 'Scripts', 'id_' + sanitize(req.query.Author) + sanitize(req.query.Filename) + '.lua');
+    fs.readFile(filePath, {
+        encoding: 'utf-8'
+    }, function (err, data) {
+        if (!err) {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            });
+            res.write(data);
+            res.end();
+        } else {
+            console.log(err);
+        }
+    });
+});
+
 app.all('/Browse/Tags.json', function (req, res) {
     var sess = req.session;
     res.writeHead(200, {
