@@ -1,7 +1,7 @@
 html
   head
     title Login
-script(src='//fast.eager.io/4d631U5YZd.js')
+    script(src='//fast.eager.io/4d631U5YZd.js')
     script#insertjshere(src='includes.js')
     link(href='stylesheets/bootstrap.min.css', rel='stylesheet')
     link(href='stylesheets/bootstrap-theme.min.css', rel='stylesheet')
@@ -13,32 +13,31 @@ script(src='//fast.eager.io/4d631U5YZd.js')
     // jQuery (necessary for Bootstrap's JavaScript plugins)
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
     script(src='javascripts/bootstrap.min.js')
-body
-    .container
-       nav.navbar.navbar-default
+  body
+    main.container
+      nav.navbar.navbar-default
         .container-fluid
            .navbar-header
             a.navbar-brand(href='/') Home
-    script.
-      $(document).ready(function(){
-      var pass;
-      $("#submit").click(function(){
-      pass=$("#pass").val();
-      $.post("/login.html",{pass:pass},function(data){
-      if(data=='done')
-      {
-      window.location.href="/";
-      } else {
-      alert("Username or password invalid!");
-      }
-      });
-      });
-      });
-  body
-.container
+      script.
+        $(document).ready(function(){
+        var pass;
+        $("#submit").click(function(){
+        pass=$("#pass").val();
+        $.post("/login.html",{pass:pass},function(data){
+        if(data=='done')
+        {
+        window.location.href="/";
+        } else {
+        alert("Username or password invalid!");
+        }
+        });
+        });
+        });
+
       h2 Login
       form(role='form')
         .form-group
-          label(for='pass') Password:
+          label.control-label(for='pass') Password:
           input#pass.form-control(type='password', placeholder='Enter password')
         button#submit.btn.btn-default(type='submit') Submit

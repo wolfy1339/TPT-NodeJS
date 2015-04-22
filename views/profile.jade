@@ -1,7 +1,8 @@
 doctype html
 html
-title #{username}'s profile
-script(src='//fast.eager.io/4d631U5YZd.js')
+  head
+    title #{username}'s profile
+    script(src='//fast.eager.io/4d631U5YZd.js')
     script#insertjshere(src='includes.js')
     link(href='stylesheets/bootstrap.min.css', rel='stylesheet')
     link(href='stylesheets/bootstrap-theme.min.css', rel='stylesheet')
@@ -13,34 +14,34 @@ script(src='//fast.eager.io/4d631U5YZd.js')
     // jQuery (necessary for Bootstrap's JavaScript plugins)
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
     script(src='javascripts/bootstrap.min.js')
-body
-    .container
+  body
+    main.container
 
-if islogedin
- nav.navbar.navbar-default
-        .container-fluid
-          .navbar-header
-            a.navbar-brand(href='/') Home
-          div
-            ul.nav.navbar-nav
-              li
-                a(href='motd.html') MOTD changer
-              li
-                a(href='fp.html') Set FP
-              li
+      if islogedin
+        nav.navbar.navbar-default
+          .container-fluid
+            .navbar-header
+              a.navbar-brand(href='/') Home
+            div.navbar-collapse.collapse
+              ul.nav.navbar-nav
+                li
+                  a(href='motd.html') MOTD changer
+                li
+                  a(href='fp.html') Set FP
+                li
                 a(href='reserved.html') RESERVED 
-else
- nav.navbar.navbar-default
-        .container-fluid
-          .navbar-header
-            a.navbar-brand(href='/') Home
-          div
-            ul.nav.navbar-nav
-              li 
-                a(href='login.html') Manager log in
+      else
+        nav.navbar.navbar-default
+          .container-fluid
+            .navbar-header
+              a.navbar-brand(href='/') Home
+            div.navbar-collapse
+              ul.nav.navbar-nav
+                li 
+                  a(href='login.html') Manager log in
 
-p Username: #{username}
-p ID: #{id}
-p Elevation #{elev}
-p Registered: #{reg}
-p Bibliography: #{bib}
+      p Username: #{username}
+      p ID: #{id}
+      p Elevation #{elev}
+      p Registered: #{reg}
+      p Bibliography: #{bib}

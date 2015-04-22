@@ -15,36 +15,42 @@ script(src='//fast.eager.io/4d631U5YZd.js')
     script(src='javascripts/bootstrap.min.js')
 body
     .container
-       nav.navbar.navbar-default
+      nav.navbar.navbar-default
         .container-fluid
            .navbar-header
             a.navbar-brand(href='/') Home
-    script.
-      $(document).ready(function(){
-      var user, pass, erc;
-      $("#submit").click(function(){
-      user=$("#user").val();
-      pass=$("#pass").val();
-      erc=$("#erc").val();
-      $.post("/register.html",{user:user, pass:pass, erc:erc},function(data){
-      if(data=='done')
-      {
-      window.location.href="/";
-      } else {
-      alert("Something went wrong...");
-      }
-      });
-      });
-      });
-  body
-.container
+      script.
+        $(document).ready(function(){
+        var user, pass, erc;
+        $("#submit").click(function(){
+        user=$("#user").val();
+        pass=$("#pass").val();
+        erc=$("#erc").val();
+        $.post("/register.html",{user:user, pass:pass, erc:erc},function(data){
+        if(data=='done')
+        {
+        window.location.href="/";
+        } else {
+        alert("Something went wrong...");
+        }
+        });
+        });
+        });
+
       h2 Register
-      form(role='form')
+      form.form-horizontal(role='form')
         .form-group
-label(for='user') ERC:
-          input#erc.form-control(type='text', placeholder='Early Access Key')
-label(for='user') Username:
-          input#user.form-control(type='text', placeholder='Username')
-label(for='pass') Password:
-          input#pass.form-control(type='password', placeholder='Password')
-        button#submit.btn.btn-default(type='submit') Submit
+          label.control-label.col-sm-2(for='user') ERC:
+          .col-sm-10
+            input#erc.form-control(type='text', placeholder='Early Access Key')
+        .form-group
+          label.control-label.col-sm-2(for='user') Username:
+          .col-sm-10
+            input#user.form-control(type='text', placeholder='Username')
+        .form-group
+          label.control-label.col-sm-2(for='pass') Password:
+          .col-sm-10
+            input#pass.form-control(type='password', placeholder='Password')
+        .form-group
+          .col-sm-offset-10.col-sm-2
+            button#submit.btn.btn-default(type='submit') Submit

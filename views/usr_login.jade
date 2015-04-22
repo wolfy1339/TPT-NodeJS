@@ -1,7 +1,7 @@
 html
   head
     title Login
-script(src='//fast.eager.io/4d631U5YZd.js')
+    script(src='//fast.eager.io/4d631U5YZd.js')
     script#insertjshere(src='includes.js')
     link(href='stylesheets/bootstrap.min.css', rel='stylesheet')
     link(href='stylesheets/bootstrap-theme.min.css', rel='stylesheet')
@@ -14,34 +14,35 @@ script(src='//fast.eager.io/4d631U5YZd.js')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
     script(src='javascripts/bootstrap.min.js')
 body
-    .container
+    main.container
        nav.navbar.navbar-default
         .container-fluid
            .navbar-header
             a.navbar-brand(href='/') Home
-    script.
-      $(document).ready(function(){
-      var user, pass;
-      $("#submit").click(function(){
-      user=$("#user").val();
-      pass=$("#pass").val();
-      $.post("/usr_login.html",{user:user, pass:pass},function(data){
-      if(data=='done')
-      {
-      window.location.href="/";
-      } else {
-      alert("Invalid username or password!");
-      }
-      });
-      });
-      });
-  body
-.container
-      h2 Login
-      form(role='form')
-        .form-group
-label(for='user') Username:
-          input#user.form-control(type='text', placeholder='Username')
-label(for='pass') Password:
-          input#pass.form-control(type='password', placeholder='Password')
-        button#submit.btn.btn-default(type='submit') Submit
+
+      script.
+        $(document).ready(function(){
+        var user, pass;
+        $("#submit").click(function(){
+        user=$("#user").val();
+        pass=$("#pass").val();
+        $.post("/usr_login.html",{user:user, pass:pass},function(data){
+        if(data=='done')
+        {
+        window.location.href="/";
+        } else {
+        alert("Invalid username or password!");
+        }
+        });
+        });
+        });
+
+        h2 Login
+        form(role='form')
+          .form-group
+            label.control-label(for='user') Username:
+            input#user.form-control(type='text', placeholder='Username')
+          .form-group
+            label.control=label(for='pass') Password:
+            input#pass.form-control(type='password', placeholder='Password')
+          button#submit.btn.btn-default(type='submit') Submit
