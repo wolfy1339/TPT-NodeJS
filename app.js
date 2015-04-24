@@ -251,7 +251,9 @@ app.get('/profile.html', function (req, res) {
                 bib: dataa[5]
             });
         } else {
-            console.log(err);
+            res.render('profile_error', {
+                username: req.query.name
+            });
         }
     });
 });
