@@ -203,9 +203,9 @@ app.post('/Browse/Comments.json', function (req, res) {
     form.parse(req, function (err, Data) {
         if (!err) {
             var util = require('util');
-console.log(util.inspect(TPT));
+            console.log(util.inspect(TPT));
             var fs = require('fs');
-var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), "utf8");
+            var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), "utf8");
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +'{"Username":"' + TPT.User+ '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment +'","Timestamp":"1","FormattedUsername":"' + TPT.User +'"}, ', function (err) {
                 if (err) {
                     return console.log(err);
