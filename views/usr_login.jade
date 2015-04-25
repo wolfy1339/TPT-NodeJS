@@ -13,12 +13,21 @@ html
     // jQuery (necessary for Bootstrap's JavaScript plugins)
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
     script(src='javascripts/bootstrap.min.js')
-body
+  body
     main.container
        nav.navbar.navbar-default
         .container-fluid
            .navbar-header
             a.navbar-brand(href='/') Home
+
+      h2 Login
+      form(role='form')
+       .form-group
+          label.control-label(for='user') Username:
+          input#user.form-control(type='text', placeholder='Username')
+       .form-group
+         label.control=label(for='pass') Password:
+         input#pass.form-control(type='password', placeholder='Password')
 
       script.
         $(document).ready(function(){
@@ -36,13 +45,3 @@ body
         });
         });
         });
-
-      h2 Login
-     form(role='form')
-       .form-group
-          label.control-label(for='user') Username:
-          input#user.form-control(type='text', placeholder='Username')
-       .form-group
-         label.control=label(for='pass') Password:
-         input#pass.form-control(type='password', placeholder='Password')
-      button#submit.btn.btn-default(type='submit') Submit
