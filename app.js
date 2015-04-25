@@ -252,7 +252,7 @@ app.get('/profile.html', function (req, res) {
             });
         } else {
             res.render('profile_error', {
-                username: req.query.name
+                username: req.query.Name
             });
         }
     });
