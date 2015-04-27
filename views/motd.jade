@@ -19,10 +19,10 @@ html
       var motd;
       $("#submit").click(function(){
       motd=$("#motd").val();
-      $.post("/motd.html",{motd:motd},function(data){
+      $.post("motd.html",{motd:motd},function(data){
       if(data=='done')
       {
-      window.location.href="/motd.html";
+      window.location.href="motd.html";
       } else {
       alert("Error!");
       }
