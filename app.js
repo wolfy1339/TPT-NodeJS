@@ -484,7 +484,7 @@ app.post('/Login.json', function (req, res) {
                 return console.error('upload failed:', err);
             }
             console.log('Upload successful!  Server responded with:', body);
- res.writeHead(200, {
+        res.writeHead(200, {
                 'Content-Type': 'text/json'
             }); res.write(body);
         });
@@ -603,7 +603,7 @@ app.post('/Save.api', function (req, res) {
 
                 console.log('Save data saved!');
             });
-fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sID + '.txt'), '[', function (err) {
+            fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sID + '.txt'), '[', function (err) {
                 if (err) {
                     return console.log(err);
                 }
@@ -619,26 +619,25 @@ fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sID + '.txt'), '[', functi
             });
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '.cps')));
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.cps')));
-var spawn = require('child_process').spawn;
-var child = spawn('Render', [sID + '.cps', sID], {cwd: path.join(__dirname, 'Saves_bin')});
+            var spawn = require('child_process').spawn;
+            var child = spawn('Render', [sID + '.cps', sID], {cwd: path.join(__dirname, 'Saves_bin')});
 
-// Listen for any response from the child:
-child.stdout.on('data', function (data) {
-    console.log(data.toString());
-});
+            // Listen for any response from the child:
+            child.stdout.on('data', function (data) {
+                console.log(data.toString());
+            });
 
-// Listen for any errors:
-child.stderr.on('data', function (data) {
-    console.log('There was an error: ' + data);
-});
+            // Listen for any errors:
+            child.stderr.on('data', function (data) {
+                console.log('There was an error: ' + data);
+            });
 
-child.on('close', function(code) {
-    console.log('Renderer closed with code: ' + code);
-fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.pti')));
-fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1_small.pti')));
-fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_small.pti')));
-});
-//}
+            child.on('close', function(code) {
+                console.log('Renderer closed with code: ' + code);
+                fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.pti')));
+                fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1_small.pti')));
+                fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_small.pti')));
+            });
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
