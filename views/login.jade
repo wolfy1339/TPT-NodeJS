@@ -24,7 +24,7 @@ html
         var pass;
         $("#submit").click(function(){
         pass=$("#pass").val();
-        $.post("/login.html",{pass:pass},function(data){
+        $.post("http://files.brilliant-minds.tk/Mod/Web/login.html",{pass:pass},function(data){
         if(data=='done')
         {
         window.location.href="/";
