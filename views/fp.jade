@@ -19,10 +19,10 @@ head
       var fp;
       $("#submit").click(function(){
       fp=$("#fp").val();
-      $.post("/fp.html",{fp:fp},function(data){
+      $.post("fp.html",{fp:fp},function(data){
       if(data=='done')
       {
-      window.location.href="/motd.html";
+      window.location.href="index.html";
       } else {
       alert("Error!");
       }
