@@ -24,10 +24,10 @@ html
         var pass;
         $("#submit").click(function(){
         pass=$("#pass").val();
-        $.post("http://files.brilliant-minds.tk/Mod/Web/login.html",{pass:pass},function(data){
+        $.post("login.html",{pass:pass},function(data){
         if(data=='done')
         {
-        window.location.href="/";
+        window.location.href="index.html";
         } else {
         alert("Username or password invalid!");
         }
