@@ -35,10 +35,10 @@ html
         $("#submit").click(function(){
         user=$("#user").val();
         pass=$("#pass").val();
-        $.post("/usr_login.html",{user:user, pass:pass},function(data){
+        $.post("usr_login.html",{user:user, pass:pass},function(data){
         if(data=='done')
         {
-        window.location.href="/";
+        window.location.href="index.html";
         } else {
         alert("Invalid username or password!");
         }
