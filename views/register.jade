@@ -26,10 +26,10 @@ body
         user=$("#user").val();
         pass=$("#pass").val();
         erc=$("#erc").val();
-        $.post("/register.html",{user:user, pass:pass, erc:erc},function(data){
+        $.post("register.html",{user:user, pass:pass, erc:erc},function(data){
         if(data=='done')
         {
-        window.location.href="/";
+        window.location.href="index.html";
         } else {
         alert("Something went wrong...");
         }
