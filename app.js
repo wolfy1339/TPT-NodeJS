@@ -175,7 +175,6 @@ app.post('/deploy', function (req, res) {
         var crypto = require('crypto'),
             text = req.body,
             key = '3xfKxZLKdkgQ8TI4Zpsf',
-            hash;
             hash = crypto.createHmac('sha1', key).update(text).digest('hex');
         if (hash == req.get('X-Hub-Signature')) {
             var githjson = JSON.parse(req.body);
