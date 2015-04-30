@@ -26,9 +26,9 @@ build/Release
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
-#Users/Saves/Scripts/Comments
-#Save
-#Saves_1
-#Saves_bin
-#Scripts
-#Users
+Users/Saves/Scripts/Comments
+Save
+Saves_1
+Saves_bin
+Scripts
+Users
