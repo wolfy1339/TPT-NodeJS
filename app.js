@@ -176,7 +176,8 @@ app.post('/deploy', function (req, res) {
             text = req.body,
             key = '3xfKxZLKdkgQ8TI4Zpsf',
             hash;
-        if (hash = crypto.createHmac('sha1', key).update(text).digest('hex') == req.get('X-Hub-Signature')) {
+            hash = crypto.createHmac('sha1', key).update(text).digest('hex');
+        if (hash == req.get('X-Hub-Signature')) {
             var githjson = JSON.parse(req.body);
             var spawn = require('child_process').spawn;
             var child;
