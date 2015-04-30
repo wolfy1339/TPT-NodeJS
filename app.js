@@ -263,6 +263,12 @@ app.get('/fp.html', function (req, res) {
     }
 });
 
+app.get('/logout.html', function (req, res) {
+    var sess = req.session;
+        res.redirect('/');
+        islogedin = false;
+});
+
 app.get('/profile.html', function (req, res) {
     var sess = req.session;
     var fs = require('fs');
