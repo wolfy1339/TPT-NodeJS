@@ -39,7 +39,7 @@ if(req.query.DK=="3xfKxZLKdkgQ8TI4ZpsfJc8W9zqYF0PcM8r8e948a3JaX1Fc99V6oY22lV64VA
   console.log("QUITING FOR DEPLOY!");
   process.exit(0);
 } else {
-  console.log(""ERR_WRONG_DEPLOY_KEY!);
+  console.log("ERR_WRONG_DEPLOY_KEY!");
   res.end("ERROR");
   
 }
