@@ -189,6 +189,11 @@ app.post('/deploy', function (req, res) {
                     child = spawn('deploy');
                 }
             }
+            res.writeHead(200, {
+                'Content-Type': 'text/json'
+            });
+            res.write("{Code: Goodbye, see you later.}");
+            res.end();
             console.log("Halting for deploy!");
             process.exit(0);
         }
