@@ -183,11 +183,7 @@ app.post('/deploy', function (req, res) {
             if (isWindows) {
                 child = spawn('deploy.bat');
             } else {
-                if (isX64) {
-                    child = spawn('deploy.sh');
-                } else {
-                    child = spawn('deploy');
-                }
+                child = spawn('deploy.sh');
             }
             res.writeHead(200, {
                 'Content-Type': 'text/json'
