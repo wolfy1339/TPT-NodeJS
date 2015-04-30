@@ -33,7 +33,17 @@ console.log(islogedin);
   res.redirect('http://localhost:3000');
 });
 
-
+app.get('/deploy', function (req, res) {
+var sess = req.session;
+if(req.query.DK=="3xfKxZLKdkgQ8TI4ZpsfJc8W9zqYF0PcM8r8e948a3JaX1Fc99V6oY22lV64VAptYY4V09l34r0m5VoMGIYl9yfeH6x1M5m6"){
+  console.log("QUITING FOR DEPLOY!");
+  process.exit(0);
+} else {
+  console.log(""ERR_WRONG_DEPLOY_KEY!);
+  res.end("ERROR");
+  
+}
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
