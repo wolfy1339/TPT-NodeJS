@@ -171,19 +171,19 @@ app.all('/Browse/View.json', function (req, res) {
 
 app.post('/deploy', function (req, res) {
     var sess = req.session;
-    if(islogedin){
-var crypto = require('crypto')
-  , text = req.body
-  , key = '3xfKxZLKdkgQ8TI4Zpsf'
-  , hash
-  if(hash = crypto.createHmac('sha1', key).update(text).digest('hex')==req.get('X-Hub-Signature')){
-var githjson = JSON.parse(req.body);
-var spawn = require('child_process').spawn;
+    if (islogedin) {
+        var crypto = require('crypto'),
+            text = req.body,
+            key = '3xfKxZLKdkgQ8TI4Zpsf',
+            hash;
+        if (hash = crypto.createHmac('sha1', key).update(text).digest('hex') == req.get('X-Hub-Signature')) {
+            var githjson = JSON.parse(req.body);
+            var spawn = require('child_process').spawn;
             var child;
-            if (isWindows){
+            if (isWindows) {
                 child = spawn('deploy.bat');
             } else {
-                if (isX64){
+                if (isX64) {
                     child = spawn('deploy.sh');
                 } else {
                     child = spawn('deploy');
@@ -191,8 +191,8 @@ var spawn = require('child_process').spawn;
             }
             console.log("Halting for deploy!");
             process.exit(0);
-  }
-}
+        }
+    }
 });
 
 // I'm not completely sure this will work, but it should
@@ -201,13 +201,13 @@ app.get('/Browse/Comments.json', function (req, res) {
     var fs = require('fs');
     var path = require('path');
     var filePath = path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt');
-/*    if(!readFileSync(filePath)==""){
-res.writeHead(200, {
-                'Content-Type': 'text/html'
-            });
-req.end('[]');
-} else {
-*/
+    /*    if(!readFileSync(filePath)==""){
+    res.writeHead(200, {
+                    'Content-Type': 'text/html'
+                });
+    req.end('[]');
+    } else {
+    */
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
@@ -215,13 +215,13 @@ req.end('[]');
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
-            res.write(data+'{"Username": "Io", "UserID": "1", "Gravatar": "", "Text":".", "Timestamp":"1428177544","FormattedUsername": "Io"}]');
+            res.write(data + '{"Username": "Io", "UserID": "1", "Gravatar": "", "Text":".", "Timestamp":"1428177544","FormattedUsername": "Io"}]');
             res.end();
         } else {
             console.log(err);
         }
     });
-//}
+    //}
 });
 
 // I'm not completely sure this will work, but it should
@@ -237,7 +237,7 @@ app.post('/Browse/Comments.json', function (req, res) {
             console.log(util.inspect(TPT));
             var fs = require('fs');
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), "utf8");
-            fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +'{"Username":"' + TPT.User+ '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment +'","Timestamp":"1","FormattedUsername":"' + TPT.User +'"}, ', function (err) {
+            fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata + '{"Username":"' + TPT.User + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment + '","Timestamp":"1","FormattedUsername":"' + TPT.User + '"}, ', function (err) {
                 if (err) {
                     return console.log(err);
                 }
@@ -320,7 +320,7 @@ app.get('/User.json', function (req, res) {
         if (!err) {
             var dataa = data.split('!EOL!');
             console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
-                        res.writeHead(200, {
+            res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
             res.end('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
@@ -557,53 +557,53 @@ app.post('/Login.json', function (req, res) {
                     res.write(datats);
                     res.end();
                 } else {
-//                    res.writeHead(200, {
-//                       'Content-Type': 'text/json'
-//                    });
+                    //                    res.writeHead(200, {
+                    //                       'Content-Type': 'text/json'
+                    //                    });
                     request.post({
-            url: 'http://powdertoy.co.uk/Login.json',
-            form: {
-                Username: Data.Username,
-                Hash: Data.Hash
-            }
-        }, function (err, httpResponse, body) {
-            console.log(body);
-            res.writeHead(200, {
-                'Content-Type': 'text/json'
-            });
-                    TPT.islogedin = true;
-                    TPT.User = Data.Username;
-                    //TPT.ID = dataa[2];
-            res.write(body);
-            res.end();
-        });
+                        url: 'http://powdertoy.co.uk/Login.json',
+                        form: {
+                            Username: Data.Username,
+                            Hash: Data.Hash
+                        }
+                    }, function (err, httpResponse, body) {
+                        console.log(body);
+                        res.writeHead(200, {
+                            'Content-Type': 'text/json'
+                        });
+                        TPT.islogedin = true;
+                        TPT.User = Data.Username;
+                        //TPT.ID = dataa[2];
+                        res.write(body);
+                        res.end();
+                    });
                 }
                 //}
             } else {
- //                                   res.write('{Error: "Incorrect username or password"}');
- //                   res.end();
-                    request.post({
-            url: 'http://powdertoy.co.uk/Login.json',
-            form: {
-                Username: Data.Username,
-                Hash: Data.Hash
-            }
-        }, function (err, httpResponse, body) {
-            console.log(body);
-            res.writeHead(200, {
-                'Content-Type': 'text/json'
-            });
+                //                                   res.write('{Error: "Incorrect username or password"}');
+                //                   res.end();
+                request.post({
+                    url: 'http://powdertoy.co.uk/Login.json',
+                    form: {
+                        Username: Data.Username,
+                        Hash: Data.Hash
+                    }
+                }, function (err, httpResponse, body) {
+                    console.log(body);
+                    res.writeHead(200, {
+                        'Content-Type': 'text/json'
+                    });
                     TPT.islogedin = true;
                     TPT.User = Data.Username;
                     //TPT.ID = dataa[2];
-            res.write(body);
-            res.end();
-        });
-/*            }
-                console.log(err);
-                                    res.write('{Error: "Incorrect username or password"}');
+                    res.write(body);
                     res.end();
-*/
+                });
+                /*            }
+                                console.log(err);
+                                                    res.write('{Error: "Incorrect username or password"}');
+                                    res.end();
+                */
             }
         });
     });
@@ -650,7 +650,6 @@ app.post('/Save.api', function (req, res) {
             });
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '.cps')));
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.cps')));
-            
 
             // Listen for any response from the child:
             child.stdout.on('data', function (data) {
@@ -662,7 +661,7 @@ app.post('/Save.api', function (req, res) {
                 console.log('There was an error: ' + data);
             });
 
-            child.on('close', function(code) {
+            child.on('close', function (code) {
                 console.log('Renderer closed with code: ' + code);
                 fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.pti')));
                 fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1_small.pti')));
