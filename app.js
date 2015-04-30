@@ -169,6 +169,32 @@ app.all('/Browse/View.json', function (req, res) {
     });
 });
 
+app.post('/deploy', function (req, res) {
+    var sess = req.session;
+    if(islogedin){
+var crypto = require('crypto')
+  , text = req.body
+  , key = '3xfKxZLKdkgQ8TI4Zpsf'
+  , hash
+  if(hash = crypto.createHmac('sha1', key).update(text).digest('hex')){
+var githjson = JSON.parse(req.body);
+var spawn = require('child_process').spawn;
+            var child;
+            if (isWindows){
+                child = spawn('deploy.bat');
+            } else {
+                if (isX64){
+                    child = spawn('deploy.sh');
+                } else {
+                    child = spawn('deploy');
+                }
+            }
+            console.log("Halting for deploy!");
+            process.exit(0);
+  }
+}
+});
+
 // I'm not completely sure this will work, but it should
 app.get('/Browse/Comments.json', function (req, res) {
     var sess = req.session;
@@ -624,17 +650,7 @@ app.post('/Save.api', function (req, res) {
             });
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '.cps')));
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.cps')));
-            var spawn = require('child_process').spawn;
-            var child;
-            if (isWindows){
-                child = spawn('Render', [sID + '.cps', sID], {cwd: path.join(__dirname, 'Saves_bin')});
-            } else {
-                if (isX64){
-                    child = spawn('render64', [sID + '.cps', sID], {cwd: path.join(__dirname, 'Saves_bin')});
-                } else {
-                    child = spawn('render', [sID + '.cps', sID], {cwd: path.join(__dirname, 'Saves_bin')});
-                }
-            }
+            
 
             // Listen for any response from the child:
             child.stdout.on('data', function (data) {
