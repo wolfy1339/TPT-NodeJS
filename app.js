@@ -283,6 +283,11 @@ app.get('/fp.html', function (req, res) {
     }
 });
 
+app.get('/index.html', function (req, res) {
+    var sess = req.session;
+        res.redirect('/');
+});
+
 app.get('/logout.html', function (req, res) {
     var sess = req.session;
     res.redirect('/');
