@@ -210,6 +210,31 @@ app.get('/verify/:id', function(req, res) {
 app.post('/deploy', function(req, res) {
     var sess = req.session;
     var crypto = require('crypto');
+    if (islogedin) {
+        var spawn = require('child_process').spawn;
+        var child;
+        if (isWindows) {
+            child = spawn('deploy.bat');
+        } else {
+            child = spawn('deploy.sh');
+        }
+        res.writeHead(200, {
+            'Content-Type': 'text/json'
+        });
+        res.write("{Code: Goodbye, see you later.}");
+        res.end();
+
+    /*if (!islogedin){
+        res.writeHead(200, {
+            'Content-Type': 'text/json'
+        });
+        res.write("{Code: Error. Log in first.}");
+        res.end();
+    }*/
+
+        console.log("Halting for deploy!");
+        process.exit(0);
+    }
     var text = req.body;
     var key = '3xfKxZLKdkgQ8TI4Zpsf';
     var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
