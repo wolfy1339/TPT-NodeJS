@@ -67,9 +67,7 @@ app.all('/Startup.json', function(req, res) {
 // I'm not completely sure this will work, but it should
 app.get('/GetScript.api', function(req, res) {
     var sess = req.session;
-    var filePath = path.join(__dirname, 'Scripts', 'id_' + sanitize(req.query.Author) + sanitize(req.query.Filename) +
-
-        '.lua');
+    var filePath = path.join(__dirname, 'Scripts', 'id_' + sanitize(req.query.Author) + sanitize(req.query.Filename) + '.lua');
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function(err, data) {
@@ -167,48 +165,47 @@ app.all('/Browse/View.json', function(req, res) {
     });
 });
 
-app.get('/verify/:id',
-    function(req, res) {
-        var id = req.params.id;
-        var path = require('path');
-        var fs = require('fs');
-        var vidp = path.join(__dirname, 'vid', id + '.txt');
-        if (fs.existsSync(vidp)) {
-            fs.readFile(vidp, {
-                encoding: 'utf-8'
-            }, function(err, data) {
+app.get('/verify/:id', function(req, res) {
+    var id = req.params.id;
+    var vidp = path.join(__dirname, 'vid', id + '.txt');
+    if (fs.existsSync(vidp)) {
+        fs.readFile(vidp, {
+            encoding: 'utf-8'
+        }, function(err, data) {
+            if (err) {
+                console.log(err);
+            }
+            var dataa = data.split('!EOL!');
+            var Uname = dataa[0];
+            var Hash = dataa[1];
+            var uID = dataa[4];
+            fs.writeFile(path.join(__dirname, 'Users', Uname + '.txt'), Uname + '!EOL!' + Hash + '!EOL!' + uID + '!EOL!None!EOL!?!EOL!No' + ' biography set.', function(err) {
                 if (err) {
-                    console.log(err);
+                    return console.log(err);
                 }
-                var dataa = data.split('!EOL!');
-                var Uname = dataa[0];
-                var Hash = dataa[1];
-                var uID = dataa[4];
-                fs.writeFile(path.join(__dirname, 'Users', Uname + '.txt'), Uname + '!EOL!' + Hash + '!EOL!' + uID + '!EOL!None!EOL!?!EOL!No' + ' biography set.', function(err) {
+                fs.unlink(vidp, function(err) {
                     if (err) {
-                        return console.log(err);
+                        console.log(err);
                     }
-                    fs.unlink(vidp, function(err) {
-                        if (err) console.log(err);
-                        console.log('Verifying request ' + id + '...');
-                        console.log('User ' + Uname + ' Registered!');
-                        res.writeHead(200, {
-                            'Content-Type': 'text/html'
-                        });
-                        res.write('{DONE}');
-                        res.end();
+                    console.log('Verifying request ' + id + '...');
+                    console.log('User ' + Uname + ' Registered!');
+                    res.writeHead(200, {
+                        'Content-Type': 'text/html'
                     });
+                    res.write('{DONE}');
+                    res.end();
                 });
             });
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/html'
-            });
-            res.write('{ERR_INVALID_VID}');
-            res.end();
-            console.log(vidp);
-        }
-    });
+        });
+    } else {
+        res.writeHead(200, {
+            'Content-Type': 'text/html'
+        });
+        res.write('{ERR_INVALID_VID}');
+        res.end();
+        console.log(vidp);
+    }
+});
 
 app.post('/deploy', function(req, res) {
     var sess = req.session;
@@ -280,7 +277,7 @@ app.post('/Browse/Comments.json', function(req, res) {
             var util = require('util');
             console.log(util.inspect(TPT));
             var fs = require('fs');
-            var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'),"utf8");
+            var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), "utf8");
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
                 '{"Username":"' + TPT.User + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment +
                 '","Timestamp":"1","FormattedUsername":"' + TPT.User + '"}, ',
@@ -373,7 +370,6 @@ app.get('/User.json', function(req, res) {
         if (!err) {
             var dataa = data.split('!EOL!');
             console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' +
-
                 dataa[5] + '"}}');
             res.writeHead(200, {
                 'Content-Type': 'text/json'
@@ -453,7 +449,6 @@ app.post('/usr_login.html', function(req, res) {
                 res.write('Incorrect username or password');
                 res.end();
             }
-            //}
         } else {
             console.log(err);
         }
@@ -480,7 +475,6 @@ app.post('/register.html', function(req, res) {
         if (err) {
             return console.log(err);
         }
-
         console.log('Current uID was updated!');
     });
     if (req.body.erc == 'BMNNET++') {
@@ -489,7 +483,6 @@ app.post('/register.html', function(req, res) {
                 if (err) {
                     return console.log(err);
                 }
-
                 console.log('User ' + req.body.user + ' Registered!');
             });
         } else {
@@ -600,8 +593,7 @@ app.post('/Login.json', function(req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/json'
                     });
-                    var datats = '{"Status":1,"UserID":' + dataa[2] +
-                        ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
+                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
                     TPT.islogedin = true;
                     TPT.User = Data.Username;
                     TPT.ID = dataa[2];
@@ -673,7 +665,6 @@ app.post('/Save.api', function(req, res) {
                 if (err) {
                     return console.log(err);
                 }
-
                 console.log('Current ID was updated!');
             });
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), '{"ID":' + sID +
@@ -684,14 +675,12 @@ app.post('/Save.api', function(req, res) {
                     if (err) {
                         return console.log(err);
                     }
-
                     console.log('Save data saved!');
                 });
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sID + '.txt'), '[', function(err) {
                 if (err) {
                     return console.log(err);
                 }
-
                 console.log('Save\'s Initial Comment data saved!');
             });
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), '{"ID":' + sID +
@@ -701,7 +690,6 @@ app.post('/Save.api', function(req, res) {
                     if (err) {
                         return console.log(err);
                     }
-
                     console.log('Save data part 2 saved!');
                 });
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '.cps')));
