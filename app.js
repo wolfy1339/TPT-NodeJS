@@ -1,20 +1,21 @@
 var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var islogedin = false;
-var routes = require('./routes/index.js');
-var users = require('./routes/users.js');
-var request = require('request');
 var app = express();
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var favicon = require('serve-favicon');
+var fs = require('fs');
+var islogedin = false;
+var logger = require('morgan');
+var path = require('path');
+var request = require('request');
+var routes = require('./routes/index.js');
+var sanitize = require('sanitize-filename');
 var session = require('express-session');
 var TPT = {};
-var wTPTUser = '';
 TPT.islogedin = false;
+var users = require('./routes/users.js');
+var wTPTUser = '';
 var wTPTislogedin = false;
-var sanitize = require('sanitize-filename');
 
 // Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
 var isWindows = false;
@@ -40,9 +41,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use('/', routes);
 app.use('/users', users);
 app.all('/Startup.json', function (req, res) {
-    var fs = require('fs');
-    var path = require('path');
-
     var filePath = path.join(__dirname, 'motd.txt');
 
     fs.readFile(filePath, {
@@ -66,8 +64,6 @@ app.all('/Startup.json', function (req, res) {
 // I'm not completely sure this will work, but it should
 app.get('/GetScript.api', function (req, res) {
     var sess = req.session;
-    var fs = require('fs');
-    var path = require('path');
     var filePath = path.join(__dirname, 'Scripts', 'id_' + sanitize(req.query.Author) + sanitize(req.query.Filename) + '.lua');
     fs.readFile(filePath, {
         encoding: 'utf-8'
@@ -96,8 +92,6 @@ app.all('/Browse/Tags.json', function (req, res) {
 var filePath;
 app.all('/Browse.json', function (req, res) {
     var sess = req.session;
-    var fs = require('fs');
-    var path = require('path');
     if (!req.query.Search_Query) {
         filePath = path.join(__dirname, 'saves.txt');
         fs.readFile(filePath, {
@@ -148,8 +142,6 @@ app.all('/Browse.json', function (req, res) {
 
 app.all('/Browse/View.json', function (req, res) {
     var sess = req.session;
-    var fs = require('fs');
-    var path = require('path');
 
     var filePath = path.join(__dirname, 'Saves', 'save_' + sanitize(req.query.ID) + '.txt');
     fs.readFile(filePath, {
@@ -199,8 +191,6 @@ app.post('/deploy', function (req, res) {
 // I'm not completely sure this will work, but it should
 app.get('/Browse/Comments.json', function (req, res) {
     var sess = req.session;
-    var fs = require('fs');
-    var path = require('path');
     var filePath = path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt');
     /*    if(!readFileSync(filePath)==""){
     res.writeHead(200, {
@@ -228,7 +218,6 @@ app.get('/Browse/Comments.json', function (req, res) {
 // I'm not completely sure this will work, but it should
 app.post('/Browse/Comments.json', function (req, res) {
     var sess = req.session;
-    var fs = require('fs');
     var formidable = require('formidable');
     var util = require('util');
     var form = new formidable.IncomingForm();
@@ -266,14 +255,12 @@ app.get('/fp.html', function (req, res) {
 
 app.get('/logout.html', function (req, res) {
     var sess = req.session;
-        res.redirect('/');
-        islogedin = false;
+    res.redirect('/');
+    islogedin = false;
 });
 
 app.get('/profile.html', function (req, res) {
     var sess = req.session;
-    var fs = require('fs');
-    var path = require('path');
     // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
     var filePath = path.join(__dirname, 'Users', sanitize(req.query.Name) + '.txt');
     fs.readFile(filePath, {
@@ -301,7 +288,6 @@ app.post('/fp.html', function (req, res) {
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     if (islogedin) {
-        var fs = require('fs');
         fs.writeFile('saves.txt', req.body.fp, function (err) {
             if (err) {
                 res.end(err);
@@ -317,8 +303,6 @@ app.post('/fp.html', function (req, res) {
 
 app.get('/User.json', function (req, res) {
     var sess = req.session;
-    var fs = require('fs');
-    var path = require('path');
     // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
     var filePath = path.join(__dirname, 'Users', sanitize(req.query.Name) + '.txt');
     fs.readFile(filePath, {
@@ -377,8 +361,6 @@ app.get('/usr_login.html', function (req, res) {
 });
 
 app.post('/usr_login.html', function (req, res) {
-    var fs = require('fs');
-    var path = require('path');
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
@@ -423,10 +405,7 @@ app.get('/register.html', function (req, res) {
 
 app.post('/register.html', function (req, res) {
     var crypto = require('crypto');
-    var fs = require('fs');
-
     var md5sum = crypto.createHash('md5');
-
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
@@ -503,9 +482,7 @@ app.post('/Login.json', function (req, res) {
         //validation here
     }
     var sess = req.session;
-    var fs = require('fs');
-    /*var formidable = require('formidable');
-    var util = require('util');
+    /*var util = require('util');
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, Data) {
         console.log("Username: " + Data.Hash);
@@ -618,14 +595,12 @@ app.post('/Login.json', function (req, res) {
 
 app.post('/Save.api', function (req, res) {
     var sess = req.session;
-    var fs = require('fs');
     var formidable = require('formidable');
     var util = require('util');
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, sData, sData2) {
         if (!err) {
             var util = require('util');
-            var fs = require('fs');
             var sID = fs.readFileSync('cID.txt', 'utf8');
             fs.writeFile(path.join(__dirname, 'cID.txt'), parseInt(sID) + 1, function (err) {
                 if (err) {
