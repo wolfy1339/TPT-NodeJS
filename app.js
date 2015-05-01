@@ -163,7 +163,7 @@ app.all('/Browse/View.json', function (req, res) {
 
 app.post('/deploy', function (req, res) {
     var sess = req.session;
-    if (islogedin) {
+//    if (islogedin) {
         var crypto = require('crypto');
         var text = req.body;
         var key = '3xfKxZLKdkgQ8TI4Zpsf';
@@ -182,10 +182,17 @@ app.post('/deploy', function (req, res) {
             });
             res.write("{Code: Goodbye, see you later.}");
             res.end();
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/json'
+            });
+            res.write("{Code: Error. Bad signature.}");
+            res.end();
+        }
             console.log("Halting for deploy!");
             process.exit(0);
         }
-    }
+//    }
 });
 
 // I'm not completely sure this will work, but it should
