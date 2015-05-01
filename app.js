@@ -164,12 +164,12 @@ app.all('/Browse/View.json', function (req, res) {
 app.post('/deploy', function (req, res) {
     var sess = req.session;
     if (islogedin) {
-        var crypto = require('crypto'),
-            text = req.body,
-            key = '3xfKxZLKdkgQ8TI4Zpsf',
-            hash = crypto.createHmac('sha1', key).update(text).digest('hex');
+        var crypto = require('crypto');
+        var text = req.body;
+        var key = '3xfKxZLKdkgQ8TI4Zpsf';
+        var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
         if (hash == req.get('X-Hub-Signature')) {
-            var githjson = JSON.parse(req.body);
+            var githjson = JSON.parse(text);
             var spawn = require('child_process').spawn;
             var child;
             if (isWindows) {
