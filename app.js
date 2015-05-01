@@ -10,13 +10,6 @@ var users = require('./routes/users.js');
 var request = require('request');
 var app = express();
 var session = require('express-session');
-app.use(session({
-    //Change if security problem is detected!
-    secret: 'BrilliantMindsoftheTPTservers'
-}));
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 var TPT = {};
 var wTPTUser = '';
 TPT.islogedin = false;
@@ -27,6 +20,13 @@ var sanitize = require('sanitize-filename');
 var isWindows = false;
 var isX64 = true;
 
+app.use(session({
+    //Change if security problem is detected!
+    secret: 'BrilliantMindsoftheTPTservers'
+}));
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/favicon.png'));
 app.use(logger('dev'));
