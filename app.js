@@ -52,7 +52,10 @@ app.all('/Startup.json', function (req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
-            res.write('{"Updates":{"Stable":{"Major":90,"Minor":2,"Build":322,"File":"\/Download\/Builds\/Build-322\/-.ptu"},"Beta":{"Major":90,"Minor":1,"Build":320,"File":"\/Download\/Builds\/Build-320\/-.ptu"},"Snapshot":{"Major":83,"Minor":3,"Build":208,"Snapshot":1346881831,"File":"\/Download\/Builds\/TPTPP\/-.ptu"}},"Notifications":[],"Session":false,"MessageOfTheDay":"' + data + '"}');
+            res.write('{"Updates":{"Stable":{"Major":90,"Minor":2,"Build":322,"File":"\/Download\/Builds\/Build-'+
+'322\/-.ptu"},"Beta":{"Major":90,"Minor":1,"Build":320,"File":"\/Download\/Builds\/Build-320\/-.ptu"},"Snapshot":'+
+'{"Major":83,"Minor":3,"Build":208,"Snapshot":1346881831,"File":"\/Download\/Builds\/TPTPP\/-.ptu"}},"Notifications":'+
+'[],"Session":false,"MessageOfTheDay":"' + data + '"}');
             res.end();
         } else {
             console.log(err);
@@ -64,7 +67,9 @@ app.all('/Startup.json', function (req, res) {
 // I'm not completely sure this will work, but it should
 app.get('/GetScript.api', function (req, res) {
     var sess = req.session;
-    var filePath = path.join(__dirname, 'Scripts', 'id_' + sanitize(req.query.Author) + sanitize(req.query.Filename) + '.lua');
+    var filePath = path.join(__dirname, 'Scripts', 'id_' + sanitize(req.query.Author) + sanitize(req.query.Filename) + 
+
+'.lua');
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function (err, data) {
@@ -85,7 +90,8 @@ app.all('/Browse/Tags.json', function (req, res) {
     res.writeHead(200, {
         'Content-Type': 'text/html'
     });
-    res.write('{"TagTotal": 1, "Results": 1, "Tags": [{"Tag": "Tags", "Count": 1}, {"Tag": "are", "Count": 1}, {"Tag": "not", "Count": 1}, {"Tag": "yet", "Count": 1}, {"Tag": "implemented.", "Count": 1}');
+    res.write('{"TagTotal": 1, "Results": 1, "Tags": [{"Tag": "Tags", "Count": 1}, {"Tag": "are", "Count": 1}, {"Tag": "not",'+ 
+'"Count": 1}, {"Tag": "yet", "Count": 1}, {"Tag": "implemented.", "Count": 1}');
     res.end();
 });
 
@@ -160,6 +166,49 @@ app.all('/Browse/View.json', function (req, res) {
 
     });
 });
+
+app.get('/verify/:id', 
+function(req, res){
+  var id = req.params.id;
+var path = require('path');
+var fs = require('fs');
+var vidp = path.join(__dirname, 'vid' , id + '.txt');
+ if (fs.existsSync(vidp)) {
+fs.readFile(vidp, {
+        encoding: 'utf-8'
+    }, function (err, data) {
+        if (err) {
+console.log(err);
+}
+var dataa = data.split('!EOL!');
+var Uname = dataa[0];
+var Hash = dataa[1];
+var uID = dataa[4];
+fs.writeFile(path.join(__dirname, 'Users', Uname + '.txt'), Uname + '!EOL!' + Hash + '!EOL!' + uID + '!EOL!None!EOL!?!EOL!No'+' biography set.', function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+    fs.unlink(vidp, function (err) {
+      if (err) console.log(err);
+      console.log('Verifying request ' + id + '...');
+                console.log('User ' + Uname + ' Registered!');
+res.writeHead(200, {
+                'Content-Type': 'text/html'
+            });
+            res.write('{DONE}');
+            res.end();
+            });
+    });
+    });
+} else {
+res.writeHead(200, {
+                'Content-Type': 'text/html'
+            });
+            res.write('{ERR_INVALID_VID}');
+            res.end();
+console.log(vidp);
+}
+  });
 
 app.post('/deploy', function (req, res) {
     var sess = req.session;
@@ -236,7 +285,8 @@ app.get('/Browse/Comments.json', function (req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
-            res.write(data + '{"Username": "Io", "UserID": "1", "Gravatar": "", "Text":".", "Timestamp":"1428177544","FormattedUsername": "Io"}]');
+            res.write(data + '{"Username": "Io", "UserID": "1", "Gravatar": "", "Text":".", '+
+'"Timestamp":"1428177544","FormattedUsername": "Io"}]');
             res.end();
         } else {
             console.log(err);
@@ -256,8 +306,12 @@ app.post('/Browse/Comments.json', function (req, res) {
             var util = require('util');
             console.log(util.inspect(TPT));
             var fs = require('fs');
-            var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), "utf8");
-            fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata + '{"Username":"' + TPT.User + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment + '","Timestamp":"1","FormattedUsername":"' + TPT.User + '"}, ', function (err) {
+            var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 
+
+"utf8");
+            fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
+'{"Username":"' + TPT.User + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment + 
+'","Timestamp":"1","FormattedUsername":"' + TPT.User + '"}, ', function (err) {
                 if (err) {
                     return console.log(err);
                 }
@@ -345,11 +399,16 @@ app.get('/User.json', function (req, res) {
     }, function (err, data) {
         if (!err) {
             var dataa = data.split('!EOL!');
-            console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
+            console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] 
++ '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + 
+
+dataa[5] + '"}}');
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
-            res.end('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
+            res.end('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + 
+'_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + 
+dataa[5] + '"}}');
         } else {
             console.log(err);
         }
@@ -407,7 +466,8 @@ app.post('/usr_login.html', function (req, res) {
             //Separate data in an array.
             var dataa = data.split('!EOL!');
             var crypto = require('crypto');
-            if (dataa[1] == crypto.createHash('md5').update(req.body.user + '-' + crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex')) {
+            if (dataa[1] == crypto.createHash('md5').update(req.body.user + '-' + crypto.createHash('md5').update
+(req.body.pass).digest('hex')).digest('hex')) {
                 res.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
@@ -454,12 +514,12 @@ app.post('/register.html', function (req, res) {
     });
     if (req.body.erc == 'BMNNET++') {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
-            fs.writeFile(path.join(__dirname, 'Users', req.body.user + '.txt'), req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!None', function (err) {
+            fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'), req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!None', function (err) {
                 if (err) {
                     return console.log(err);
                 }
 
-                console.log('User' + req.body.user + 'Registered!');
+                console.log('User ' + req.body.user + ' Registered!');
             });
         } else {
             req.end('ERR_USER_EXISTS');
@@ -569,7 +629,8 @@ app.post('/Login.json', function (req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/json'
                     });
-                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
+                    var datats = '{"Status":1,"UserID":' + dataa[2] + 
+',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
                     TPT.islogedin = true;
                     TPT.User = Data.Username;
                     TPT.ID = dataa[2];
@@ -644,7 +705,10 @@ app.post('/Save.api', function (req, res) {
 
                 console.log('Current ID was updated!');
             });
-            fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), '{"ID":' + sID + ',"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + TPT.user + '","Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}', function (err) {
+            fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), '{"ID":' + sID + 
+',"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + 
+'","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + TPT.user + 
+'","Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}', function (err) {
                 if (err) {
                     return console.log(err);
                 }
@@ -658,15 +722,21 @@ app.post('/Save.api', function (req, res) {
 
                 console.log('Save\'s Initial Comment data saved!');
             });
-            fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), '{"ID":' + sID + ',"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"' + sData.Name + '", "Username":"' + TPT.User + '","Comments":1,"Published": "' + sData.Publish + '"}', function (err) {
+            fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), '{"ID":' + sID + 
+',"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"' + 
+sData.Name + '", "Username":"' + TPT.User + '","Comments":1,"Published": "' + sData.Publish + '"}', function (err) {
                 if (err) {
                     return console.log(err);
                 }
 
                 console.log('Save data part 2 saved!');
             });
-            fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '.cps')));
-            fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.cps')));
+            fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + 
+
+'.cps')));
+            fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + 
+
+'_1.cps')));
             var spawn = require('child_process').spawn;
             var child;
             if (isWindows){
@@ -690,9 +760,13 @@ app.post('/Save.api', function (req, res) {
 
             child.on('close', function (code) {
                 console.log('Renderer closed with code: ' + code);
-                fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.pti')));
-                fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1_small.pti')));
-                fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_small.pti')));
+                fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '.pti')).pipe(fs.createWriteStream(path.join
+
+(__dirname, 'Saves_bin', sID + '_1.pti')));
+                fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream
+(path.join(__dirname, 'Saves_bin', sID + '_1_small.pti')));
+                fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream
+(path.join(__dirname, 'Saves_bin', sID + '_small.pti')));
             });
             res.writeHead(200, {
                 'Content-Type': 'text/json'
