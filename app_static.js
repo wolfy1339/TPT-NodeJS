@@ -1,15 +1,17 @@
 var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var islogedin = false;
-var routes = require('./routes/index.js');
-var users = require('./routes/users.js');
-var request = require('request');
 var app = express();
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var favicon = require('serve-favicon');
+var fs = require('fs');
+var islogedin = false;
+var logger = require('morgan');
+var path = require('path');
+var request = require('request');
+var routes = require('./routes/index.js');
 var session = require('express-session');
+var users = require('./routes/users.js');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -23,7 +25,6 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 app.use('/', routes);
-var fs = require('fs');
 
 app.use(express.static(__dirname + '/Saves_bin'));
 
@@ -37,13 +38,12 @@ app.get('/', function(req, res) {
 
 app.get('/deploy', function(req, res) {
     var sess = req.session;
-    if (req.query.DK == "3xfKxZLKdkgQ8TI4ZpsfJc8W9zqYF0PcM8r8e948a3JaX1Fc99V6oY22lV64VAptYY4V09l34r0m5VoMGIYl9yfeH6x1M5m6") {
-        console.log("QUITING FOR DEPLOY!");
+    if (req.query.DK == '3xfKxZLKdkgQ8TI4ZpsfJc8W9zqYF0PcM8r8e948a3JaX1Fc99V6oY22lV64VAptYY4V09l34r0m5VoMGIYl9yfeH6x1M5m6') {
+        console.log('QUITING FOR DEPLOY!');
         process.exit(0);
     } else {
-        console.log("ERR_WRONG_DEPLOY_KEY!");
-        res.end("ERROR");
-
+        console.log('ERR_WRONG_DEPLOY_KEY!');
+        res.end('ERROR');
     }
 });
 
