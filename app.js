@@ -210,9 +210,9 @@ app.get('/verify/:id', function(req, res) {
 app.post('/deploy', function(req, res) {
     var sess = req.session;
     var crypto = require('crypto');
+    var spawn = require('child_process').spawn;
+    var child;
     if (islogedin) {
-        var spawn = require('child_process').spawn;
-        var child;
         if (isWindows) {
             child = spawn('deploy.bat');
         } else {
@@ -238,8 +238,6 @@ app.post('/deploy', function(req, res) {
         var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
         if (hash == req.get('X-Hub-Signature')) {
             var githjson = JSON.parse(text);
-            var spawn = require('child_process').spawn;
-            var child;
             if (isWindows) {
                 child = spawn('deploy.bat');
             } else {
