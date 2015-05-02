@@ -246,15 +246,15 @@ app.post('/deploy', function(req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
-            res.write("{Code: Goodbye, see you later.}");
+            res.write('{Code: Goodbye, see you later.}');
             res.end();
         } else {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
-            res.write("{Code: Error. Bad signature.}");
+            res.write('{Code: Error. Bad signature.}');
             res.end();
-            console.log("Halting for deploy!");
+            console.log('Halting for deploy!');
             process.exit(0);
         }
     }
