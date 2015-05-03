@@ -4,7 +4,8 @@ node_js:
   - 0.11
   - 0.12
 script:
-  - npm test
+  - npm start
+#  - npm test
   - npm install jshint -g
   - jshint app.js
   - jshint app_static.js
