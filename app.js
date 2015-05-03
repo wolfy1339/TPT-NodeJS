@@ -534,7 +534,8 @@ app.post('/passwd.html', function(req, res) {
                 console.log(err);
             }
             console.log('User ' + wTPTUser + ' changed his/her password');
-        });
+        };
+    });
     res.end('done');
 });
 
