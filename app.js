@@ -207,7 +207,7 @@ app.get('/verify/:id', function(req, res) {
     }
 });
 
-app.post('/deploy', function(req, res) {
+app.all('/deploy', function(req, res) {
     var sess = req.session;
     var crypto = require('crypto');
     var spawn = require('child_process').spawn;
