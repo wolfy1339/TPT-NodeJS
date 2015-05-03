@@ -238,7 +238,7 @@ app.all('/deploy', function(req, res) {
         var key = '3xfKxZLKdkgQ8TI4Zpsf';
         var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
         if (hash == req.get('X-Hub-Signature')) {
-            var githjson = JSON.parse(text);
+//            var githjson = JSON.parse(text);
             if (isWindows) {
                 child = spawn('deploy.bat');
             } else {
@@ -438,7 +438,7 @@ app.get('/upload.html', function(req, res) {
     if (!islogedin) {
         fs.readFile(req.files.file.path, function (err, data) {
   // ...
-  var Path = __dirname + "/uploads/" + req.files.file.name;
+  var Path = __dirname + '/uploads/' + req.files.file.name;
   fs.writeFile(Path, data, function (err) {
     res.redirect("/");
   });
