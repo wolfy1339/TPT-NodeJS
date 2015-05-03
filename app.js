@@ -517,26 +517,24 @@ app.post('/passwd.html', function(req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
-    fs.readFile(vidp, {
-            encoding: 'utf-8'
-        }, function(err, data) {
+    fs.readFile(vidp, {encoding: 'utf-8'}, function(err, data) {
+        if (err) {
+            console.log(err);
+        }
+        var dataa = data.split('!EOL!');
+        var Uname = dataa[0];
+        var Hash = dataa[1];
+        var uID = dataa[4];
+        var Reg = dataa[5];
+        var Bib = dataa[6];
+        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), wTPTUser + '!EOL!' + md5sum(md5sum.update(wTPTUser) + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, function(err) {
             if (err) {
                 console.log(err);
             }
-            var dataa = data.split('!EOL!');
-            var Uname = dataa[0];
-            var Hash = dataa[1];
-            var uID = dataa[4];
-            var Reg = dataa[5];
-            var Bib = dataa[6];
-            fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), wTPTUser + '!EOL!' + md5sum.update(wTPTUser) + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib,
-                function(err) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    console.log('User ' + wTPTUser + ' changed his/her password');
-                });
-    }); res.end('done');
+            console.log('User ' + wTPTUser + ' changed his/her password');
+        });
+    });
+    res.end('done');
 });
 
 app.get('/register.html', function(req, res) {
