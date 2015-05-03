@@ -238,7 +238,7 @@ app.all('/deploy', function(req, res) {
         var key = '3xfKxZLKdkgQ8TI4Zpsf';
         var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
         if (hash == req.get('X-Hub-Signature')) {
-//            var githjson = JSON.parse(text);
+            //            var githjson = JSON.parse(text);
             if (isWindows) {
                 child = spawn('deploy.bat');
             } else {
@@ -393,7 +393,7 @@ app.get('/User.json', function(req, res) {
         if (!err) {
             var dataa = data.split('!EOL!');
             console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' +
-            dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
+                dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
@@ -436,13 +436,13 @@ app.get('/upload.html', function(req, res) {
 app.get('/upload.html', function(req, res) {
     var sess = req.session;
     if (!islogedin) {
-        fs.readFile(req.files.file.path, function (err, data) {
-  // ...
-  var Path = __dirname + '/uploads/' + req.files.file.name;
-  fs.writeFile(Path, data, function (err) {
-    res.redirect("/");
-  });
-});
+        fs.readFile(req.files.file.path, function(err, data) {
+            // ...
+            var Path = __dirname + '/uploads/' + req.files.file.name;
+            fs.writeFile(Path, data, function(err) {
+                res.redirect("/");
+            });
+        });
     } else {
         res.redirect('/');
     }
@@ -518,27 +518,26 @@ app.post('/passwd.html', function(req, res) {
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     fs.readFile(vidp, {
-        encoding: 'utf-8'
-    }, function(err, data) {
-        if (err) {
-            console.log(err);
-        }
-        var dataa = data.split('!EOL!');
-        var Uname = dataa[0];
-        var Hash = dataa[1];
-        var uID = dataa[4];
-        var Reg = dataa[5];
-        var Bib = dataa[6];
-        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), wTPTUser + '!EOL!' + crypto.createHash('md5').update(wTPTUser) + '-' + crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, function(err) {
+            encoding: 'utf-8'
+        }, function(err, data) {
             if (err) {
                 console.log(err);
             }
-            console.log('User ' + wTPTUser + ' changed his/her password');
-        }
-    });
-    res.end('done');
+            var dataa = data.split('!EOL!');
+            var Uname = dataa[0];
+            var Hash = dataa[1];
+            var uID = dataa[4];
+            var Reg = dataa[5];
+            var Bib = dataa[6];
+            fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), wTPTUser + '!EOL!' + md5sum.update(wTPTUser) + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib,
+                function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log('User ' + wTPTUser + ' changed his/her password');
+                });
+    }); res.end('done');
 });
-
 
 app.get('/register.html', function(req, res) {
     var sess = req.session;
@@ -564,7 +563,7 @@ app.post('/register.html', function(req, res) {
     });
     if (req.body.erc == 'BMNNET++') {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
-            fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'), req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!None', function(err) {
+            fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'), req.body.user + '!EOL!' + md5sum.update(req.body.user + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!None', function(err) {
                 if (err) {
                     return console.log(err);
                 }
