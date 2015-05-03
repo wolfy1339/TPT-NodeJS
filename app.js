@@ -300,7 +300,7 @@ app.post('/Browse/Comments.json', function(req, res) {
             var util = require('util');
             console.log(util.inspect(TPT));
             var fs = require('fs');
-            var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), "utf8");
+            var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
                 '{"Username":"' + TPT.User + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment +
                 '","Timestamp":"1","FormattedUsername":"' + TPT.User + '"}, ',
@@ -392,8 +392,8 @@ app.get('/User.json', function(req, res) {
     }, function(err, data) {
         if (!err) {
             var dataa = data.split('!EOL!');
-            console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' +
-                dataa[5] + '"}}');
+            console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' +
+            dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
