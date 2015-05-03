@@ -1,6 +1,6 @@
 {
   "name": "TPT",
-  "version": "0.5.1",
+  "version": "0.5.3",
   "private": true,
   "scripts": {
     "start": "node ./bin/www.js"

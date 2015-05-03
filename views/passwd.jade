@@ -1,7 +1,6 @@
-doctype html
 html
   head
-    title Upload
+    title Change password
     script(src='//fast.eager.io/4d631U5YZd.js')
     script#insertjshere(src='includes.js')
     link(href='stylesheets/bootstrap.min.css', rel='stylesheet')
@@ -14,40 +13,31 @@ html
     // jQuery (necessary for Bootstrap's JavaScript plugins)
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
     script(src='javascripts/bootstrap.min.js')
-    script.
-      $(document).ready(function(){
-      var motd;
-      $("#submit").click(function(){
-      motd=$("#motd").val();
-      $.post("motd.html",{motd:motd},function(data){
-      if(data=='done')
-      {
-      window.location.href="motd.html";
-      } else {
-      alert("Error!");
-      }
-      });
-      });
-      });
   body
     main.container
-
       nav.navbar.navbar-default
         .container-fluid
-          .navbar-header
+           .navbar-header
             a.navbar-brand(href='/') Home
-          div.nav-collapse.collapse
-            ul.nav.navbar-nav
-              li
-                a(href='motd.html') MOTD changer
-              li
-                a(href='reserved.html') RESERVED
-              li
-                a(href='reserved.html') RESERVED 
-      h2 Upload a file
-      
-      form#motd-form(role='form')
+      script.
+        $(document).ready(function(){
+        var pass;
+        $("#submit").click(function(){
+        pass=$("#pass").val();
+        $.post("login.html",{pass:pass},function(data){
+        if(data=='done')
+        {
+        window.location.href="index.html";
+        } else {
+        alert("Error!");
+        }
+        });
+        });
+        });
+
+      h2 Change password
+      form(role='form')
         .form-group
-          label.control-form(for='file') File:
-           form(action="upload.html", method="post", enctype="multipart/form-data")
-             input(type="file", name="file")
+          label.control-label(for='pass') Password:
+          input#pass.form-control(type='password', placeholder='Enter password')
+        button#submit.btn.btn-default(type='submit') Submit

@@ -502,6 +502,44 @@ app.post('/usr_login.html', function(req, res) {
     });
 });
 
+app.get('/passwd.html', function(req, res) {
+    var sess = req.session;
+    if (wTPTislogedin) {
+        res.render('passwd', {});
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.post('/passwd.html', function(req, res) {
+    var crypto = require('crypto');
+    var md5sum = crypto.createHash('md5');
+    var sess = req.session;
+    //In this we are assigning user to sess.user variable.
+    //user comes from HTML page.
+        fs.readFile(vidp, {
+            encoding: 'utf-8'
+        }, function(err, data) {
+            if (err) {
+                console.log(err);
+            }
+            var dataa = data.split('!EOL!');
+            var Uname = dataa[0];
+            var Hash = dataa[1];
+            var uID = dataa[4];
+            var Reg = dataa[5];
+            var Bib = dataa[6];
+            fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), wTPTUser + '!EOL!' + crypto.createHash('md5').update(wTPTUser) + '-' + crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL! + Reg + '!EOL! + Bib, function(err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log('User ' + wTPTUser + ' changed his/her password');
+            });
+});
+        res.end('done');
+});
+
+
 app.get('/register.html', function(req, res) {
     var sess = req.session;
     if (!islogedin) {
