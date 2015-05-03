@@ -423,6 +423,30 @@ app.get('/login.html', function(req, res) {
     }
 });
 
+app.get('/upload.html', function(req, res) {
+    var sess = req.session;
+    if (!islogedin) {
+        res.render('upload', {});
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/upload.html', function(req, res) {
+    var sess = req.session;
+    if (!islogedin) {
+        fs.readFile(req.files.file.path, function (err, data) {
+  // ...
+  var Path = __dirname + "/uploads/" + req.files.file.name;
+  fs.writeFile(Path, data, function (err) {
+    res.redirect("/");
+  });
+});
+    } else {
+        res.redirect('/');
+    }
+});
+
 app.post('/login.html', function(req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
