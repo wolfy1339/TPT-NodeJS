@@ -210,7 +210,7 @@ app.get('/verify/:id', function(req, res) {
 
 function dot2num(dot) {
     var d = dot.split('.');
-    return ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);
+    return d;
 }
 
 app.all('/deploy', function(req, res) {
