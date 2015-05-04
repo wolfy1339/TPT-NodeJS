@@ -224,13 +224,13 @@ app.all('/deploy', function(req, res) {
         res.writeHead(200, {
             'Content-Type': 'text/json'
         });
-        res.write("{Code: Goodbye, see you later.}");
+        res.write('{Code: Goodbye, see you later.}');
         res.end();
     } else {
         res.writeHead(200, {
             'Content-Type': 'text/json'
         });
-        res.write("{Code: Error. Log in first.}");
+        res.write('{Code: Error. Log in first.}');
         res.end();
     }
     if (!islogedin) {
@@ -522,12 +522,11 @@ app.post('/passwd.html', function(req, res) {
             console.log(err);
         }
         var dataa = data.split('!EOL!');
-        var Uname = dataa[0];
         var Hash = dataa[1];
         var uID = dataa[4];
         var Reg = dataa[5];
         var Bib = dataa[6];
-        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), wTPTUser + '!EOL!' + md5sum(md5sum.update(wTPTUser) + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, function(err) {
+        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), wTPTUser + '!EOL!' + md5sum.update(md5sum.update(wTPTUser) + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, function(err) {
             if (err) {
                 console.log(err);
             }
@@ -561,7 +560,9 @@ app.post('/register.html', function(req, res) {
     });
     if (req.body.erc == 'BMNNET++') {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
-            fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'), req.body.user + '!EOL!' + md5sum.update(req.body.user + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!None', function(err) {
+            fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
+            req.body.user + '!EOL!' + md5sum.update(req.body.user + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!None',
+            function(err) {
                 if (err) {
                     return console.log(err);
                 }
