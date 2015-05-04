@@ -208,11 +208,6 @@ app.get('/verify/:id', function(req, res) {
     }
 });
 
-function dot2num(dot) {
-    var d = dot.split('.');
-    return d;
-}
-
 app.all('/deploy', function(req, res) {
     var sess = req.session;
     var crypto = require('crypto');
@@ -232,9 +227,10 @@ app.all('/deploy', function(req, res) {
         res.write('{Code: Goodbye, see you later.}');
         res.end();
     } else {
-        var ipLow = dot2num('192.30.252.0');
-        var ipHigh = dot2num('192.30.255.255');
-        var ip = dot2num(req.connection.remoteAddress);
+        var php = require('phpjs');
+        var ipLow = php.ip2long('192.30.252.0');
+        var ipHigh = php.ip2long('192.30.255.255');
+        var ip = php.ip2long(req.connection.remoteAddress);
         if(ip >= ipLow && ip <= ipHigh) {
             var text = req.body;
             var key = '3xfKxZLKdkgQ8TI4Zpsf';
