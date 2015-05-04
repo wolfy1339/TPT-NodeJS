@@ -247,7 +247,7 @@ app.all('/deploy', function(req, res) {
                 });
                 res.write('{Code: Goodbye, see you later.}');
                 res.end();
-                console.log('Halting for deploy!')
+                console.log('Halting for deploy!');
                 process.exit(0);
             } else {
                 res.writeHead(401, {
@@ -446,7 +446,7 @@ app.get('/upload.html', function(req, res) {
             // ...
             var Path = __dirname + '/uploads/' + req.files.file.name;
             fs.writeFile(Path, data, function(err) {
-                res.redirect("/");
+                res.redirect('index.html');
             });
         });
     } else {
