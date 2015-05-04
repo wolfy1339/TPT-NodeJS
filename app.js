@@ -227,18 +227,9 @@ app.all('/deploy', function(req, res) {
         res.write('{Code: Goodbye, see you later.}');
         res.end();
     } else {
-        res.writeHead(200, {
-            'Content-Type': 'text/json'
-        });
-        res.write('{Code: Error. Log in first.}');
-        res.end();
-    }
-    if (!islogedin) {
-        var text = req.body;
         var key = '3xfKxZLKdkgQ8TI4Zpsf';
         var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
         if (hash == req.get('X-Hub-Signature')) {
-            //            var githjson = JSON.parse(text);
             if (isWindows) {
                 child = spawn('deploy.bat');
             } else {
@@ -257,6 +248,13 @@ app.all('/deploy', function(req, res) {
             res.end();
             console.log('Halting for deploy!');
             process.exit(0);
+        }
+        if (typeof req.get('X-Hub-Signature') != 'undefined') {
+            res.writeHead(200, {
+                'Content-Type': 'text/json'
+            });
+            res.write('{Code: Error. Log in first.}');
+            res.end();
         }
     }
 });
