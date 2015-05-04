@@ -258,6 +258,7 @@ app.all('/deploy', function(req, res) {
                 res.end();
                 console.log('Halting for deploy!');
                 process.exit(0);
+            }
         } else {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
