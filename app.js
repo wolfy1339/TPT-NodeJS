@@ -241,19 +241,20 @@ app.all('/deploy', function(req, res) {
                 } else {
                     child = spawn('deploy.sh');
                 }
+                console.log(ip);
                 res.writeHead(200, {
                     'Content-Type': 'text/json'
                 });
                 res.write('{Code: Goodbye, see you later.}');
                 res.end();
+                console.log('Halting for deploy!')
+                process.exit(0);
             } else {
                 res.writeHead(401, {
                     'Content-Type': 'text/json'
                 });
                 res.write('{Code: Error. Bad signature.}');
                 res.end();
-                console.log('Halting for deploy!');
-                process.exit(0);
             }
         } else {
             res.writeHead(401, {
@@ -261,6 +262,7 @@ app.all('/deploy', function(req, res) {
             });
             res.write('{Code: Error. Log in first.}');
             res.end();
+            console.log(ip)
         }
     }
 });
