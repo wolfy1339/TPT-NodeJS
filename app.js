@@ -234,8 +234,8 @@ app.all('/deploy', function(req, res) {
     } else {
         var ipLow = dot2num('192.30.252.0');
         var ipHigh = dot2num('192.30.255.255');
-        var ip = req.headers['x-forwarded-for'] || req.headers['client-ip'] || req.connection.remoteAddress;
-        if(dot2num(ip) >= ipLow && dot2num(ip) <= ipHigh) {
+        var ip = dot2num(req.connection.remoteAddress);
+        if(ip >= ipLow && ip <= ipHigh) {
             var text = req.body;
             var key = '3xfKxZLKdkgQ8TI4Zpsf';
             var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
