@@ -260,11 +260,12 @@ app.all('/deploy', function(req, res) {
                 process.exit(0);
             }
         } else {
-            res.writeHead(200, {
+            res.writeHead(401, {
                 'Content-Type': 'text/json'
             });
             res.write('{Code: Error. Log in first.}');
             res.end();
+        }
     }
 });
 
