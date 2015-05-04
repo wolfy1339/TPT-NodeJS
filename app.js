@@ -227,6 +227,7 @@ app.all('/deploy', function(req, res) {
         res.write('{Code: Goodbye, see you later.}');
         res.end();
     } else {
+        var text = req.body;
         var key = '3xfKxZLKdkgQ8TI4Zpsf';
         var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
         if (hash == req.get('X-Hub-Signature')) {
