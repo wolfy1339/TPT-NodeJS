@@ -208,6 +208,11 @@ app.get('/verify/:id', function(req, res) {
     }
 });
 
+function dot2num(dot) {
+    var d = dot.split('.');
+    return ((((((+d[0])*256)+(+d[1]))*256)+(+d[2]))*256)+(+d[3]);
+}
+
 app.all('/deploy', function(req, res) {
     var sess = req.session;
     var crypto = require('crypto');
@@ -227,36 +232,38 @@ app.all('/deploy', function(req, res) {
         res.write('{Code: Goodbye, see you later.}');
         res.end();
     } else {
-        var text = req.body;
-        var key = '3xfKxZLKdkgQ8TI4Zpsf';
-        var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
-        if (hash == req.get('X-Hub-Signature')) {
-            if (isWindows) {
-                child = spawn('deploy.bat');
+        var ipLow = dot2num('192.30.252.0');
+        var ipHigh = dot2num('192.30.255.255');
+        var ip = req.headers['x-forwarded-for'] || req.headers['client-ip'] || req.connection.remoteAddress;
+        if(dot2num(ip) >== ipLow && dot2num(ip) <== ipHigh) {
+            var text = req.body;
+            var key = '3xfKxZLKdkgQ8TI4Zpsf';
+            var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
+            if (hash == req.get('X-Hub-Signature')) {
+                if (isWindows) {
+                    child = spawn('deploy.bat');
+                } else {
+                    child = spawn('deploy.sh');
+                }
+                res.writeHead(200, {
+                    'Content-Type': 'text/json'
+                });
+                res.write('{Code: Goodbye, see you later.}');
+                res.end();
             } else {
-                child = spawn('deploy.sh');
-            }
-            res.writeHead(200, {
-                'Content-Type': 'text/json'
-            });
-            res.write('{Code: Goodbye, see you later.}');
-            res.end();
+                res.writeHead(401, {
+                    'Content-Type': 'text/json'
+                });
+                res.write('{Code: Error. Bad signature.}');
+                res.end();
+                console.log('Halting for deploy!');
+                process.exit(0);
         } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/json'
-            });
-            res.write('{Code: Error. Bad signature.}');
-            res.end();
-            console.log('Halting for deploy!');
-            process.exit(0);
-        }
-        if (typeof req.get('X-Hub-Signature') != 'undefined') {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
             res.write('{Code: Error. Log in first.}');
             res.end();
-        }
     }
 });
 
