@@ -228,9 +228,9 @@ app.all('/deploy', function(req, res) {
         res.end();
     } else {
         var php = require('phpjs');
-        var ipLow = php.ip2long('192.30.252.0');
-        var ipHigh = php.ip2long('192.30.255.255');
-        var ip = php.ip2long(req.connection.remoteAddress);
+        var ipLow = parseInt(php.ip2long('192.30.252.0'));
+        var ipHigh = parseInt(php.ip2long('192.30.255.255'));
+        var ip = parseInt(php.ip2long(req.connection.remoteAddress));
         if(ip >= ipLow && ip <= ipHigh) {
             var text = req.body;
             var key = '3xfKxZLKdkgQ8TI4Zpsf';
