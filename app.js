@@ -220,12 +220,12 @@ app.all('/deploy', function(req, res) {
             child = spawn('deploy.sh');
         }
         console.log("Halting for deploy!");
-        process.exit(0);
         res.writeHead(200, {
             'Content-Type': 'text/json'
         });
         res.write('{Code: Goodbye, see you later.}');
         res.end();
+        process.exit(0);
     } else {
         var php = require('phpjs');
         var ipLow = parseInt(php.ip2long('192.30.252.0'));
