@@ -262,7 +262,7 @@ app.all('/deploy', function(req, res) {
             });
             res.write('{Code: Error. Log in first.}');
             res.end();
-            console.log(ip)
+            console.log(ip);
         }
     }
 });
