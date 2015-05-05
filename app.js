@@ -230,8 +230,10 @@ app.all('/deploy', function(req, res) {
         var php = require('phpjs');
         var ipLow = parseInt(php.ip2long('192.30.252.0'));
         var ipHigh = parseInt(php.ip2long('192.30.255.255'));
-        var ip = parseInt(php.ip2long(req.ip));
-        if(ip >= ipLow && ip <= ipHigh) {
+        // ::1 is the ip and thus returns NaN
+        var ip = req.ip;
+        var remoteIP = parseInt(php.ip2long(req.headers['x-forwarded-for']));
+        if (ip == '::1' && remoteIP >= ipLow && remoteIP <= ipHigh) {
             var text = req.body;
             var key = '3xfKxZLKdkgQ8TI4Zpsf';
             var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
@@ -241,8 +243,6 @@ app.all('/deploy', function(req, res) {
                 } else {
                     child = spawn('deploy.sh');
                 }
-                console.log(req.ip);
-                console.log(req.client.remoteAddress);
                 res.writeHead(200, {
                     'Content-Type': 'text/json'
                 });
@@ -264,7 +264,6 @@ app.all('/deploy', function(req, res) {
             res.write('{Code: Error. Log in first.}');
             res.end();
             console.log(req.ip);
-            console.log(req.client.remoteAddress);
         }
     }
 });
