@@ -230,7 +230,7 @@ app.all('/deploy', function(req, res) {
         var php = require('phpjs');
         var ipLow = parseInt(php.ip2long('192.30.252.0'));
         var ipHigh = parseInt(php.ip2long('192.30.255.255'));
-        var ip = parseInt(php.ip2long(req.connection.remoteAddress));
+        var ip = parseInt(php.ip2long(undefined));
         if(ip >= ipLow && ip <= ipHigh) {
             var text = req.body;
             var key = '3xfKxZLKdkgQ8TI4Zpsf';
@@ -241,7 +241,8 @@ app.all('/deploy', function(req, res) {
                 } else {
                     child = spawn('deploy.sh');
                 }
-                console.log(ip);
+                console.log(req.ip);
+                console.log(rq.client.remoteAddress)
                 res.writeHead(200, {
                     'Content-Type': 'text/json'
                 });
