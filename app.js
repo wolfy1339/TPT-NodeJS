@@ -242,7 +242,7 @@ app.all('/deploy', function(req, res) {
                     child = spawn('deploy.sh');
                 }
                 console.log(req.ip);
-                console.log(req.client.remoteAddress)
+                console.log(req.client.remoteAddress);
                 res.writeHead(200, {
                     'Content-Type': 'text/json'
                 });
@@ -263,7 +263,8 @@ app.all('/deploy', function(req, res) {
             });
             res.write('{Code: Error. Log in first.}');
             res.end();
-            console.log(ip);
+            console.log(req.ip);
+            console.log(req.client.remoteAddress);
         }
     }
 });
