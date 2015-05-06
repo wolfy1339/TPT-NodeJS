@@ -212,7 +212,6 @@ app.all('/deploy', function(req, res) {
     var sess = req.session;
     var crypto = require('crypto');
     var spawn = require('child_process').spawn;
-    var child;
     if (islogedin) {
         if (isWindows) {
             child = spawn('deploy.bat');
@@ -228,35 +227,23 @@ app.all('/deploy', function(req, res) {
         process.exit(0);
     } else {
         var php = require('phpjs');
-        var ipLow = parseInt(php.ip2long('192.30.252.0'));
-        var ipHigh = parseInt(php.ip2long('192.30.255.255'));
+        var ipLow = php.ip2long('192.30.252.0');
+        var ipHigh = php.ip2long('192.30.255.255');
         // ::1 is the ip and thus returns NaN
-        var ip = req.ip;
-        var remoteIP = parseInt(php.ip2long(req.headers['x-forwarded-for']));
-        if (ip == '::1' && remoteIP >= ipLow && remoteIP <= ipHigh) {
-            var text = req.body;
-            var key = '3xfKxZLKdkgQ8TI4Zpsf';
-            var hash = crypto.createHmac('sha1', key).update(text).digest('hex');
-            if (hash == req.get('X-Hub-Signature')) {
-                if (isWindows) {
-                    child = spawn('deploy.bat');
-                } else {
-                    child = spawn('deploy.sh');
-                }
-                res.writeHead(200, {
-                    'Content-Type': 'text/json'
-                });
-                res.write('{Code: Goodbye, see you later.}');
-                res.end();
-                console.log('Halting for deploy!');
-                process.exit(0);
+        var ip = php.ip2long(req.get('X-Forwarded-For'));
+        if (ip >= ipLow && ip <= ipHigh) {
+            if (isWindows) {
+                spawn('deploy.bat');
             } else {
-                res.writeHead(401, {
-                    'Content-Type': 'text/json'
-                });
-                res.write('{Code: Error. Bad signature.}');
-                res.end();
+                spawn('deploy.sh');
             }
+            res.writeHead(200, {
+                'Content-Type': 'text/json'
+            });
+            res.write('{Code: Goodbye, see you later.}');
+            res.end();
+            console.log('Halting for deploy!');
+            process.exit(0);
         } else {
             res.writeHead(401, {
                 'Content-Type': 'text/json'
