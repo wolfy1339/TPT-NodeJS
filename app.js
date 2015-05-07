@@ -520,7 +520,7 @@ app.post('/passwd.html', function(req, res) {
         var uID = dataa[4];
         var Reg = dataa[5];
         var Bib = dataa[6];
-        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), wTPTUser + '!EOL!' + md5sum.update(md5sum.update(wTPTUser) + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, function(err) {
+        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), wTPTUser + '!EOL!' + md5sum.update(md5sum.update(wTPTUser).digest('hex') + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, function(err) {
             if (err) {
                 console.log(err);
             }
