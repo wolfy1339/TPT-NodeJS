@@ -320,18 +320,18 @@ app.get('/fp.html', function(req, res) {
     if (islogedin) {
         res.render('fp', {});
     } else {
-        res.redirect('/');
+        res.redirect('index.html');
     }
 });
 
 app.get('/index.html', function(req, res) {
     var sess = req.session;
-    res.redirect('/');
+    res.redirect('index.html');
 });
 
 app.get('/logout.html', function(req, res) {
     var sess = req.session;
-    res.redirect('/');
+    res.redirect('index.html');
     islogedin = false;
 });
 
@@ -414,7 +414,7 @@ app.get('/login.html', function(req, res) {
     if (!islogedin) {
         res.render('login', {});
     } else {
-        res.redirect('/');
+        res.redirect('index.html');
     }
 });
 
@@ -423,7 +423,7 @@ app.get('/upload.html', function(req, res) {
     if (!islogedin) {
         res.render('upload', {});
     } else {
-        res.redirect('/');
+        res.redirect('index.html');
     }
 });
 
@@ -438,7 +438,7 @@ app.get('/upload.html', function(req, res) {
             });
         });
     } else {
-        res.redirect('/');
+        res.redirect('index.html');
     }
 });
 
@@ -459,7 +459,7 @@ app.get('/usr_login.html', function(req, res) {
     if (!wTPTislogedin) {
         res.render('usr_login', {});
     } else {
-        res.redirect('/');
+        res.redirect('index.html');
     }
 });
 
@@ -501,7 +501,7 @@ app.get('/passwd.html', function(req, res) {
     if (wTPTislogedin) {
         res.render('passwd', {});
     } else {
-        res.redirect('/');
+        res.redirect('index.html');
     }
 });
 
@@ -535,7 +535,7 @@ app.get('/register.html', function(req, res) {
     if (!islogedin) {
         res.render('register', {});
     } else {
-        res.redirect('/');
+        res.redirect('index.html');
     }
 });
 
@@ -576,7 +576,7 @@ app.get('/motd.html', function(req, res) {
     if (islogedin) {
         res.render('motd', {});
     } else {
-        res.redirect('/');
+        res.redirect('index.html');
     }
 });
 
