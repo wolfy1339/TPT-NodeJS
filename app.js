@@ -552,6 +552,9 @@ app.post('/register.html', function(req, res) {
         }
         console.log('Current uID was updated!');
     });
+    res.writeHead(200, {
+        'content-type': 'text/html'
+    });
     if (req.body.erc == 'BMNNET++') {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
             fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
@@ -563,10 +566,13 @@ app.post('/register.html', function(req, res) {
                 console.log('User ' + req.body.user + ' Registered!');
             });
         } else {
+console.log('ERROR1');
             req.end('ERR_USER_EXISTS');
         }
+        console.log('ERROR2');
         res.end('done');
     } else {
+       console.log('ERROR3');
         res.end('ERROR');
     }
 });
