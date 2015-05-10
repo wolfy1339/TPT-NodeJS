@@ -324,12 +324,7 @@ app.get('/fp.html', function(req, res) {
     }
 });
 
-app.get('/index.html', function(req, res) {
-    var sess = req.session;
-    res.redirect('index.html');
-});
-
-app.get('/logout.html', function(req, res) {
+app.get('/logout.html', function (req, res) {
     var sess = req.session;
     res.redirect('index.html');
     islogedin = false;
