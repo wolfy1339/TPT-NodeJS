@@ -2,10 +2,12 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var crypto = require('crypto');
 var favicon = require('serve-favicon');
 var fs = require('fs');
 var islogedin = false;
 var logger = require('morgan');
+var md5sum = crypto.createHash('md5');
 var path = require('path');
 var request = require('request');
 var routes = require('./routes/index.js');
@@ -210,13 +212,12 @@ app.get('/verify/:id', function(req, res) {
 
 app.all('/deploy', function(req, res) {
     var sess = req.session;
-    var crypto = require('crypto');
     var spawn = require('child_process').spawn;
     if (islogedin) {
         if (isWindows) {
-            child = spawn('deploy.bat');
+            spawn('deploy.bat');
         } else {
-            child = spawn('deploy.sh');
+            spawn('deploy.sh');
         }
         console.log("Halting for deploy!");
         res.writeHead(200, {
@@ -229,7 +230,7 @@ app.all('/deploy', function(req, res) {
         var php = require('phpjs');
         var ipLow = php.ip2long('192.30.252.0');
         var ipHigh = php.ip2long('192.30.255.255');
-        // ::1 is the ip and thus returns NaN
+        // We use this header to detect the IP
         var ip = php.ip2long(req.get('X-Forwarded-For'));
         if (ip >= ipLow && ip <= ipHigh) {
             if (isWindows) {
@@ -469,8 +470,7 @@ app.post('/usr_login.html', function(req, res) {
         if (!err) {
             //Separate data in an array.
             var dataa = data.split('!EOL!');
-            var crypto = require('crypto');
-            if (dataa[1] == crypto.createHash('md5').update(req.body.user + '-' + crypto.createHash('md5').update(req.body.pass).digest('hex')).digest('hex')) {
+            if (dataa[1] == md5sum.update(req.body.user + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex')) {
                 res.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
@@ -501,8 +501,6 @@ app.get('/passwd.html', function(req, res) {
 });
 
 app.post('/passwd.html', function(req, res) {
-    var crypto = require('crypto');
-    var md5sum = crypto.createHash('md5');
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
@@ -535,8 +533,6 @@ app.get('/register.html', function(req, res) {
 });
 
 app.post('/register.html', function(req, res) {
-    var crypto = require('crypto');
-    var md5sum = crypto.createHash('md5');
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
@@ -561,7 +557,7 @@ app.post('/register.html', function(req, res) {
                 console.log('User ' + req.body.user + ' Registered!');
             });
         } else {
-console.log('ERROR1');
+            console.log('ERROR1');
             req.end('ERR_USER_EXISTS');
         }
         console.log('ERROR2');
@@ -773,18 +769,17 @@ app.post('/Save.api', function(req, res) {
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '.cps')));
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.cps')));
             var spawn = require('child_process').spawn;
-            var child;
             if (isWindows) {
                 child = spawn('Render', [sID + '.cps', sID], {
                     cwd: path.join(__dirname, 'Saves_bin')
                 });
             } else {
                 if (isX64) {
-                    child = spawn('render64', [sID + '.cps', sID], {
+                    spawn('render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                 } else {
-                    child = spawn('render', [sID + '.cps', sID], {
+                    spawn('render', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                 }
