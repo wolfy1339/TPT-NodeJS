@@ -219,7 +219,7 @@ app.all('/deploy', function(req, res) {
         } else {
             spawn('deploy.sh');
         }
-        console.log("Halting for deploy!");
+        console.log('Halting for deploy!');
         res.writeHead(200, {
             'Content-Type': 'text/json'
         });
@@ -260,13 +260,6 @@ app.all('/deploy', function(req, res) {
 app.get('/Browse/Comments.json', function(req, res) {
     var sess = req.session;
     var filePath = path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt');
-    /*    if(!readFileSync(filePath)==""){
-    res.writeHead(200, {
-                    'Content-Type': 'text/html'
-                });
-    req.end('[]');
-    } else {
-    */
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function(err, data) {
@@ -292,7 +285,6 @@ app.post('/Browse/Comments.json', function(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
         if (!err) {
-            var util = require('util');
             console.log(util.inspect(TPT));
             var fs = require('fs');
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
@@ -513,7 +505,9 @@ app.post('/passwd.html', function(req, res) {
         var uID = dataa[4];
         var Reg = dataa[5];
         var Bib = dataa[6];
-        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), wTPTUser + '!EOL!' + md5sum.update(md5sum.update(wTPTUser).digest('hex') + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, function(err) {
+        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), 
+        wTPTUser + '!EOL!' + md5sum.update(md5sum.update(wTPTUser).digest('hex') + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, 
+        function(err) {
             if (err) {
                 console.log(err);
             }
@@ -615,42 +609,6 @@ app.post('/Login.json', function(req, res) {
         //validation here
     }
     var sess = req.session;
-    /*var util = require('util');
-    var form = new formidable.IncomingForm();
-    form.parse(req, function (err, Data) {
-        console.log("Username: " + Data.Hash);
-        var formData = {
-            // Pass a simple key-value pair
-            Username: util.inspect(Data),
-            Hash: 'redacted'
-        };
-        request.post({
-            url: 'http://powdertoy.co.uk/Login.json',
-            formData: formData
-        }, function optionalCallback(err, httpResponse, body) {
-            if (err) {
-                return console.error('upload failed:', err);
-            }
-            console.log('Upload successful!  Server responded with:', body);
-        res.writeHead(200, {
-                'Content-Type': 'text/json'
-            }); res.write(body);
-        });
-        request.post({
-            url: 'http://powdertoy.co.uk/Login.json',
-            form: {
-                Username: 'io',
-                Hash: 'redacted'
-            }
-        }, function (err, httpResponse, body) {
-            console.log(body);
-            res.writeHead(200, {
-                'Content-Type': 'text/json'
-            });
-            res.write(body);
-            res.end();
-        });
-    });*/
     var formidable = require('formidable');
     var util = require('util');
     var request = require('request');
@@ -674,9 +632,6 @@ app.post('/Login.json', function(req, res) {
                     res.write(datats);
                     res.end();
                 } else {
-                    //                    res.writeHead(200, {
-                    //                       'Content-Type': 'text/json'
-                    //                    });
                     request.post({
                         url: 'http://powdertoy.co.uk/Login.json',
                         form: {
@@ -695,10 +650,7 @@ app.post('/Login.json', function(req, res) {
                         res.end();
                     });
                 }
-                //}
             } else {
-                //                                   res.write('{Error: "Incorrect username or password"}');
-                //                   res.end();
                 request.post({
                     url: 'http://powdertoy.co.uk/Login.json',
                     form: {
@@ -716,11 +668,6 @@ app.post('/Login.json', function(req, res) {
                     res.write(body);
                     res.end();
                 });
-                /*            }
-                                console.log(err);
-                                                    res.write('{Error: "Incorrect username or password"}');
-                                    res.end();
-                */
             }
         });
     });
@@ -733,7 +680,6 @@ app.post('/Save.api', function(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, sData, sData2) {
         if (!err) {
-            var util = require('util');
             var sID = fs.readFileSync('cID.txt', 'utf8');
             fs.writeFile(path.join(__dirname, 'cID.txt'), parseInt(sID) + 1, function(err) {
                 if (err) {
