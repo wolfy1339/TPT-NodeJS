@@ -506,12 +506,12 @@ app.post('/passwd.html', function(req, res) {
         var Reg = dataa[5];
         var Bib = dataa[6];
         fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), 
-        wTPTUser + '!EOL!' + md5sum.update(md5sum.update(wTPTUser).digest('hex') + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, 
+        wTPTUser + '!EOL!' + md5sum.update(wTPTUser + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, 
         function(err) {
             if (err) {
                 console.log(err);
             }
-            console.log('User ' + wTPTUser + ' changed his/her password');
+            console.log('User ' + wTPTUser + ' changed their password');
         });
     });
     res.end('done');
@@ -610,7 +610,6 @@ app.post('/Login.json', function(req, res) {
     }
     var sess = req.session;
     var formidable = require('formidable');
-    var util = require('util');
     var request = require('request');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
@@ -676,7 +675,6 @@ app.post('/Login.json', function(req, res) {
 app.post('/Save.api', function(req, res) {
     var sess = req.session;
     var formidable = require('formidable');
-    var util = require('util');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, sData, sData2) {
         if (!err) {
