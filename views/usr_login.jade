@@ -21,13 +21,18 @@ html
            .navbar-header
             a.navbar-brand(href='/') Home
       h2 Login
-      form(role='form')
+      form.form-horizontal(role='form')
         .form-group
-          label.control-label(for='pass') Username:
-           input#user.form-control(type='text', placeholder='Enter username')
-          label.control-label(for='pass') Password:
-           input#pass.form-control(type='password', placeholder='Enter password')
-        button#submit.btn.btn-default(type='submit') Submit
+          label.control-label.col-sm-2(for='pass') Username:
+          .col-sm-10
+            input#user.form-control(type='text', placeholder='Enter username')
+        .form-group
+          label.control-label.col-sm-2(for='pass') Password:
+          .col-sm-10
+            input#pass.form-control(type='password', placeholder='Enter password')
+        .form-group
+            .col-sm-10.col-sm-offset-2
+              button#submit.btn.btn-default(type='submit') Submit
 
 
       script.
