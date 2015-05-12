@@ -9,7 +9,6 @@ var logger = require('morgan');
 var path = require('path');
 var request = require('request');
 var routes = require('./routes/index.js');
-var session = require('express-session');
 var users = require('./routes/users.js');
 
 // view engine setup
