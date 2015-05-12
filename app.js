@@ -7,8 +7,8 @@ var favicon = require('serve-favicon');
 var fs = require('fs');
 var islogedin = false;
 var logger = require('morgan');
-var md5sum = crypto.createHash('md5');
 var path = require('path');
+var password;
 var routes = require('./routes/index.js');
 var sanitize = require('sanitize-filename');
 var session = require('express-session');
@@ -461,7 +461,8 @@ app.post('/usr_login.html', function(req, res) {
         if (!err) {
             //Separate data in an array.
             var dataa = data.split('!EOL!');
-            if (dataa[1] == md5sum.update(req.body.user + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex')) {
+            password = crypto.createHash('md5').update(req.body.pass).digest('hex');
+            if (dataa[1] == crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex')) {
                 res.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
@@ -503,8 +504,9 @@ app.post('/passwd.html', function(req, res) {
         var uID = dataa[4];
         var Reg = dataa[5];
         var Bib = dataa[6];
-        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'), 
-        wTPTUser + '!EOL!' + md5sum.update(wTPTUser + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, 
+        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'),
+        password = crypto.createHash('md5').update(req.body.pass).digest('hex');
+        wTPTUser + '!EOL!' + crypto.createHash('md5').update(wTPTUser + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, 
         function(err) {
             if (err) {
                 console.log(err);
@@ -541,7 +543,8 @@ app.post('/register.html', function(req, res) {
     if (req.body.erc == 'BMNNET++') {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
             fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
-            req.body.user + '!EOL!' + md5sum.update(req.body.user + '-' + md5sum.update(req.body.pass).digest('hex')).digest('hex') + '!EOL!' + uID + '!EOL!None',
+            password = crypto.createHash('md5').update(req.body.pass).digest('hex');
+            req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!None',
             function(err) {
                 if (err) {
                     return console.log(err);
