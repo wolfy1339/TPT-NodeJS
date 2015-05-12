@@ -9,7 +9,6 @@ var islogedin = false;
 var logger = require('morgan');
 var md5sum = crypto.createHash('md5');
 var path = require('path');
-var request = require('request');
 var routes = require('./routes/index.js');
 var sanitize = require('sanitize-filename');
 var session = require('express-session');
@@ -556,7 +555,7 @@ app.post('/register.html', function(req, res) {
         console.log('ERROR2');
         res.end('done');
     } else {
-       console.log('ERROR3');
+        console.log('ERROR3');
         res.end('ERROR');
     }
 });
