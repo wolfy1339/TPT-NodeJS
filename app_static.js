@@ -4,7 +4,6 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var favicon = require('serve-favicon');
 var fs = require('fs');
-var islogedin = false;
 var logger = require('morgan');
 var path = require('path');
 var request = require('request');
