@@ -501,7 +501,6 @@ app.post('/passwd.html', function(req, res) {
             console.log(err);
         }
         var dataa = data.split('!EOL!');
-        var Hash = dataa[1];
         var uID = dataa[4];
         var Reg = dataa[5];
         var Bib = dataa[6];
