@@ -36,7 +36,7 @@ app.get('/', function(req, res) {
     res.redirect('http://localhost:3000');
 });
 
-app.get('/deploy', function(req, res) {
+app.post('/deploy', function(req, res) {
     var sess = req.session;
     if (req.query.DK == '3xfKxZLKdkgQ8TI4ZpsfJc8W9zqYF0PcM8r8e948a3JaX1Fc99V6oY22lV64VAptYY4V09l34r0m5VoMGIYl9yfeH6x1M5m6') {
         console.log('QUITING FOR DEPLOY!');
