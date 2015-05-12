@@ -504,8 +504,8 @@ app.post('/passwd.html', function(req, res) {
         var uID = dataa[4];
         var Reg = dataa[5];
         var Bib = dataa[6];
-        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'),
         password = crypto.createHash('md5').update(req.body.pass).digest('hex');
+        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'),
         wTPTUser + '!EOL!' + crypto.createHash('md5').update(wTPTUser + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, 
         function(err) {
             if (err) {
@@ -542,8 +542,8 @@ app.post('/register.html', function(req, res) {
     });
     if (req.body.erc == 'BMNNET++') {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
-            fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
             password = crypto.createHash('md5').update(req.body.pass).digest('hex');
+            fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
             req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!None',
             function(err) {
                 if (err) {
