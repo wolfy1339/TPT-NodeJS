@@ -396,6 +396,15 @@ app.get('/', function(req, res) {
     });
 });
 
+app.get('index.html', function(req, res) {
+    var sess = req.session;
+    res.render('index', {
+        islogedin: islogedin,
+        wtptislogedin: wTPTislogedin,
+        wtptusr: wTPTUser
+    });
+});
+
 app.get('/login.html', function(req, res) {
     var sess = req.session;
     if (!islogedin) {
