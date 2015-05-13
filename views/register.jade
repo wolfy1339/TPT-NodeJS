@@ -1,23 +1,25 @@
+doctype html
 html
   head
     title Register
-script(src='//fast.eager.io/4d631U5YZd.js')
+    script(src='//fast.eager.io/4d631U5YZd.js')
     script#insertjshere(src='includes.js')
     link(href='stylesheets/bootstrap.min.css', rel='stylesheet')
     link(href='stylesheets/bootstrap-theme.min.css', rel='stylesheet')
     // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
     // WARNING: Respond.js doesn't work if you view the page via file://
-    //if lt IE 9
+    //
+      if lt IE 9
       script(src='https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')
       script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
     // jQuery (necessary for Bootstrap's JavaScript plugins)
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
     script(src='javascripts/bootstrap.min.js')
-body
-    .container
+  body
+    main.container
       nav.navbar.navbar-default
         .container-fluid
-           .navbar-header
+          .navbar-header
             a.navbar-brand(href='/') Home
       script.
         $(document).ready(function(){
@@ -36,7 +38,6 @@ body
         });
         });
         });
-
       h2 Register
       form.form-horizontal(role='form')
         .form-group
