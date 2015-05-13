@@ -396,7 +396,7 @@ app.get('/', function(req, res) {
     });
 });
 
-app.get('index.html', function(req, res) {
+app.get('/index.html', function(req, res) {
     var sess = req.session;
     res.render('index', {
         islogedin: islogedin,
