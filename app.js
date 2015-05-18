@@ -32,6 +32,8 @@ client.addListener('error', function(message) {
 });
 
 app.use(session({
+    name: 'PowderSession',
+    saveUninitialized: false,
     //Change if security problem is detected!
     secret: 'BrilliantMindsoftheTPTservers'
 }));
