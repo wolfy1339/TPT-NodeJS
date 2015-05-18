@@ -12,11 +12,13 @@ var password;
 var routes = require('./routes/index.js');
 var sanitize = require('sanitize-filename');
 var session = require('express-session');
+/*
 var TPT = {};
 TPT.islogedin = false;
 var users = require('./routes/users.js');
 var wTPTUser = '';
 var wTPTislogedin = false;
+*/
 
 // Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
 var isWindows = false;
@@ -54,6 +56,7 @@ app.use('/files', express.static(path.join(__dirname, 'uploads')));
 //app.use('/', routes);
 app.use('/users', users);
 app.all('/Startup.json', function(req, res) {
+    var sess = req.session
     var filePath = path.join(__dirname, 'motd.txt');
 
     fs.readFile(filePath, {
@@ -107,6 +110,7 @@ app.all('/Browse/Tags.json', function(req, res) {
 });
 
 app.all('/Browse.json', function(req, res) {
+    var sess = req.session
     var filePath;
     var sess = req.session;
     if (!req.query.Search_Query) {
@@ -179,6 +183,7 @@ app.all('/Browse/View.json', function(req, res) {
 });
 
 app.get('/verify/:id', function(req, res) {
+    var sess = req.session
     var id = req.params.id;
     var vidp = path.join(__dirname, 'vid', id + '.txt');
     if (fs.existsSync(vidp)) {
@@ -223,7 +228,7 @@ app.get('/verify/:id', function(req, res) {
 app.all('/deploy', function(req, res) {
     var sess = req.session;
     var spawn = require('child_process').spawn;
-    if (islogedin) {
+    if (sess.islogedin) {
         if (isWindows) {
             spawn('deploy.bat');
         } else {
@@ -320,7 +325,7 @@ app.post('/Browse/Comments.json', function(req, res) {
 
 app.get('/fp.html', function(req, res) {
     var sess = req.session;
-    if (islogedin) {
+    if (sess.islogedin) {
         res.render('fp', {});
     } else {
         res.redirect('index.html');
@@ -330,7 +335,7 @@ app.get('/fp.html', function(req, res) {
 app.get('/logout.html', function (req, res) {
     var sess = req.session;
     res.redirect('index.html');
-    islogedin = false;
+    sess.islogedin = false;
 });
 
 app.get('/profile.html', function(req, res) {
@@ -361,7 +366,7 @@ app.post('/fp.html', function(req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
-    if (islogedin) {
+    if (sess.islogedin) {
         fs.writeFile('saves.txt', req.body.fp, function(err) {
             if (err) {
                 res.end(err);
@@ -400,25 +405,41 @@ app.get('/User.json', function(req, res) {
 
 app.get('/', function(req, res) {
     var sess = req.session;
+    if(sess.islogedin){
     res.render('index', {
         islogedin: islogedin,
-        wtptislogedin: wTPTislogedin,
-        wtptusr: wTPTUser
+        wtptislogedin: sess.wTPTislogedin,
+        wtptusr: sess.wTPTUser
     });
+    } else {
+            if(sess.wTPT.islogedin){
+    res.render('index', {
+        islogedin: false,
+        wtptislogedin: sess.wTPTislogedin,
+        wtptusr: sess.wTPTUser
+    });
+            } else {
+            res.render('index', {
+        islogedin: false,
+        wtptislogedin: false,
+        wtptusr: 'nobody'
+    });
+            }
+    }
 });
 
 app.get('/index.html', function(req, res) {
     var sess = req.session;
     res.render('index', {
-        islogedin: islogedin,
-        wtptislogedin: wTPTislogedin,
-        wtptusr: wTPTUser
+        islogedin: sess.islogedin,
+        wtptislogedin: sess.wTPTislogedin,
+        wtptusr: sess.wTPTUser
     });
 });
 
 app.get('/login.html', function(req, res) {
     var sess = req.session;
-    if (!islogedin) {
+    if (!sess.islogedin) {
         res.render('login', {});
     } else {
         res.redirect('index.html');
@@ -427,7 +448,7 @@ app.get('/login.html', function(req, res) {
 
 app.get('/upload.html', function(req, res) {
     var sess = req.session;
-    if (!islogedin) {
+    if (!sess.islogedin) {
         res.render('upload', {});
     } else {
         res.redirect('index.html');
@@ -436,7 +457,7 @@ app.get('/upload.html', function(req, res) {
 
 app.get('/upload.html', function(req, res) {
     var sess = req.session;
-    if (!islogedin) {
+    if (!sess.islogedin) {
         fs.readFile(req.files.file.path, function(err, data) {
             // ...
             var Path = __dirname + '/uploads/' + req.files.file.name;
@@ -454,7 +475,7 @@ app.post('/login.html', function(req, res) {
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     if (req.body.pass == 'pass') {
-        islogedin = true;
+        sess.islogedin = true;
         res.end('done');
     } else {
         res.end('ERR_USER_OR_PASS_WRONG');
@@ -463,7 +484,7 @@ app.post('/login.html', function(req, res) {
 
 app.get('/usr_login.html', function(req, res) {
     var sess = req.session;
-    if (!wTPTislogedin) {
+    if (!sess.wTPTislogedin) {
         res.render('usr_login', {});
     } else {
         res.redirect('index.html');
@@ -486,8 +507,8 @@ app.post('/usr_login.html', function(req, res) {
                 res.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
-                wTPTislogedin = true;
-                wTPTUser = req.body.user;
+                sess.wTPTislogedin = true;
+                sess.wTPTUser = req.body.user;
                 res.write('done');
                 res.end();
             } else {
@@ -505,7 +526,7 @@ app.post('/usr_login.html', function(req, res) {
 
 app.get('/passwd.html', function(req, res) {
     var sess = req.session;
-    if (wTPTislogedin) {
+    if (sess.wTPTislogedin) {
         res.render('passwd', {});
     } else {
         res.redirect('index.html');
@@ -525,13 +546,13 @@ app.post('/passwd.html', function(req, res) {
         var Reg = dataa[5];
         var Bib = dataa[6];
         password = crypto.createHash('md5').update(req.body.pass).digest('hex');
-        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'),
+        fs.writeFile(path.join(__dirname, 'Users', sess.wTPTUser + '.txt'),
         wTPTUser + '!EOL!' + crypto.createHash('md5').update(wTPTUser + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, 
         function(err) {
             if (err) {
                 console.log(err);
             }
-            console.log('User ' + wTPTUser + ' changed their password');
+            console.log('User ' + sess.wTPTUser + ' changed their password');
         });
     });
     res.end('done');
@@ -539,7 +560,7 @@ app.post('/passwd.html', function(req, res) {
 
 app.get('/register.html', function(req, res) {
     var sess = req.session;
-    if (!islogedin) {
+    if (!sess.islogedin) {
         res.render('register', {});
     } else {
         res.redirect('index.html');
@@ -585,7 +606,7 @@ app.post('/register.html', function(req, res) {
 
 app.get('/motd.html', function(req, res) {
     var sess = req.session;
-    if (islogedin) {
+    if (sess.islogedin) {
         res.render('motd', {});
     } else {
         res.redirect('index.html');
@@ -596,7 +617,7 @@ app.post('/motd.html', function(req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
-    if (islogedin) {
+    if (sess.islogedin) {
         var fs = require('fs');
         fs.writeFile('motd.txt', req.body.motd, function(err) {
             if (err) {
@@ -646,9 +667,9 @@ app.post('/Login.json', function(req, res) {
                         'Content-Type': 'text/json'
                     });
                     var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
-                    TPT.islogedin = true;
-                    TPT.User = Data.Username;
-                    TPT.ID = dataa[2];
+                    sess.TPT.islogedin = true;
+                    sess.TPT.user = Data.Username;
+                    sess.TPT.ID = dataa[2];
                     res.write(datats);
                     res.end();
                 } else {
@@ -709,7 +730,7 @@ app.post('/Save.api', function(req, res) {
              client.say('#BMN', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), '{"ID":' + sID +
                 ',"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name +
-                '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + TPT.user +
+                '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPT.user +
                 '","Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}',
                 function(err) {
                     if (err) {
@@ -725,7 +746,7 @@ app.post('/Save.api', function(req, res) {
             });
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), '{"ID":' + sID +
                 ',"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"' +
-                sData.Name + '", "Username":"' + TPT.User + '","Comments":1,"Published": "' + sData.Publish + '"}',
+                sData.Name + '", "Username":"' + sess.TPT.User + '","Comments":1,"Published": "' + sData.Publish + '"}',
                 function(err) {
                     if (err) {
                         return console.log(err);
