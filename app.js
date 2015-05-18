@@ -53,7 +53,24 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
-//app.use('/', routes);
+// Generate a batch of ERCs
+var uuid = require('uuid');
+var ercs=[];
+var erclist="";
+for(var ercn=0;ercn > 15; ercn++){
+  ercs[ercn]=uuid.v4(); 
+  erclist=erclist+ercs[ercn];
+}
+// ERC Validation
+function validate_erc(erc){
+    for(var ercn=0;ercn > 15; ercn++){
+       if(erc==ercs[ercn]){
+           return true;
+       }
+    }
+    return false;
+}
+// app.use('/', routes);
 app.use('/users', users);
 app.all('/Startup.json', function(req, res) {
     var sess = req.session
@@ -268,6 +285,34 @@ app.all('/deploy', function(req, res) {
             res.end();
             console.log(req.ip);
         }
+    }
+});
+
+app.get('/ercs.html', function(req, res) {
+    var sess = req.session;
+    if (sess.islogedin) {
+        res.render('erc', {erc:erclist});
+    } else {
+        res.redirect('index.html');
+    }
+});
+
+app.post('/motd.html', function(req, res) {
+    var sess = req.session;
+    //In this we are assigning user to sess.user variable.
+    //user comes from HTML page.
+    if (sess.islogedin) {
+        var fs = require('fs');
+        fs.writeFile('motd.txt', req.body.motd, function(err) {
+            if (err) {
+                res.end(err);
+                return console.log(err);
+            }
+            console.log('The file was saved!');
+        });
+        res.end('done');
+    } else {
+        res.end('ERR_NOT_LOGED_IN');
     }
 });
 
@@ -581,7 +626,7 @@ app.post('/register.html', function(req, res) {
     res.writeHead(200, {
         'content-type': 'text/html'
     });
-    if (req.body.erc == 'BMNNET++') {
+    if (validate_erc(req.body.erc) || req.body.erc=="SUPER_SECRET_AND_AWESOME_AND_COMPLEX_ERC_CODE_7v6b8qyqnhgba73b0tv63a70oqy6mtrhjuf") {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
             password = crypto.createHash('md5').update(req.body.pass).digest('hex');
             fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
