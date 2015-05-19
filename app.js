@@ -247,11 +247,12 @@ app.get('/verify/:id', function(req, res) {
 app.all('/deploy', function(req, res) {
     var sess = req.session;
     var spawn = require('child_process').spawn;
+    var child;
     if (sess.islogedin) {
         if (isWindows) {
-            spawn('deploy.bat');
+            child = spawn('deploy.bat');
         } else {
-            spawn('deploy.sh');
+            child = spawn('deploy.sh');
         }
         console.log('Halting for deploy!');
         res.writeHead(200, {
