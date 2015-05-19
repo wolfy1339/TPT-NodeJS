@@ -76,7 +76,7 @@ function validate_erc(erc) {
 // app.use('/', routes);
 app.use('/users', users);
 app.all('/Startup.json', function(req, res) {
-    var sess = req.session
+    var sess = req.session;
     var filePath = path.join(__dirname, 'motd.txt');
 
     fs.readFile(filePath, {
@@ -130,9 +130,8 @@ app.all('/Browse/Tags.json', function(req, res) {
 });
 
 app.all('/Browse.json', function(req, res) {
-    var sess = req.session
-    var filePath;
     var sess = req.session;
+    var filePath;
     if (!req.query.Search_Query) {
         filePath = path.join(__dirname, 'saves.txt');
         fs.readFile(filePath, {
@@ -203,7 +202,7 @@ app.all('/Browse/View.json', function(req, res) {
 });
 
 app.get('/verify/:id', function(req, res) {
-    var sess = req.session
+    var sess = req.session;
     var id = req.params.id;
     var vidp = path.join(__dirname, 'vid', id + '.txt');
     if (fs.existsSync(vidp)) {
