@@ -86,7 +86,7 @@ app.all('/Startup.json', function(req, res) {
         if (!err) {
             console.log('received data: ' + data);
             res.writeHead(200, {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/json'
             });
             res.write('{"Updates":{"Stable":{"Major":90,"Minor":2,"Build":322,"File":"\/Download\/Builds\/Build-' +
                 '322\/-.ptu"},"Beta":{"Major":90,"Minor":1,"Build":320,"File":"\/Download\/Builds\/Build-320\/-.ptu"},"Snapshot":' +
@@ -122,7 +122,7 @@ app.get('/GetScript.api', function(req, res) {
 app.all('/Browse/Tags.json', function(req, res) {
     var sess = req.session;
     res.writeHead(200, {
-        'Content-Type': 'text/html'
+        'Content-Type': 'text/json'
     });
     res.write('{"TagTotal": 1, "Results": 1, "Tags": [{"Tag": "Tags", "Count": 1}, {"Tag": "are", "Count": 1}, {"Tag": "not",' +
         '"Count": 1}, {"Tag": "yet", "Count": 1}, {"Tag": "implemented.", "Count": 1}');
@@ -190,7 +190,7 @@ app.all('/Browse/View.json', function(req, res) {
         if (!err) {
             console.log('received data: ' + data);
             res.writeHead(200, {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/json'
             });
             res.write('{"Count":517032, "Saves":[' + data + ']}');
             res.end();
@@ -664,13 +664,11 @@ app.get('/Login.json', function(req, res) {
     res.writeHead(200, {
         'content-type': 'text/html'
     });
-    res.end(
-        '<form action="/Login.json" enctype="multipart/form-data" method="post">' +
+    res.end('<form action="/Login.json" enctype="multipart/form-data" method="post">' +
         '<input type="text" name="Username"><br>' +
         '<input type="text" name="Hash"><br>' +
         '<input type="submit" value="Login">' +
-        '</form>'
-    );
+        '</form>');
 });
 
 app.post('/Login.json', function(req, res) {
