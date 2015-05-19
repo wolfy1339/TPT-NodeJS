@@ -22,10 +22,10 @@ var session = require('express-session');
 /*
 var TPT = {};
 TPT.islogedin = false;
-var users = require('./routes/users.js');
 var wTPTUser = '';
 var wTPTislogedin = false;
 */
+var users = require('./routes/users.js');
 var uuid = require('uuid');
 
 var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
