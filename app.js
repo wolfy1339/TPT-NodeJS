@@ -3,9 +3,16 @@ var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var crypto = require('crypto');
+var erclist;
+var ercn = 0;
+var ercs = [];
 var favicon = require('serve-favicon');
 var fs = require('fs');
+var irc = require('irc');
 var islogedin = false;
+// Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
+var isWindows = false;
+var isX64 = true;
 var logger = require('morgan');
 var path = require('path');
 var password;
@@ -19,14 +26,13 @@ var users = require('./routes/users.js');
 var wTPTUser = '';
 var wTPTislogedin = false;
 */
+var uuid = require('uuid');
 
-// Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
-var isWindows = false;
-var isX64 = true;
-
-var irc = require('irc');
-var client = new irc.Client('irc.freenode.net', 'BMNNETBot', {
-    channels: ['#BMNNET'],
+var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
+    channels: ['#BMNNet'],
+    userName: 'BMNBot',
+    password: '',
+    sasl: true
 });
 
 client.addListener('error', function(message) {
@@ -54,17 +60,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
 // Generate a batch of ERCs
-var uuid = require('uuid');
-var ercs=[];
-var erclist="";
-for(var ercn=0;ercn > 15; ercn++){
-  ercs[ercn]=uuid.v4(); 
-  erclist=erclist+ercs[ercn];
+for (ercn=0;ercn > 15; ercn++) {
+  ercs[ercn] = uuid.v4(); 
+  erclist = erclist + ercs[ercn];
 }
 // ERC Validation
-function validate_erc(erc){
-    for(var ercn=0;ercn > 15; ercn++){
-       if(erc==ercs[ercn]){
+function validate_erc(erc) {
+    for (ercn=0; ercn > 15; ercn++) {
+       if (erc == ercs[ercn]) {
            return true;
        }
     }
@@ -297,25 +300,6 @@ app.get('/ercs.html', function(req, res) {
     }
 });
 
-app.post('/motd.html', function(req, res) {
-    var sess = req.session;
-    //In this we are assigning user to sess.user variable.
-    //user comes from HTML page.
-    if (sess.islogedin) {
-        var fs = require('fs');
-        fs.writeFile('motd.txt', req.body.motd, function(err) {
-            if (err) {
-                res.end(err);
-                return console.log(err);
-            }
-            console.log('The file was saved!');
-        });
-        res.end('done');
-    } else {
-        res.end('ERR_NOT_LOGED_IN');
-    }
-});
-
 // I'm not completely sure this will work, but it should
 app.get('/Browse/Comments.json', function(req, res) {
     var sess = req.session;
@@ -346,7 +330,6 @@ app.post('/Browse/Comments.json', function(req, res) {
     form.parse(req, function(err, Data) {
         if (!err) {
             console.log(util.inspect(TPT));
-            var fs = require('fs');
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
                 '{"Username":"' + TPT.User + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment +
@@ -626,7 +609,7 @@ app.post('/register.html', function(req, res) {
     res.writeHead(200, {
         'content-type': 'text/html'
     });
-    if (validate_erc(req.body.erc) || req.body.erc=="SUPER_SECRET_AND_AWESOME_AND_COMPLEX_ERC_CODE_7v6b8qyqnhgba73b0tv63a70oqy6mtrhjuf") {
+    if (validate_erc(req.body.erc) || req.body.erc == "SUPER_SECRET_AND_AWESOME_AND_COMPLEX_ERC_CODE_7v6b8qyqnhgba73b0tv63a70oqy6mtrhjuf") {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
             password = crypto.createHash('md5').update(req.body.pass).digest('hex');
             fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
@@ -663,7 +646,6 @@ app.post('/motd.html', function(req, res) {
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     if (sess.islogedin) {
-        var fs = require('fs');
         fs.writeFile('motd.txt', req.body.motd, function(err) {
             if (err) {
                 res.end(err);
