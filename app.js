@@ -31,7 +31,7 @@ var uuid = require('uuid');
 var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
     channels: ['#BMNNet'],
     userName: 'BMNBot',
-    password: '',
+    password: 'Powder!',
     sasl: true
 });
 
