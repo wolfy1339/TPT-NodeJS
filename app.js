@@ -3,28 +3,36 @@ var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var crypto = require('crypto');
+var erclist;
+var ercn = 0;
+var ercs = [];
 var favicon = require('serve-favicon');
 var fs = require('fs');
+var irc = require('irc');
 var islogedin = false;
+// Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
+var isWindows = false;
+var isX64 = true;
 var logger = require('morgan');
 var path = require('path');
 var password;
 var routes = require('./routes/index.js');
 var sanitize = require('sanitize-filename');
 var session = require('express-session');
+/*
 var TPT = {};
 TPT.islogedin = false;
-var users = require('./routes/users.js');
 var wTPTUser = '';
 var wTPTislogedin = false;
+*/
+var users = require('./routes/users.js');
+var uuid = require('uuid');
 
-// Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
-var isWindows = false;
-var isX64 = true;
-
-var irc = require('irc');
-var client = new irc.Client('irc.freenode.net', 'BMNNETBot', {
-    channels: ['#BMNNET'],
+var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
+    channels: ['#BMNNet'],
+    userName: 'BMNBot',
+    password: 'Powder!',
+    sasl: true
 });
 
 client.addListener('error', function(message) {
@@ -51,9 +59,24 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
-//app.use('/', routes);
+// Generate a batch of ERCs
+for (ercn=0;ercn > 15; ercn++) {
+  ercs[ercn] = uuid.v4(); 
+  erclist = erclist + ercs[ercn];
+}
+// ERC Validation
+function validate_erc(erc) {
+    for (ercn=0; ercn > 15; ercn++) {
+       if (erc == ercs[ercn]) {
+           return true;
+       }
+    }
+    return false;
+}
+// app.use('/', routes);
 app.use('/users', users);
 app.all('/Startup.json', function(req, res) {
+    var sess = req.session;
     var filePath = path.join(__dirname, 'motd.txt');
 
     fs.readFile(filePath, {
@@ -63,7 +86,7 @@ app.all('/Startup.json', function(req, res) {
         if (!err) {
             console.log('received data: ' + data);
             res.writeHead(200, {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/json'
             });
             res.write('{"Updates":{"Stable":{"Major":90,"Minor":2,"Build":322,"File":"\/Download\/Builds\/Build-' +
                 '322\/-.ptu"},"Beta":{"Major":90,"Minor":1,"Build":320,"File":"\/Download\/Builds\/Build-320\/-.ptu"},"Snapshot":' +
@@ -99,7 +122,7 @@ app.get('/GetScript.api', function(req, res) {
 app.all('/Browse/Tags.json', function(req, res) {
     var sess = req.session;
     res.writeHead(200, {
-        'Content-Type': 'text/html'
+        'Content-Type': 'text/json'
     });
     res.write('{"TagTotal": 1, "Results": 1, "Tags": [{"Tag": "Tags", "Count": 1}, {"Tag": "are", "Count": 1}, {"Tag": "not",' +
         '"Count": 1}, {"Tag": "yet", "Count": 1}, {"Tag": "implemented.", "Count": 1}');
@@ -107,8 +130,8 @@ app.all('/Browse/Tags.json', function(req, res) {
 });
 
 app.all('/Browse.json', function(req, res) {
-    var filePath;
     var sess = req.session;
+    var filePath;
     if (!req.query.Search_Query) {
         filePath = path.join(__dirname, 'saves.txt');
         fs.readFile(filePath, {
@@ -167,7 +190,7 @@ app.all('/Browse/View.json', function(req, res) {
         if (!err) {
             console.log('received data: ' + data);
             res.writeHead(200, {
-                'Content-Type': 'text/html'
+                'Content-Type': 'text/json'
             });
             res.write('{"Count":517032, "Saves":[' + data + ']}');
             res.end();
@@ -179,6 +202,7 @@ app.all('/Browse/View.json', function(req, res) {
 });
 
 app.get('/verify/:id', function(req, res) {
+    var sess = req.session;
     var id = req.params.id;
     var vidp = path.join(__dirname, 'vid', id + '.txt');
     if (fs.existsSync(vidp)) {
@@ -223,11 +247,12 @@ app.get('/verify/:id', function(req, res) {
 app.all('/deploy', function(req, res) {
     var sess = req.session;
     var spawn = require('child_process').spawn;
-    if (islogedin) {
+    var child;
+    if (sess.islogedin) {
         if (isWindows) {
-            spawn('deploy.bat');
+            child = spawn('deploy.bat');
         } else {
-            spawn('deploy.sh');
+            child = spawn('deploy.sh');
         }
         console.log('Halting for deploy!');
         res.writeHead(200, {
@@ -266,6 +291,15 @@ app.all('/deploy', function(req, res) {
     }
 });
 
+app.get('/ercs.html', function(req, res) {
+    var sess = req.session;
+    if (sess.islogedin) {
+        res.render('erc', {erc:erclist});
+    } else {
+        res.redirect('index.html');
+    }
+});
+
 // I'm not completely sure this will work, but it should
 app.get('/Browse/Comments.json', function(req, res) {
     var sess = req.session;
@@ -296,7 +330,6 @@ app.post('/Browse/Comments.json', function(req, res) {
     form.parse(req, function(err, Data) {
         if (!err) {
             console.log(util.inspect(TPT));
-            var fs = require('fs');
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
                 '{"Username":"' + TPT.User + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment +
@@ -320,7 +353,7 @@ app.post('/Browse/Comments.json', function(req, res) {
 
 app.get('/fp.html', function(req, res) {
     var sess = req.session;
-    if (islogedin) {
+    if (sess.islogedin) {
         res.render('fp', {});
     } else {
         res.redirect('index.html');
@@ -330,7 +363,7 @@ app.get('/fp.html', function(req, res) {
 app.get('/logout.html', function (req, res) {
     var sess = req.session;
     res.redirect('index.html');
-    islogedin = false;
+    sess.islogedin = false;
 });
 
 app.get('/profile.html', function(req, res) {
@@ -361,7 +394,7 @@ app.post('/fp.html', function(req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
-    if (islogedin) {
+    if (sess.islogedin) {
         fs.writeFile('saves.txt', req.body.fp, function(err) {
             if (err) {
                 res.end(err);
@@ -400,25 +433,41 @@ app.get('/User.json', function(req, res) {
 
 app.get('/', function(req, res) {
     var sess = req.session;
+    if(sess.islogedin){
     res.render('index', {
         islogedin: islogedin,
-        wtptislogedin: wTPTislogedin,
-        wtptusr: wTPTUser
+        wtptislogedin: sess.wTPTislogedin,
+        wtptusr: sess.wTPTUser
     });
+    } else {
+            if(sess.wTPT.islogedin){
+    res.render('index', {
+        islogedin: false,
+        wtptislogedin: sess.wTPTislogedin,
+        wtptusr: sess.wTPTUser
+    });
+            } else {
+            res.render('index', {
+        islogedin: false,
+        wtptislogedin: false,
+        wtptusr: 'nobody'
+    });
+            }
+    }
 });
 
 app.get('/index.html', function(req, res) {
     var sess = req.session;
     res.render('index', {
-        islogedin: islogedin,
-        wtptislogedin: wTPTislogedin,
-        wtptusr: wTPTUser
+        islogedin: sess.islogedin,
+        wtptislogedin: sess.wTPTislogedin,
+        wtptusr: sess.wTPTUser
     });
 });
 
 app.get('/login.html', function(req, res) {
     var sess = req.session;
-    if (!islogedin) {
+    if (!sess.islogedin) {
         res.render('login', {});
     } else {
         res.redirect('index.html');
@@ -427,7 +476,7 @@ app.get('/login.html', function(req, res) {
 
 app.get('/upload.html', function(req, res) {
     var sess = req.session;
-    if (!islogedin) {
+    if (!sess.islogedin) {
         res.render('upload', {});
     } else {
         res.redirect('index.html');
@@ -436,7 +485,7 @@ app.get('/upload.html', function(req, res) {
 
 app.get('/upload.html', function(req, res) {
     var sess = req.session;
-    if (!islogedin) {
+    if (!sess.islogedin) {
         fs.readFile(req.files.file.path, function(err, data) {
             // ...
             var Path = __dirname + '/uploads/' + req.files.file.name;
@@ -454,7 +503,7 @@ app.post('/login.html', function(req, res) {
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     if (req.body.pass == 'pass') {
-        islogedin = true;
+        sess.islogedin = true;
         res.end('done');
     } else {
         res.end('ERR_USER_OR_PASS_WRONG');
@@ -463,7 +512,7 @@ app.post('/login.html', function(req, res) {
 
 app.get('/usr_login.html', function(req, res) {
     var sess = req.session;
-    if (!wTPTislogedin) {
+    if (!sess.wTPTislogedin) {
         res.render('usr_login', {});
     } else {
         res.redirect('index.html');
@@ -486,8 +535,8 @@ app.post('/usr_login.html', function(req, res) {
                 res.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
-                wTPTislogedin = true;
-                wTPTUser = req.body.user;
+                sess.wTPTislogedin = true;
+                sess.wTPTUser = req.body.user;
                 res.write('done');
                 res.end();
             } else {
@@ -505,7 +554,7 @@ app.post('/usr_login.html', function(req, res) {
 
 app.get('/passwd.html', function(req, res) {
     var sess = req.session;
-    if (wTPTislogedin) {
+    if (sess.wTPTislogedin) {
         res.render('passwd', {});
     } else {
         res.redirect('index.html');
@@ -525,13 +574,13 @@ app.post('/passwd.html', function(req, res) {
         var Reg = dataa[5];
         var Bib = dataa[6];
         password = crypto.createHash('md5').update(req.body.pass).digest('hex');
-        fs.writeFile(path.join(__dirname, 'Users', wTPTUser + '.txt'),
+        fs.writeFile(path.join(__dirname, 'Users', sess.wTPTUser + '.txt'),
         wTPTUser + '!EOL!' + crypto.createHash('md5').update(wTPTUser + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, 
         function(err) {
             if (err) {
                 console.log(err);
             }
-            console.log('User ' + wTPTUser + ' changed their password');
+            console.log('User ' + sess.wTPTUser + ' changed their password');
         });
     });
     res.end('done');
@@ -539,7 +588,7 @@ app.post('/passwd.html', function(req, res) {
 
 app.get('/register.html', function(req, res) {
     var sess = req.session;
-    if (!islogedin) {
+    if (!sess.islogedin) {
         res.render('register', {});
     } else {
         res.redirect('index.html');
@@ -560,7 +609,7 @@ app.post('/register.html', function(req, res) {
     res.writeHead(200, {
         'content-type': 'text/html'
     });
-    if (req.body.erc == 'BMNNET++') {
+    if (validate_erc(req.body.erc) || req.body.erc == "SUPER_SECRET_AND_AWESOME_AND_COMPLEX_ERC_CODE_7v6b8qyqnhgba73b0tv63a70oqy6mtrhjuf") {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
             password = crypto.createHash('md5').update(req.body.pass).digest('hex');
             fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
@@ -585,7 +634,7 @@ app.post('/register.html', function(req, res) {
 
 app.get('/motd.html', function(req, res) {
     var sess = req.session;
-    if (islogedin) {
+    if (sess.islogedin) {
         res.render('motd', {});
     } else {
         res.redirect('index.html');
@@ -596,8 +645,7 @@ app.post('/motd.html', function(req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
-    if (islogedin) {
-        var fs = require('fs');
+    if (sess.islogedin) {
         fs.writeFile('motd.txt', req.body.motd, function(err) {
             if (err) {
                 res.end(err);
@@ -616,13 +664,11 @@ app.get('/Login.json', function(req, res) {
     res.writeHead(200, {
         'content-type': 'text/html'
     });
-    res.end(
-        '<form action="/Login.json" enctype="multipart/form-data" method="post">' +
+    res.end('<form action="/Login.json" enctype="multipart/form-data" method="post">' +
         '<input type="text" name="Username"><br>' +
         '<input type="text" name="Hash"><br>' +
         '<input type="submit" value="Login">' +
-        '</form>'
-    );
+        '</form>');
 });
 
 app.post('/Login.json', function(req, res) {
@@ -646,9 +692,9 @@ app.post('/Login.json', function(req, res) {
                         'Content-Type': 'text/json'
                     });
                     var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
-                    TPT.islogedin = true;
-                    TPT.User = Data.Username;
-                    TPT.ID = dataa[2];
+                    sess.TPT.islogedin = true;
+                    sess.TPT.user = Data.Username;
+                    sess.TPT.ID = dataa[2];
                     res.write(datats);
                     res.end();
                 } else {
@@ -709,7 +755,7 @@ app.post('/Save.api', function(req, res) {
              client.say('#BMN', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), '{"ID":' + sID +
                 ',"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name +
-                '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + TPT.user +
+                '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPT.user +
                 '","Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}',
                 function(err) {
                     if (err) {
@@ -725,7 +771,7 @@ app.post('/Save.api', function(req, res) {
             });
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), '{"ID":' + sID +
                 ',"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"' +
-                sData.Name + '", "Username":"' + TPT.User + '","Comments":1,"Published": "' + sData.Publish + '"}',
+                sData.Name + '", "Username":"' + sess.TPT.User + '","Comments":1,"Published": "' + sData.Publish + '"}',
                 function(err) {
                     if (err) {
                         return console.log(err);
