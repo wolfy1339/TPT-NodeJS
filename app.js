@@ -19,12 +19,6 @@ var password;
 var routes = require('./routes/index.js');
 var sanitize = require('sanitize-filename');
 var session = require('express-session');
-/*
-var TPT = {};
-TPT.islogedin = false;
-var wTPTUser = '';
-var wTPTislogedin = false;
-*/
 var users = require('./routes/users.js');
 var uuid = require('uuid');
 
@@ -39,7 +33,7 @@ client.addListener('error', function(message) {
     console.log('error: ', message);
 });
 
-client.send("nickserv", "identify", "BMNBot", "Powder!");
+client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 
 app.use(session({
     name: 'PowderSession',
