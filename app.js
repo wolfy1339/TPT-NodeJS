@@ -432,7 +432,7 @@ app.get('/', function(req, res) {
     var sess = req.session;
     if(sess.islogedin){
     res.render('index', {
-        islogedin: islogedin,
+        islogedin: sess.islogedin,
         wtptislogedin: sess.wTPTislogedin,
         wtptusr: sess.wTPTUser
     });
