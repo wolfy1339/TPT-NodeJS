@@ -240,7 +240,7 @@ app.get('/verify/:id', function(req, res) {
         console.log(vidp);
     }
 });
-
+/*
 app.all('/deploy', function(req, res) {
     var sess = req.session;
     var spawn = require('child_process').spawn;
@@ -287,7 +287,7 @@ app.all('/deploy', function(req, res) {
         }
     }
 });
-
+*/
 app.get('/ercs.html', function(req, res) {
     var sess = req.session;
     if (sess.islogedin) {
