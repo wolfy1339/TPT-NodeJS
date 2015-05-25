@@ -79,7 +79,6 @@ app.all('/Startup.json', function(req, res) {
     fs.readFile(filePath, {
         encoding: 'utf-8'
     }, function(err, data) {
-        var sess = req.session;
         if (!err) {
             console.log('received data: ' + data);
             res.writeHead(200, {
@@ -673,6 +672,7 @@ app.post('/Login.json', function(req, res) {
         //validation here
     }
     var sess = req.session;
+    sess.TPT = {};
     var formidable = require('formidable');
     var request = require('request');
     var form = new formidable.IncomingForm();
