@@ -28,4 +28,4 @@ function restartApp(req, res, e) {
 }
 
 app.post('/', restartApp);
-startApp();
+startApp('app.js');
