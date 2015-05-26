@@ -779,16 +779,16 @@ app.post('/Save.api', function(req, res) {
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.cps')));
             var spawn = require('child_process').spawn;
             if (isWindows) {
-                spawn('Render', [sID + '.cps', sID], {
+                child = spawn('Render', [sID + '.cps', sID], {
                     cwd: path.join(__dirname, 'Saves_bin')
                 });
             } else {
                 if (isX64) {
-                    spawn('render64', [sID + '.cps', sID], {
+                    child = spawn('render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                 } else {
-                    spawn('render', [sID + '.cps', sID], {
+                    child = spawn('render', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                 }
