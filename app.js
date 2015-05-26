@@ -707,7 +707,7 @@ app.post('/Login.json', function(req, res) {
                             'Content-Type': 'text/json'
                         });
                         TPT.islogedin = true;
-                        TPT.User = Data.Username;
+                        TPT.user = Data.Username;
                         //TPT.ID = dataa[2];
                         res.write(body);
                         res.end();
