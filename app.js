@@ -752,7 +752,7 @@ app.post('/Save.api', function(req, res) {
              client.say('#BMN', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), '{"ID":' + sID +
                 ',"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name +
-                '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPT.User +
+                '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPT.user +
                 '","Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}',
                 function(err) {
                     if (err) {
@@ -768,7 +768,7 @@ app.post('/Save.api', function(req, res) {
             });
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), '{"ID":' + sID +
                 ',"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"' +
-                sData.Name + '", "Username":"' + sess.TPT.User + '","Comments":1,"Published": "' + sData.Publish + '"}',
+                sData.Name + '", "Username":"' + sess.TPT.user + '","Comments":1,"Published": "' + sData.Publish + '"}',
                 function(err) {
                     if (err) {
                         return console.log(err);
