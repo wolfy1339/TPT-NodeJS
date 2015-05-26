@@ -325,11 +325,11 @@ app.post('/Browse/Comments.json', function(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
         if (!err) {
-            console.log(util.inspect(TPT));
+            console.log(util.inspect(sess.TPT));
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
-                '{"Username":"' + TPT.User + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + TPT.ID + '_40.png","Text":"' + Data.Comment +
-                '","Timestamp":"1","FormattedUsername":"' + TPT.User + '"}, ',
+                '{"Username":"' + sess.TPT.user + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + sess.TPT.ID + '_40.png","Text":"' + Data.Comment +
+                '","Timestamp":"1","FormattedUsername":"' + sess.TPT.user + '"}, ',
                 function(err) {
                     if (err) {
                         return console.log(err);
