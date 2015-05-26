@@ -738,6 +738,7 @@ app.post('/Login.json', function(req, res) {
 
 app.post('/Save.api', function(req, res) {
     var sess = req.session;
+    console.log(require('util').inspect(sess));
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, sData, sData2) {
