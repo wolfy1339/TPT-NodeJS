@@ -23,7 +23,7 @@ function restartApp(req, res, e) {
     spawn('git', ['pull']);   // git pull
     spawn('npm', ['install']); // npm install
     child.kill();
-    startApp(e);
+    startApp(e || 'app.js');
     res.send('Ok');
 }
 
