@@ -742,7 +742,7 @@ app.post('/Save.api', function(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, sData, sData2) {
         if (!err) {
-            var sID = fs.readFileSync('cID.txt', 'utf8');
+            var sID = parseInt(fs.readFileSync('cID.txt', 'utf8'));
             fs.writeFile(path.join('cID.txt'), parseInt(sID) + 1, function(err) {
                 if (err) {
                     return console.log(err);
