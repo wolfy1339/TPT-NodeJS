@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var child;
 var cp = require('child_process');
-var exec = cp.exec;
+//var exec = cp.exec;
 var spawn = cp.spawn;
 var port = process.env.PORT || 3011;
 
@@ -18,7 +18,7 @@ function startApp(e) {
     child = spawn('node', [e]);
     child.stdout.setEncoding('utf8');
     child.stdout.on('data', function (data) {
-        var str = data.toString()
+        var str = data.toString();
         console.log(str);
     });
     child.on('close', function (code) {
