@@ -706,8 +706,8 @@ app.post('/Login.json', function(req, res) {
                         res.writeHead(200, {
                             'Content-Type': 'text/json'
                         });
-                        TPT.islogedin = true;
-                        TPT.user = Data.Username;
+                        sess.TPT.islogedin = true;
+                        sess.TPT.user = Data.Username;
                         //TPT.ID = dataa[2];
                         res.write(body);
                         res.end();
@@ -725,8 +725,8 @@ app.post('/Login.json', function(req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/json'
                     });
-                    TPT.islogedin = true;
-                    TPT.user = Data.Username;
+                    sess.TPT.islogedin = true;
+                    sess.TPT.user = Data.Username;
                     //TPT.ID = dataa[2];
                     res.write(body);
                     res.end();
