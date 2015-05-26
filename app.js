@@ -784,7 +784,7 @@ app.post('/Save.api', function(req, res) {
                 });
             } else {
                 if (isX64) {
-                    child = spawn('render64', [sID + '.cps', sID], {
+                    child = spawn('./render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                 } else {
