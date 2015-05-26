@@ -328,8 +328,8 @@ app.post('/Browse/Comments.json', function(req, res) {
             console.log(util.inspect(sess.TPT));
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
-                '{"Username":"' + sess.TPT.user + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + sess.TPT.ID + '_40.png","Text":"' + Data.Comment +
-                '","Timestamp":"1","FormattedUsername":"' + sess.TPT.user + '"}, ',
+                '{"Username":"' + sess.TPTuser + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + sess.TPTID + '_40.png","Text":"' + Data.Comment +
+                '","Timestamp":"1","FormattedUsername":"' + sess.TPTuser + '"}, ',
                 function(err) {
                     if (err) {
                         return console.log(err);
@@ -671,7 +671,6 @@ app.post('/Login.json', function(req, res) {
     if (req.get('X-Auth-User-Id') && req.get('X-Auth-Session-Key')) {
         //validation here
     }
-    req.session.TPT = {};
     var sess = req.session;
     var formidable = require('formidable');
     var request = require('request');
@@ -689,9 +688,9 @@ app.post('/Login.json', function(req, res) {
                         'Content-Type': 'text/json'
                     });
                     var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
-                    sess.TPT.islogedin = true;
-                    sess.TPT.user = Data.Username;
-                    sess.TPT.ID = dataa[2];
+                    sess.TPTisologedin = true;
+                    sess.TPTuser = Data.Username;
+                    sess.TPTID = dataa[2];
                     res.write(datats);
                     res.end();
                 } else {
@@ -706,8 +705,8 @@ app.post('/Login.json', function(req, res) {
                         res.writeHead(200, {
                             'Content-Type': 'text/json'
                         });
-                        sess.TPT.islogedin = true;
-                        sess.TPT.user = Data.Username;
+                        sess.TPTisologedin = true;
+                        sess.TPTuser = Data.Username;
                         //TPT.ID = dataa[2];
                         res.write(body);
                         res.end();
@@ -725,8 +724,8 @@ app.post('/Login.json', function(req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/json'
                     });
-                    sess.TPT.islogedin = true;
-                    sess.TPT.user = Data.Username;
+                    sess.TPTisologedin = true;
+                    sess.TPTuser = Data.Username;
                     //TPT.ID = dataa[2];
                     res.write(body);
                     res.end();
@@ -753,7 +752,7 @@ app.post('/Save.api', function(req, res) {
              client.say('#BMN', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), '{"ID":' + sID +
                 ',"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name +
-                '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPT.user +
+                '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPTuser +
                 '","Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}',
                 function(err) {
                     if (err) {
@@ -769,7 +768,7 @@ app.post('/Save.api', function(req, res) {
             });
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), '{"ID":' + sID +
                 ',"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"' +
-                sData.Name + '", "Username":"' + sess.TPT.user + '","Comments":1,"Published": "' + sData.Publish + '"}',
+                sData.Name + '", "Username":"' + sess.TPTuser + '","Comments":1,"Published": "' + sData.Publish + '"}',
                 function(err) {
                     if (err) {
                         return console.log(err);
