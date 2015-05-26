@@ -743,7 +743,7 @@ app.post('/Save.api', function(req, res) {
     form.parse(req, function(err, sData, sData2) {
         if (!err) {
             var sID = fs.readFileSync('cID.txt', 'utf8');
-            fs.writeFile(path.join(__dirname, 'cID.txt'), parseInt(sID) + 1, function(err) {
+            fs.writeFile(path.join('cID.txt'), parseInt(sID) + 1, function(err) {
                 if (err) {
                     return console.log(err);
                 }
@@ -784,7 +784,7 @@ app.post('/Save.api', function(req, res) {
                 });
             } else {
                 if (isX64) {
-                    child = spawn('./render64', [sID + '.cps', sID], {
+                    child = spawn('render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                 } else {
