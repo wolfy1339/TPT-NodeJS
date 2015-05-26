@@ -671,8 +671,8 @@ app.post('/Login.json', function(req, res) {
     if (req.get('X-Auth-User-Id') && req.get('X-Auth-Session-Key')) {
         //validation here
     }
+    req.session.TPT = {};
     var sess = req.session;
-    sess.TPT = {};
     var formidable = require('formidable');
     var request = require('request');
     var form = new formidable.IncomingForm();
@@ -726,7 +726,7 @@ app.post('/Login.json', function(req, res) {
                         'Content-Type': 'text/json'
                     });
                     TPT.islogedin = true;
-                    TPT.User = Data.Username;
+                    TPT.user = Data.Username;
                     //TPT.ID = dataa[2];
                     res.write(body);
                     res.end();
