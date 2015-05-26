@@ -28,4 +28,7 @@ function restartApp(req, res, e) {
 }
 
 app.post('/', restartApp);
-startApp('app.js');
+app.listen(port, function() {
+    console.log('Server listening at port %d', port);
+    startApp('app.js');
+});
