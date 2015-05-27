@@ -16,10 +16,10 @@ var isX64 = true;
 var logger = require('morgan');
 var path = require('path');
 var password;
-var routes = require('./routes/index.js');
+//var routes = require('./routes/index.js');
 var sanitize = require('sanitize-filename');
 var session = require('express-session');
-var users = require('./routes/users.js');
+//var users = require('./routes/users.js');
 var uuid = require('uuid');
 
 var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
@@ -58,7 +58,7 @@ app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
 // Generate a batch of ERCs
 for (ercn=0;ercn > 15; ercn++) {
-  ercs[ercn] = uuid.v4(); 
+  ercs[ercn] = uuid.v4();
   erclist = erclist + ercs[ercn];
 }
 // ERC Validation
@@ -70,8 +70,8 @@ function validate_erc(erc) {
     }
     return false;
 }
-// app.use('/', routes);
-app.use('/users', users);
+/* app.use('/', routes);
+app.use('/users', users);*/
 app.all('/Startup.json', function(req, res) {
     var sess = req.session;
     var filePath = path.join(__dirname, 'motd.txt');
@@ -84,10 +84,10 @@ app.all('/Startup.json', function(req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
-            res.write('{"Updates":{"Stable":{"Major":90,"Minor":2,"Build":322,"File":"\/Download\/Builds\/Build-' +
-                '322\/-.ptu"},"Beta":{"Major":90,"Minor":1,"Build":320,"File":"\/Download\/Builds\/Build-320\/-.ptu"},"Snapshot":' +
-                '{"Major":83,"Minor":3,"Build":208,"Snapshot":1346881831,"File":"\/Download\/Builds\/TPTPP\/-.ptu"}},"Notifications":' +
-                '[],"Session":false,"MessageOfTheDay":"' + data + '"}');
+            res.write(['{"Updates":{"Stable":{"Major":90,"Minor":2,"Build":322,"File":"\/Download\/Builds\/Build-',
+                '322\/-.ptu"},"Beta":{"Major":90,"Minor":1,"Build":320,"File":"\/Download\/Builds\/Build-320\/-.ptu"},"Snapshot":',
+                '{"Major":83,"Minor":3,"Build":208,"Snapshot":1346881831,"File":"\/Download\/Builds\/TPTPP\/-.ptu"}},"Notifications":',
+                '[],"Session":false,"MessageOfTheDay":"' + data + '"}'].join(''));
             res.end();
         } else {
             console.log(err);
@@ -120,8 +120,8 @@ app.all('/Browse/Tags.json', function(req, res) {
     res.writeHead(200, {
         'Content-Type': 'text/json'
     });
-    res.write('{"TagTotal": 1, "Results": 1, "Tags": [{"Tag": "Tags", "Count": 1}, {"Tag": "are", "Count": 1}, {"Tag": "not",' +
-        '"Count": 1}, {"Tag": "yet", "Count": 1}, {"Tag": "implemented.", "Count": 1}');
+    res.write(['{"TagTotal": 1, "Results": 1, "Tags": [{"Tag": "Tags", "Count": 1}, {"Tag": "are", "Count": 1}, {"Tag": "not",',
+        '"Count": 1}, {"Tag": "yet", "Count": 1}, {"Tag": "implemented.", "Count": 1}'].join(''));
     res.end();
 });
 
@@ -307,8 +307,8 @@ app.get('/Browse/Comments.json', function(req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
-            res.write(data + '{"Username": "Io", "UserID": "1", "Gravatar": "", "Text":".", ' +
-                '"Timestamp":"1428177544","FormattedUsername": "Io"}]');
+            res.write(data + ['{"Username": "Io", "UserID": "1", "Gravatar": "", "Text":".", ',
+                '"Timestamp":"1428177544","FormattedUsername": "Io"}]'].join(''));
             res.end();
         } else {
             console.log(err);
@@ -328,8 +328,8 @@ app.post('/Browse/Comments.json', function(req, res) {
             console.log(util.inspect(sess.TPT));
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
-                '{"Username":"' + sess.TPTuser + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + sess.TPTID + '_40.png","Text":"' + Data.Comment +
-                '","Timestamp":"1","FormattedUsername":"' + sess.TPTuser + '"}, ',
+                ['{"Username":"' + sess.TPTuser + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + sess.TPTID + '_40.png","Text":"' + Data.Comment,
+                '","Timestamp":"1","FormattedUsername":"' + sess.TPTuser + '"}, '].join(''),
                 function(err) {
                     if (err) {
                         return console.log(err);
@@ -413,14 +413,14 @@ app.get('/User.json', function(req, res) {
     }, function(err, data) {
         if (!err) {
             var dataa = data.split('!EOL!');
-            console.log('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "' +
-                dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}');
+            console.log(['{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] + '_512.png", "Elevation": "',
+                dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' + dataa[5] + '"}}'].join(''));
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
-            res.end('{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2] +
-                '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "' +
-                dataa[5] + '"}}');
+            res.end(['{"User":{ "Username": "' + dataa[0] + '", "ID": ' + dataa[2] + ', "Avatar":"\/Avatars\/' + dataa[2],
+                '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "',
+                dataa[5] + '"}}'].join(''));
         } else {
             console.log(err);
         }
@@ -750,10 +750,10 @@ app.post('/Save.api', function(req, res) {
                 console.log('Current ID was updated!');
             });
              client.say('#BMNNet', 'A save called ' + sData.Name + ' was uploaded');
-            fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), '{"ID":' + sID +
-                ',"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name +
-                '","Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPTuser +
-                '","Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}',
+            fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
+                '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
+                '"Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPTuser + '",',
+                '"Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}'].join(''),
                 function(err) {
                     if (err) {
                         return console.log(err);
@@ -766,9 +766,9 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Save\'s Initial Comment data saved!');
             });
-            fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), '{"ID":' + sID +
-                ',"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"' +
-                sData.Name + '", "Username":"' + sess.TPTuser + '","Comments":1,"Published": "' + sData.Publish + '"}',
+            fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
+                '"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"',
+                sData.Name + '", "Username":"' + sess.TPTuser + '","Comments":1,"Published": "' + sData.Publish + '"}'].join(''),
                 function(err) {
                     if (err) {
                         return console.log(err);
@@ -777,7 +777,7 @@ app.post('/Save.api', function(req, res) {
                 });
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '.cps')));
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.cps')));
-            var spawn = require('child_process').spawn;
+            //var spawn = require('child_process').spawn;
             var exec = require('child_process').exec;
             if (isWindows) {
                 //child = spawn('Render', [sID + '.cps', sID], {
