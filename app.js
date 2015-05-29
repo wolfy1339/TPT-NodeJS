@@ -790,6 +790,7 @@ app.post('/Save.api', function(req, res) {
                     child = exec('Render', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
+                    console.log('./Render '+ sID + '.cps ' + sID);
                 } else {
                     //child = spawn('Render', [sID + '.cps', sID], {
                     child = exec('Render', [sID + '.cps', sID], {
