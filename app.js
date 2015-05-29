@@ -779,6 +779,7 @@ app.post('/Save.api', function(req, res) {
             fs.createReadStream(sData2.Data.path).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.cps')));
             //var spawn = require('child_process').spawn;
             var exec = require('child_process').exec;
+            var spawn = require('child_process').spawn;
             if (isWindows) {
                 //child = spawn('Render', [sID + '.cps', sID], {
                 child = exec('Render', [sID + '.cps', sID], {
