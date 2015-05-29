@@ -787,7 +787,7 @@ app.post('/Save.api', function(req, res) {
             } else {
                 if (isX64) {
                    //child = spawn('Render', [sID + '.cps', sID], {
-                    child = exec('Render64', [sID + '.cps', sID], {
+                    child = exec('render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                     console.log('./Render '+ sID + '.cps ' + sID);
