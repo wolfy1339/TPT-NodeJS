@@ -356,6 +356,16 @@ app.get('/fp.html', function(req, res) {
     }
 });
 
+app.get('/irc.html', function(req, res) {
+    var sess = req.session;
+    if (sess.islogedin) {
+        client.say('#BMNNet', req.query.msg);
+        res.redirect('index.html');
+    } else {
+        res.redirect('index.html');
+    }
+});
+
 app.get('/logout.html', function (req, res) {
     var sess = req.session;
     res.redirect('index.html');
