@@ -440,25 +440,25 @@ app.get('/User.json', function(req, res) {
 app.get('/', function(req, res) {
     var sess = req.session;
     if(sess.islogedin){
-    res.render('index', {
-        islogedin: sess.islogedin,
-        wtptislogedin: sess.wTPTislogedin,
-        wtptusr: sess.wTPTUser
-    });
+        res.render('index', {
+            islogedin: sess.islogedin,
+            wtptislogedin: sess.wTPTislogedin,
+            wtptusr: sess.wTPTUser
+        });
     } else {
-            if(sess.wTPT.islogedin){
-    res.render('index', {
-        islogedin: false,
-        wtptislogedin: sess.wTPTislogedin,
-        wtptusr: sess.wTPTUser
-    });
-            } else {
+        if(sess.wTPTislogedin){
             res.render('index', {
-        islogedin: false,
-        wtptislogedin: false,
-        wtptusr: 'nobody'
-    });
-            }
+                islogedin: false,
+                wtptislogedin: sess.wTPTislogedin,
+                wtptusr: sess.wTPTUser
+            });
+        } else {
+            res.render('index', {
+                islogedin: false,
+                wtptislogedin: false,
+                wtptusr: 'nobody'
+            });
+        }
     }
 });
 
@@ -759,17 +759,17 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Current ID was updated!');
             });
-             client.say('#BMNNet', 'A save called ' + sData.Name + ' was uploaded');
+            client.say('#BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
                 '"Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPTuser + '",',
                 '"Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}'].join(''),
                 function(err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                    console.log('Save data saved!');
-                });
+                if (err) {
+                    return console.log(err);
+                }
+                console.log('Save data saved!');
+            });
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sID + '.txt'), '[', function(err) {
                 if (err) {
                     return console.log(err);
