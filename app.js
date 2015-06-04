@@ -631,7 +631,8 @@ app.post('/register.html', function(req, res) {
                 var php = require('phpjs');
                 var ip = php.ip2long(req.get('X-Forwarded-For'));
                 console.error('Possible attack detected from ' + ip);
-                req.end('ERR_ERRONEOUS_USERNAME')
+                req.end('ERR_ERRONEOUS_USERNAME');
+            }
         } else {
             console.log('ERROR1');
             req.end('ERR_USER_EXISTS');
