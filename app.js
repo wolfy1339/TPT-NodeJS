@@ -9,7 +9,6 @@ var ercs = [];
 var favicon = require('serve-favicon');
 var fs = require('fs');
 var irc = require('irc');
-var islogedin = false;
 // Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
 var isWindows = false;
 var isX64 = true;
