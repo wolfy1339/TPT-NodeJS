@@ -617,15 +617,21 @@ app.post('/register.html', function(req, res) {
     });
     if (validate_erc(req.body.erc) || req.body.erc == "SUPER_SECRET_AND_AWESOME_AND_COMPLEX_ERC_CODE_7v6b8qyqnhgba73b0tv63a70oqy6mtrhjuf") {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
-            password = crypto.createHash('md5').update(req.body.pass).digest('hex');
-            fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
-            req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!None',
-            function(err) {
-                if (err) {
-                    return console.log(err);
-                }
-                console.log('User ' + req.body.user + ' Registered!');
-            });
+            if (!req.body.user.indexOf('!EOL!')) {
+                password = crypto.createHash('md5').update(req.body.pass).digest('hex');
+                fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
+                req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!None',
+                function(err) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    console.log('User ' + req.body.user + ' Registered!');
+                });
+            } else {
+                var php = require('phpjs');
+                var ip = php.ip2long(req.get('X-Forwarded-For'));
+                console.error('Possible attack detected from ' + ip);
+                req.end('ERR_ERRONEOUS_USERNAME')
         } else {
             console.log('ERROR1');
             req.end('ERR_USER_EXISTS');
