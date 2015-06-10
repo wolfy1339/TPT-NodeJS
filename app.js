@@ -10,7 +10,7 @@ var favicon = require('serve-favicon');
 var fs = require('fs');
 var irc = require('irc');
 // Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
-var isWindows = false;
+var isWindows = process.env.iswin32 || false;
 var isX64 = true;
 var logger = require('morgan');
 var path = require('path');
