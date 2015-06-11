@@ -704,8 +704,8 @@ app.post('/Login.json', function(req, res) {
                         'Content-Type': 'text/json'
                     });
                     var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
-                    sess.TPTisologedin = true;
-                    sess.TPTuser = Data.Username;
+                    sess.TPTislogedin = true;
+                    sess.TPTUser = dataa[0];
                     sess.TPTID = dataa[2];
                     res.write(datats);
                     res.end();
@@ -721,8 +721,8 @@ app.post('/Login.json', function(req, res) {
                         res.writeHead(200, {
                             'Content-Type': 'text/json'
                         });
-                        sess.TPTisologedin = true;
-                        sess.TPTuser = Data.Username;
+                        sess.TPTislogedin = true;
+                        sess.TPTUser = Data.Username;
                         //TPT.ID = dataa[2];
                         res.write(body);
                         res.end();
@@ -740,8 +740,8 @@ app.post('/Login.json', function(req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/json'
                     });
-                    sess.TPTisologedin = true;
-                    sess.TPTuser = Data.Username;
+                    sess.TPTislogedin = true;
+                    sess.TPTUser = Data.Username;
                     //TPT.ID = dataa[2];
                     res.write(body);
                     res.end();
