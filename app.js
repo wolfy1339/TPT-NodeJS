@@ -724,6 +724,7 @@ app.post('/Login.json', function(req, res) {
                         });
                         sess.TPTislogedin = true;
                         sess.TPTUser = Data.Username;
+                        console.log(sess.TPTUser+'-tpt logged in!');
                         //TPT.ID = dataa[2];
                         res.write(body);
                         res.end();
@@ -743,6 +744,7 @@ app.post('/Login.json', function(req, res) {
                     });
                     sess.TPTislogedin = true;
                     sess.TPTUser = Data.Username;
+                    console.log(sess.TPTUser+'-tpt logged in!');
                     //TPT.ID = dataa[2];
                     res.write(body);
                     res.end();
