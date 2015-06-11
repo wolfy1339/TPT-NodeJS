@@ -707,6 +707,7 @@ app.post('/Login.json', function(req, res) {
                     sess.TPTislogedin = true;
                     sess.TPTUser = dataa[0];
                     sess.TPTID = dataa[2];
+                    console.log(sess.TPTUser+' logged in!');
                     res.write(datats);
                     res.end();
                 } else {
