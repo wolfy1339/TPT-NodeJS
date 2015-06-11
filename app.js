@@ -37,7 +37,7 @@ client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 app.use(session({
     name: 'PowderSession',
     saveUninitialized: true,
-    resave: false,
+    resave: true,
     //Change if security problem is detected!
     secret: 'BrilliantMindsoftheTPTservers'
 }));
