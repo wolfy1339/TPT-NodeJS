@@ -35,9 +35,9 @@ client.addListener('error', function(message) {
 client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 
 app.use(session({
-    name: 'PowderSession',
-//    saveUninitialized: true,
-//    resave: true,
+//    name: 'PowderSession',
+    saveUninitialized: true,
+    resave: true,
     //Change if security problem is detected!
     secret: 'BrilliantMindsoftheTPTservers'
 }));
