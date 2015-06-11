@@ -34,7 +34,7 @@ client.addListener('error', function(message) {
 
 client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 
- 
+ var sess;
  app.use(session({
     //name: 'PowderSession',
     saveUninitialized: true,
