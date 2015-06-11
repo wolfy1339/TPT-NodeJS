@@ -327,7 +327,7 @@ app.post('/Browse/Comments.json', function(req, res) {
             console.log(util.inspect(sess.TPT));
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
-                ['{"Username":"' + sess.TPTuser + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + sess.TPTID + '_40.png","Text":"' + Data.Comment,
+                ['{"Username":"' + sess.TPTUser + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + sess.TPTID + '_40.png","Text":"' + Data.Comment,
                 '","Timestamp":"1","FormattedUsername":"' + sess.TPTuser + '"}, '].join(''),
                 function(err) {
                     if (err) {
@@ -768,7 +768,7 @@ app.post('/Save.api', function(req, res) {
             client.say('#BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
-                '"Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPTuser + '",',
+                '"Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPTUser + '",',
                 '"Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}'].join(''),
                 function(err) {
                 if (err) {
@@ -784,7 +784,7 @@ app.post('/Save.api', function(req, res) {
             });
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"',
-                sData.Name + '", "Username":"' + sess.TPTuser + '","Comments":1,"Published": "' + sData.Publish + '"}'].join(''),
+                sData.Name + '", "Username":"' + sess.TPTUser + '","Comments":1,"Published": "' + sData.Publish + '"}'].join(''),
                 function(err) {
                     if (err) {
                         return console.log(err);
