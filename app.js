@@ -34,6 +34,7 @@ client.addListener('error', function(message) {
 
 client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 
+ /*
  app.use(session({
 //    name: 'PowderSession',
 //    saveUninitialized: false,
@@ -41,6 +42,8 @@ client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
      //Change if security problem is detected!
      secret: 'BrilliantMindsoftheTPTservers'
  }));
+ */
+ app.use(session({secret: 'ssshhh'}));
  
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
