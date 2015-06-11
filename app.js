@@ -765,7 +765,7 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Current ID was updated!');
             });
-            //client.say('#BMNNet', 'A save called ' + sData.Name + ' was uploaded');
+            client.say('#BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
                 '"Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPTuser + '",',
@@ -804,7 +804,7 @@ app.post('/Save.api', function(req, res) {
             } else {
                 if (isX64) {
                    //child = exec('Render', [sID + '.cps', sID], {
-                    child = spawn('./render64', [sID + '.cps', sID], {
+                    child = spawn('render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                     console.log('./Render '+ sID + '.cps ' + sID);
