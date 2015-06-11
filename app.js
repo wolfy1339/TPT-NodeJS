@@ -34,13 +34,14 @@ client.addListener('error', function(message) {
 
 client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 
-app.use(session({
+ app.use(session({
 //    name: 'PowderSession',
-//    saveUninitialized: true,
-//    resave: true,
-    //Change if security problem is detected!
-    secret: 'BrilliantMindsoftheTPTservers'
-}));
+//    saveUninitialized: false,
+//   resave: true,
+     //Change if security problem is detected!
+     secret: 'BrilliantMindsoftheTPTservers'
+ }));
+ 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
