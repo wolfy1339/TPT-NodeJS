@@ -36,7 +36,7 @@ client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 
 var sess;
 app.use(session({
-    //name: 'PowderSession',
+    name: 'PowderSession',
     saveUninitialized: true,
     resave: true,
     //Change if security problem is detected!
