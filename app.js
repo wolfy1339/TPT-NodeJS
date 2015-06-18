@@ -40,7 +40,8 @@ app.use(session({
     saveUninitialized: true,
     resave: true,
     //Change if security problem is detected!
-    secret: 'BrilliantMindsoftheTPTservers'
+    secret: 'BrilliantMindsoftheTPTservers',
+    cookie: { httpOnly: false }
  }));
 
  
