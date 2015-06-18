@@ -39,6 +39,7 @@ app.use(session({
     name: 'PowderSession',
     saveUninitialized: true,
     resave: true,
+    headerName: 'X-Auth-Session-Key',
     //Change if security problem is detected!
     secret: 'BrilliantMindsoftheTPTservers',
     cookie: { httpOnly: false }
