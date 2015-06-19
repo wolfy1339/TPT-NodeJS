@@ -153,8 +153,8 @@ app.all('/Browse.json', function(req, res) {
         if (req.query) {
             //begin of query proc
             if (req.query.Search_Query) {
-                if (req.query.Search_Query.indexOf('ID:') != -1) {
-                    var sID = req.query.Search_Query.split('ID:')[1];
+                if (req.query.Search_Query.indexOf('ID:') != -1 || req.query.Search_Query.indexOf('id:') != -1 ) {
+                    var sID = req.query.Search_Query.split('ID:')[1] || req.query.Search_Query.split('id:')[1];
                     console.log(sID);
                     filePath = path.join(__dirname, 'Saves_1', 'save_' + sanitize(sID) + '.txt');
                 }
