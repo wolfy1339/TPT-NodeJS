@@ -29,7 +29,7 @@ var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
 });
 
 client.addListener('error', function(message) {
-    console.log('error: ', message);
+    console.error('error: ', message);
 });
 
 client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
@@ -84,7 +84,7 @@ app.all('/Startup.json', function(req, res) {
         encoding: 'utf-8'
     }, function(err, data) {
         if (!err) {
-            console.log('received data: ' + data);
+            console.log('Received data: ' + data);
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
@@ -94,7 +94,7 @@ app.all('/Startup.json', function(req, res) {
                 '[],"Session":false,"MessageOfTheDay":"' + data + '"}'].join(''));
             res.end();
         } else {
-            console.log(err);
+            console.error(err);
         }
 
     });
@@ -114,7 +114,7 @@ app.get('/GetScript.api', function(req, res) {
             res.write(data);
             res.end();
         } else {
-            console.log(err);
+            console.error(err);
         }
     });
 });
@@ -138,14 +138,14 @@ app.all('/Browse.json', function(req, res) {
             encoding: 'utf-8'
         }, function(err, data) {
             if (!err) {
-                console.log('received data: ' + data);
+                console.log('Received data: ' + data);
                 res.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
                 res.write('{"Count":517032, "Saves":[' + data + ']}');
                 res.end();
             } else {
-                console.log(err);
+                console.error(err);
             }
 
         });
@@ -165,14 +165,14 @@ app.all('/Browse.json', function(req, res) {
                 encoding: 'utf-8'
             }, function(err, data) {
                 if (!err) {
-                    console.log('received data: ' + data);
+                    console.log('Received data: ' + data);
                     res.writeHead(200, {
                         'Content-Type': 'text/html'
                     });
                     res.write('{"Count":517032, "Saves":[' + data + ']}');
                     res.end();
                 } else {
-                    console.log(err);
+                    console.error(err);
                 }
 
             });
@@ -188,14 +188,14 @@ app.all('/Browse/View.json', function(req, res) {
         encoding: 'utf-8'
     }, function(err, data) {
         if (!err) {
-            console.log('received data: ' + data);
+            console.log('Received data: ' + data);
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
             res.write('{"Count":517032, "Saves":[' + data + ']}');
             res.end();
         } else {
-            console.log(err);
+            console.error(err);
         }
 
     });
@@ -210,7 +210,7 @@ app.get('/verify/:id', function(req, res) {
             encoding: 'utf-8'
         }, function(err, data) {
             if (err) {
-                console.log(err);
+                console.error(err);
             }
             var dataa = data.split('!EOL!');
             var Uname = dataa[0];
@@ -218,14 +218,14 @@ app.get('/verify/:id', function(req, res) {
             var uID = dataa[4];
             fs.writeFile(path.join(__dirname, 'Users', Uname + '.txt'), Uname + '!EOL!' + Hash + '!EOL!' + uID + '!EOL!None!EOL!?!EOL!No' + ' biography set.', function(err) {
                 if (err) {
-                    return console.log(err);
+                    return console.error(err);
                 }
                 fs.unlink(vidp, function(err) {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
                     }
                     console.log('Verifying request ' + id + '...');
-                    console.log('User ' + Uname + ' Registered!');
+                    console.info('User ' + Uname + ' Registered!');
                     res.writeHead(200, {
                         'Content-Type': 'text/html'
                     });
@@ -315,7 +315,7 @@ app.get('/Browse/Comments.json', function(req, res) {
                 '"Timestamp":"1428177544","FormattedUsername": "Io"}]'].join(''));
             res.end();
         } else {
-            console.log(err);
+            console.error(err);
         }
     });
     //}
@@ -336,7 +336,7 @@ app.post('/Browse/Comments.json', function(req, res) {
                 '","Timestamp":"1","FormattedUsername":"' + sess.TPTuser + '"}, '].join(''),
                 function(err) {
                     if (err) {
-                        return console.log(err);
+                        return console.error(err);
                     }
                     console.log('Comment data saved!');
                 });
@@ -346,7 +346,7 @@ app.post('/Browse/Comments.json', function(req, res) {
             res.write('{"Status":1}');
             res.end();
         } else {
-            console.log(err);
+            console.error(err);
         }
     });
 });
@@ -436,12 +436,12 @@ app.get('/User.json', function(req, res) {
                 '_512.png", "Elevation": "' + dataa[3] + '", "Saves":{}, "Forum":{}, "Registered": "' + dataa[4] + '", "Biography": "',
                 dataa[5] + '"}}'].join(''));
         } else {
-            console.log(err);
+            console.error(err);
         }
     });
 });
 
-app.get('/', function(req, res) {
+app.get('/index.html' || '/', function(req, res) {
     var sess = req.session;
     if(sess.islogedin){
         res.render('index', {
@@ -557,7 +557,7 @@ app.post('/usr_login.html', function(req, res) {
                 res.end();
             }
         } else {
-            console.log(err);
+            console.error(err);
         }
     });
 });
@@ -577,7 +577,7 @@ app.post('/passwd.html', function(req, res) {
     //user comes from HTML page.
     fs.readFile(vidp, {encoding: 'utf-8'}, function(err, data) {
         if (err) {
-            console.log(err);
+            console.error(err);
         }
         var dataa = data.split('!EOL!');
         var uID = dataa[4];
@@ -588,7 +588,7 @@ app.post('/passwd.html', function(req, res) {
         wTPTUser + '!EOL!' + crypto.createHash('md5').update(wTPTUser + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, 
         function(err) {
             if (err) {
-                console.log(err);
+                console.error(err);
             }
             console.log('User ' + sess.wTPTUser + ' changed their password');
         });
@@ -612,7 +612,7 @@ app.post('/register.html', function(req, res) {
     var uID = fs.readFileSync('uID.txt', 'utf8');
     fs.writeFile(path.join(__dirname, 'uID.txt'), parseInt(uID) + 1, function(err) {
         if (err) {
-            return console.log(err);
+            return console.error(err);
         }
         console.log('Current uID was updated!');
     });
@@ -627,14 +627,14 @@ app.post('/register.html', function(req, res) {
                 req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!None',
                 function(err) {
                     if (err) {
-                        return console.log(err);
+                        return console.error(err);
                     }
-                    console.log('User ' + req.body.user + ' Registered!');
+                    console.info('User ' + req.body.user + ' Registered!');
                 });
             } else {
                 var php = require('phpjs');
                 var ip = php.ip2long(req.get('X-Forwarded-For'));
-                console.error('Possible attack detected from ' + ip);
+                console.warn('Possible attack detected from ' + ip);
                 res.end('ERR_ERRONEOUS_USERNAME');
             }
         } else {
@@ -666,7 +666,7 @@ app.post('/motd.html', function(req, res) {
         fs.writeFile('motd.txt', req.body.motd, function(err) {
             if (err) {
                 res.end(err);
-                return console.log(err);
+                return console.error(err);
             }
             console.log('The file was saved!');
         });
@@ -749,7 +749,7 @@ app.post('/Login.json', function(req, res) {
                     });
                     sess.TPTislogedin = true;
                     sess.TPTUser = Data.Username;
-                    console.log(sess.TPTUser+'-tpt logged in!');
+                    console.log(sess.TPTUser + ' logged in using TPT credentials!');
                     //TPT.ID = dataa[2];
                     res.write(body);
                     res.end();
@@ -769,7 +769,7 @@ app.post('/Save.api', function(req, res) {
             var sID = parseInt(fs.readFileSync('cID.txt', 'utf8'));
             fs.writeFile(path.join('cID.txt'), parseInt(sID) + 1, function(err) {
                 if (err) {
-                    return console.log(err);
+                    return console.error(err);
                 }
                 console.log('Current ID was updated!');
             });
@@ -780,13 +780,13 @@ app.post('/Save.api', function(req, res) {
                 '"Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}'].join(''),
                 function(err) {
                 if (err) {
-                    return console.log(err);
+                    return console.error(err);
                 }
                 console.log('Save data saved!');
             });
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sID + '.txt'), '[', function(err) {
                 if (err) {
-                    return console.log(err);
+                    return console.error(err);
                 }
                 console.log('Save\'s Initial Comment data saved!');
             });
@@ -795,7 +795,7 @@ app.post('/Save.api', function(req, res) {
                 sData.Name + '", "Username":"' + sess.TPTUser + '","Comments":1,"Published": "' + sData.Publish + '"}'].join(''),
                 function(err) {
                     if (err) {
-                        return console.log(err);
+                        return console.error(err);
                     }
                     console.log('Save data part 2 saved!');
                 });
@@ -815,7 +815,7 @@ app.post('/Save.api', function(req, res) {
                     child = spawn('render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
-                    console.log('./Render '+ sID + '.cps ' + sID);
+                    console.log('./render64 '+ sID + '.cps ' + sID);
                 } else {
                     //child = spawn('Render', [sID + '.cps', sID], {
                     child = exec('Render', [sID + '.cps', sID], {
@@ -830,11 +830,11 @@ app.post('/Save.api', function(req, res) {
 
             // Listen for any errors:
             child.stderr.on('data', function(data) {
-                console.log('There was an error: ' + data);
+                console.warn('There was an error: ' + data);
             });
 
             child.on('close', function(code) {
-                console.log('Renderer closed with code: ' + code);
+                console.warn('Renderer closed with code: ' + code);
                 fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1.pti')));
                 fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_1_small.pti')));
                 fs.createReadStream(path.join(__dirname, 'Saves_bin', sID + '-small.pti')).pipe(fs.createWriteStream(path.join(__dirname, 'Saves_bin', sID + '_small.pti')));
@@ -885,7 +885,7 @@ app.use(function(err, req, res, next) {
 var port = process.env.PORT || 3001;
 
 app.listen(port, function() {
-    console.log('Server listening at port %d', port);
+    console.info('Server listening at port %d', port);
 });
 
 module.exports = app;
