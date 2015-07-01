@@ -637,6 +637,7 @@ app.post('/register.html', function(req, res) {
                 var php = require('phpjs');
                 var ip = php.ip2long(req.get('X-Forwarded-For'));
                 console.warn('Possible attack detected from ' + ip);
+                client.say('##BMNNet', 'Possible attack detected!');
                 res.end('ERR_ERRONEOUS_USERNAME');
             }
         } else {
@@ -779,7 +780,7 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Current ID was updated!');
             });
-            client.say('#BMNNet', 'A save called ' + sData.Name + ' was uploaded');
+            client.say('##BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
                 '"Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPTUser + '",',
