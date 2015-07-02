@@ -441,7 +441,32 @@ app.get('/User.json', function(req, res) {
     });
 });
 
-app.get('/index.html' || '/', function(req, res) {
+app.get('/index.html', function(req, res) {
+    var sess = req.session;
+    if(sess.islogedin){
+        res.render('index', {
+            islogedin: sess.islogedin,
+            wtptislogedin: sess.wTPTislogedin,
+            wtptusr: sess.wTPTUser
+        });
+    } else {
+        if(sess.wTPTislogedin){
+            res.render('index', {
+                islogedin: false,
+                wtptislogedin: sess.wTPTislogedin,
+                wtptusr: sess.wTPTUser
+            });
+        } else {
+            res.render('index', {
+                islogedin: false,
+                wtptislogedin: false,
+                wtptusr: 'nobody'
+            });
+        }
+    }
+});
+
+app.get('/', function(req, res) {
     var sess = req.session;
     if(sess.islogedin){
         res.render('index', {
