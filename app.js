@@ -742,8 +742,8 @@ app.post('/Login.json', function(req, res) {
                     sess.TPTUser = dataa[0];
                     sess.TPTID = dataa[2];
                     ptahuth[dataa[0]]={};
-                    ptauth[dataa[0]]["Key"]=Math.random();
-                    console.log(ptauth[dataa[0]]["Key"]);
+                    ptauth[dataa[0]].Key=Math.random();
+                    console.log(ptauth[dataa[0]].Key);
                     console.log(sess.TPTUser+' logged in!');
                     res.write(datats);
                     res.end();
