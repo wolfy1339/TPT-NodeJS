@@ -22,7 +22,7 @@ var session = require('express-session');
 var uuid = require('uuid');
 
 var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
-    channels: ['#BMNNet'],
+    channels: ['##BMNNet'],
     userName: 'BMNBot',
     password: 'Powder!',
     sasl: true
@@ -441,7 +441,7 @@ app.get('/User.json', function(req, res) {
     });
 });
 
-app.get('/index.html' || '/' || '/', function(req, res) {
+app.get('/index.html' || '/', function(req, res) {
     var sess = req.session;
     if(sess.islogedin){
         res.render('index', {
