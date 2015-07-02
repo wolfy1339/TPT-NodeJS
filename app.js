@@ -441,7 +441,7 @@ app.get('/User.json', function(req, res) {
     });
 });
 
-app.get('/index.html' || '/' || '\', function(req, res) {
+app.get('/index.html' || '/', function(req, res) {
     var sess = req.session;
     if(sess.islogedin){
         res.render('index', {
