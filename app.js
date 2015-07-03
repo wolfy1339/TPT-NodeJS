@@ -634,8 +634,7 @@ app.post('/register.html', function(req, res) {
                     console.info('User ' + req.body.user + ' Registered!');
                 });
             } else {
-                var php = require('phpjs');
-                var ip = php.ip2long(req.get('X-Forwarded-For'));
+                var ip = req.get('X-Forwarded-For');
                 console.warn('Possible attack detected from ' + ip);
                 res.end('ERR_ERRONEOUS_USERNAME');
             }
