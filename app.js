@@ -811,7 +811,7 @@ app.post('/Save.api', function(req, res) {
             client.say('##BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
-                '"Description":"' + sData.Description + '", "DateCreated":1,"Date":1,"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name) + '",',
+                '"Description":"' + sData.Description + '", "DateCreated":1,"Date":1,"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '",',
                 '"Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}'].join(''),
                 function(err) {
                 if (err) {
