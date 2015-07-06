@@ -169,7 +169,8 @@ app.all('/Browse.json', function(req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/html'
                     });
-                    res.write('{"Count":517032, "Saves":[' + data + ']}');
+                    //res.write('{"Count":517032, "Saves":[' + data + ']}');
+                    res.write(data);
                     res.end();
                 } else {
                     console.error(err);
