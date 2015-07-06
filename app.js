@@ -719,7 +719,9 @@ app.get('/Login.json', function(req, res) {
 app.post('/Login.json', function(req, res) {
     if (req.get('X-Auth-User-Id') && req.get('X-Auth-Session-Key')) {
         //validation here
-        
+        if(ptauth[req.get('X-Auth-User-Id')].Key==req.get('X-Auth-Session-Key')){
+            req.end("{Status:1}");
+        }
     }
     var sess = req.session;
     var formidable = require('formidable');
@@ -737,13 +739,13 @@ app.post('/Login.json', function(req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/json'
                     });
-                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
-                    sess.TPTislogedin = true;
-                    sess.TPTUser = dataa[0];
-                    sess.TPTID = dataa[2];
                     ptauth[dataa[0]]={};
                     ptauth[dataa[0]].Key=Math.random();
                     console.log(ptauth[dataa[0]].Key);
+                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"'+ptauth[dataa[0]].Key+'","Elevation":"' + dataa[3] + '","Notifications":[]}';
+                    sess.TPTislogedin = true;
+                    sess.TPTUser = dataa[0];
+                    sess.TPTID = dataa[2];
                     console.log(sess.TPTUser+' logged in!');
                     res.write(datats);
                     res.end();
@@ -808,7 +810,7 @@ app.post('/Save.api', function(req, res) {
             client.say('##BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
-                '"Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPTUser + '",',
+                '"Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + req.get('X-Auth-User-Id') + '",',
                 '"Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}'].join(''),
                 function(err) {
                 if (err) {
@@ -824,7 +826,7 @@ app.post('/Save.api', function(req, res) {
             });
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"',
-                sData.Name + '", "Username":"' + sess.TPTUser + '","Comments":1,"Published": "' + sData.Publish + '"}'].join(''),
+                sData.Name + '", "Username":"' + req.get('X-Auth-User-Id') + '","Comments":1,"Published": "' + sData.Publish + '"}'].join(''),
                 function(err) {
                     if (err) {
                         return console.error(err);
