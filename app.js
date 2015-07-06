@@ -332,8 +332,8 @@ app.post('/Browse/Comments.json', function(req, res) {
             console.log(util.inspect(sess.TPT));
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
-                ['{"Username":"' + sess.TPTUser + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + sess.TPTID + '_40.png","Text":"' + Data.Comment,
-                '","Timestamp":"1","FormattedUsername":"' + sess.TPTuser + '"}, '].join(''),
+                ['{"Username":"' + ptauth[dataa[0]].Name + '","UserID":"'+ptauth[dataa[0]]+","Gravatar":"\/Avatars\/' + ptauth[dataa[0]] + '_40.png","Text":"' + Data.Comment,
+                '","Timestamp":"1","FormattedUsername":"' + ptauth[dataa[0]].Name + '"}, '].join(''),
                 function(err) {
                     if (err) {
                         return console.error(err);
@@ -739,10 +739,11 @@ app.post('/Login.json', function(req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/json'
                     });
-                    ptauth[dataa[0]]={};
-                    ptauth[dataa[0]].Key=Math.random();
+                    ptauth[dataa[2]]={};
+                    ptauth[dataa[2]].Name=dataa[0]
+                    ptauth[dataa[2]].Key=Math.random();
                     console.log(ptauth[dataa[0]].Key);
-                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"'+ptauth[dataa[0]].Key+'","Elevation":"' + dataa[3] + '","Notifications":[]}';
+                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"'+ptauth[dataa[2]].Key+'","SessionKey":"'+ptauth[dataa[2]].Key+'","Elevation":"' + dataa[3] + '","Notifications":[]}';
                     sess.TPTislogedin = true;
                     sess.TPTUser = dataa[0];
                     sess.TPTID = dataa[2];
@@ -810,7 +811,7 @@ app.post('/Save.api', function(req, res) {
             client.say('##BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
-                '"Description":"' + sData.Description + '", "DateCreated":1,"Date":1,"Username":"' + req.get('X-Auth-User-Id') + '",',
+                '"Description":"' + sData.Description + '", "DateCreated":1,"Date":1,"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name) + '",',
                 '"Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}'].join(''),
                 function(err) {
                 if (err) {
@@ -826,7 +827,7 @@ app.post('/Save.api', function(req, res) {
             });
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"',
-                sData.Name + '", "Username":"' + req.get('X-Auth-User-Id') + '","Comments":1,"Published": "' + sData.Publish + '"}'].join(''),
+                sData.Name + '", "Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","Comments":1,"Published": "' + sData.Publish + '"}'].join(''),
                 function(err) {
                     if (err) {
                         return console.error(err);
