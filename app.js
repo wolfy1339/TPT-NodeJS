@@ -742,7 +742,7 @@ app.post('/Login.json', function(req, res) {
                     ptauth[dataa[2]]={};
                     ptauth[dataa[2]].Name=dataa[0]
                     ptauth[dataa[2]].Key=Math.random();
-                    console.log(ptauth[dataa[0]].Key);
+                    console.log(ptauth[dataa[2]].Key);
                     var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"'+ptauth[dataa[2]].Key+'","SessionKey":"'+ptauth[dataa[2]].Key+'","Elevation":"' + dataa[3] + '","Notifications":[]}';
                     sess.TPTislogedin = true;
                     sess.TPTUser = dataa[0];
