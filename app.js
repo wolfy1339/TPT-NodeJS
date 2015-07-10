@@ -332,7 +332,7 @@ app.post('/Browse/Comments.json', function(req, res) {
             console.log(util.inspect(sess.TPT));
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
-                ['{"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","UserID":"'+ptauth[dataa[0]]+'","Gravatar":"\/Avatars\/' + ptauth[req.get('X-Auth-User-Id')] + '_40.png","Text":"' + Data.Comment,
+                ['{"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","UserID":"'+ptauth[req.get('X-Auth-User-Id')]+'","Gravatar":"\/Avatars\/' + ptauth[req.get('X-Auth-User-Id')] + '_40.png","Text":"' + Data.Comment,
                 '","Timestamp":"1","FormattedUsername":"' + ptauth[req.get('X-Auth-User-Id')].Name + '"}, '].join(''),
                 function(err) {
                     if (err) {
