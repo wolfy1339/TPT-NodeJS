@@ -192,7 +192,8 @@ app.all('/Browse/View.json', function(req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
-            res.write('{"Count":517032, "Saves":[' + data + ']}');
+            //res.write('{"Count":517032, "Saves":[' + data + ']}');
+            res.write( data);
             res.end();
         } else {
             console.error(err);
