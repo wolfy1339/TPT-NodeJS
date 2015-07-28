@@ -809,7 +809,7 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Current ID was updated!');
             });
-            if(sData.Publish=='Published'){var published=true;}else{var published=false;}
+            if(sData.Publish=='Published'){published=true;}else{published=false;}
             client.say('##BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
@@ -844,19 +844,19 @@ app.post('/Save.api', function(req, res) {
             var spawn = require('child_process').spawn;
             if (isWindows) {
                 //child = exec('Render', [sID + '.cps', sID], {
-                var child = spawn('Render', [sID + '.cps', sID], {
+                    child = spawn('Render', [sID + '.cps', sID], {
                     cwd: path.join(__dirname, 'Saves_bin')
                 });
             } else {
                 if (isX64) {
                    //child = exec('Render', [sID + '.cps', sID], {
-                    var child = spawn('render64', [sID + '.cps', sID], {
+                        child = spawn('render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                     console.log('./render64 '+ sID + '.cps ' + sID);
                 } else {
                     //child = spawn('Render', [sID + '.cps', sID], {
-                    var child = exec('Render', [sID + '.cps', sID], {
+                        child = exec('Render', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                 }
