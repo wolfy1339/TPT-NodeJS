@@ -809,11 +809,12 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Current ID was updated!');
             });
+            var published=if(sData.Publish=="Published"){return true;}else{return false;}
             client.say('##BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
                 '"Description":"' + sData.Description + '", "DateCreated":1,"Date":1,"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '",',
-                '"Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}'].join(''),
+                '"Comments":0,"Published":' + published + ',"Version":0,"Tags":[]}'].join(''),
                 function(err) {
                 if (err) {
                     return console.error(err);
@@ -826,9 +827,10 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Save\'s Initial Comment data saved!');
             });
+            
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"',
-                sData.Name + '", "Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","Comments":1,"Published": "' + sData.Publish + '"}'].join(''),
+                sData.Name + '", "Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","Comments":1,"Published": "' + published + '"}'].join(''),
                 function(err) {
                     if (err) {
                         return console.error(err);
