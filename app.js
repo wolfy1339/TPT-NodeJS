@@ -647,7 +647,7 @@ app.post('/register.html', function(req, res) {
     res.writeHead(200, {
         'content-type': 'text/html'
     });
-    if (validate_erc(req.body.erc) || req.body.erc == "SUPER_SECRET_AND_AWESOME_AND_COMPLEX_ERC_CODE_7v6b8qyqnhgba73b0tv63a70oqy6mtrhjuf") {
+    if (validate_erc(req.body.erc) || req.body.erc == 'SUPER_SECRET_AND_AWESOME_AND_COMPLEX_ERC_CODE_7v6b8qyqnhgba73b0tv63a70oqy6mtrhjuf') {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
             if (!req.body.user.indexOf('!EOL!')) {
                 password = crypto.createHash('md5').update(req.body.pass).digest('hex');
@@ -844,19 +844,19 @@ app.post('/Save.api', function(req, res) {
             var spawn = require('child_process').spawn;
             if (isWindows) {
                 //child = exec('Render', [sID + '.cps', sID], {
-                child = spawn('Render', [sID + '.cps', sID], {
+                var child = spawn('Render', [sID + '.cps', sID], {
                     cwd: path.join(__dirname, 'Saves_bin')
                 });
             } else {
                 if (isX64) {
                    //child = exec('Render', [sID + '.cps', sID], {
-                    child = spawn('render64', [sID + '.cps', sID], {
+                    var child = spawn('render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                     console.log('./render64 '+ sID + '.cps ' + sID);
                 } else {
                     //child = spawn('Render', [sID + '.cps', sID], {
-                    child = exec('Render', [sID + '.cps', sID], {
+                    var child = exec('Render', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                 }
