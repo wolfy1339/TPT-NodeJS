@@ -809,7 +809,7 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Current ID was updated!');
             });
-            var published=if(sData.Publish=="Published"){return true;}else{return false;}
+            if(sData.Publish=="Published"){var published=true;}elsevar published=false;}
             client.say('##BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
