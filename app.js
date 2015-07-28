@@ -802,14 +802,14 @@ app.post('/Save.api', function(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, sData, sData2) {
         if (!err) {
-            var sID = parseInt(fs.readFileSync('cID.txt', 'utf8'));
+            sID = parseInt(fs.readFileSync('cID.txt', 'utf8'));
             fs.writeFile(path.join('cID.txt'), parseInt(sID) + 1, function(err) {
                 if (err) {
                     return console.error(err);
                 }
                 console.log('Current ID was updated!');
             });
-            if(sData.Publish=="Published"){var published=true;}else{var published=false;}
+            if(sData.Publish=='Published'){var published=true;}else{var published=false;}
             client.say('##BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
