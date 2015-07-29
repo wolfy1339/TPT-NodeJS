@@ -725,7 +725,7 @@ app.post('/Login.json', function(req, res) {
     if (req.get('X-Auth-User-Id') && req.get('X-Auth-Session-Key')) {
         //validation here
         if(ptauth[req.get('X-Auth-User-Id')].Key==req.get('X-Auth-Session-Key')){
-            req.end("{Status:1}");
+            req.end('{Status:1}');
         }
     }
     var sess = req.session;
