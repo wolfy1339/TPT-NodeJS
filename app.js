@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var child;
 var cookieParser = require('cookie-parser');
 var crypto = require('crypto');
 var erclist;
@@ -15,12 +16,13 @@ var isX64 = true;
 var logger = require('morgan');
 var path = require('path');
 var password;
+var ptauth = {};
+var published;
 //var routes = require('./routes/index.js');
 var sanitize = require('sanitize-filename');
 var session = require('express-session');
 //var users = require('./routes/users.js');
 var uuid = require('uuid');
-var ptauth={};
 
 var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
     channels: ['##BMNNet'],
@@ -42,7 +44,9 @@ app.use(session({
     resave: true,
     //Change if security problem is detected!
     secret: 'BrilliantMindsoftheTPTservers',
-    cookie: { httpOnly: false }
+    cookie: {
+        httpOnly: false
+    }
  }));
 
  
@@ -802,7 +806,7 @@ app.post('/Save.api', function(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, sData, sData2) {
         if (!err) {
-            sID = parseInt(fs.readFileSync('cID.txt', 'utf8'));
+            var sID = parseInt(fs.readFileSync('cID.txt', 'utf8'));
             fs.writeFile(path.join('cID.txt'), parseInt(sID) + 1, function(err) {
                 if (err) {
                     return console.error(err);
