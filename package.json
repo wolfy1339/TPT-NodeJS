@@ -1,7 +1,7 @@
 {
   "name": "TPT-NodeJS",
   "description": "A NodeJS save server made for 'The Powder Toy', It is made for the group 'Brilliant Minds of The Navy'",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "author": {
     "name": "Brilliant Minds of The Navy",
