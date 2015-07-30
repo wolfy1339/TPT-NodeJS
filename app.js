@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var child;
 var cookieParser = require('cookie-parser');
 var crypto = require('crypto');
 var erclist;
@@ -15,6 +16,8 @@ var isX64 = true;
 var logger = require('morgan');
 var path = require('path');
 var password;
+var ptauth = {};
+var published;
 //var routes = require('./routes/index.js');
 var sanitize = require('sanitize-filename');
 var session = require('express-session');
@@ -39,10 +42,11 @@ app.use(session({
     name: 'PowderSession',
     saveUninitialized: true,
     resave: true,
-    headerName: 'X-Auth-Session-Key',
     //Change if security problem is detected!
     secret: 'BrilliantMindsoftheTPTservers',
-    cookie: { httpOnly: false }
+    cookie: {
+        httpOnly: false
+    }
  }));
 
  
@@ -169,7 +173,7 @@ app.all('/Browse.json', function(req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/html'
                     });
-                    res.write('{"Count":517032, "Saves":[' + data + ']}');
+                    res.write('{"Count":1, "Saves":[' + data + ']}');
                     res.end();
                 } else {
                     console.error(err);
@@ -192,7 +196,8 @@ app.all('/Browse/View.json', function(req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/json'
             });
-            res.write('{"Count":517032, "Saves":[' + data + ']}');
+            //res.write('{"Count":517032, "Saves":[' + data + ']}');
+            res.write( data);
             res.end();
         } else {
             console.error(err);
@@ -332,8 +337,8 @@ app.post('/Browse/Comments.json', function(req, res) {
             console.log(util.inspect(sess.TPT));
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
-                ['{"Username":"' + sess.TPTUser + '","UserID":"TPT.ID","Gravatar":"\/Avatars\/' + sess.TPTID + '_40.png","Text":"' + Data.Comment,
-                '","Timestamp":"1","FormattedUsername":"' + sess.TPTuser + '"}, '].join(''),
+                ['{"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","UserID":"'+ptauth[req.get('X-Auth-User-Id')]+'","Gravatar":"\/Avatars\/' + ptauth[req.get('X-Auth-User-Id')] + '_40.png","Text":"' + Data.Comment,
+                '","Timestamp":"1","FormattedUsername":"' + ptauth[req.get('X-Auth-User-Id')].Name + '"}, '].join(''),
                 function(err) {
                     if (err) {
                         return console.error(err);
@@ -441,7 +446,32 @@ app.get('/User.json', function(req, res) {
     });
 });
 
-app.get('/index.html' || '/', function(req, res) {
+app.get('/index.html', function(req, res) {
+    var sess = req.session;
+    if(sess.islogedin){
+        res.render('index', {
+            islogedin: sess.islogedin,
+            wtptislogedin: sess.wTPTislogedin,
+            wtptusr: sess.wTPTUser
+        });
+    } else {
+        if(sess.wTPTislogedin){
+            res.render('index', {
+                islogedin: false,
+                wtptislogedin: sess.wTPTislogedin,
+                wtptusr: sess.wTPTUser
+            });
+        } else {
+            res.render('index', {
+                islogedin: false,
+                wtptislogedin: false,
+                wtptusr: 'nobody'
+            });
+        }
+    }
+});
+
+app.get('/', function(req, res) {
     var sess = req.session;
     if(sess.islogedin){
         res.render('index', {
@@ -621,7 +651,7 @@ app.post('/register.html', function(req, res) {
     res.writeHead(200, {
         'content-type': 'text/html'
     });
-    if (validate_erc(req.body.erc) || req.body.erc == "SUPER_SECRET_AND_AWESOME_AND_COMPLEX_ERC_CODE_7v6b8qyqnhgba73b0tv63a70oqy6mtrhjuf") {
+    if (validate_erc(req.body.erc) || req.body.erc == 'SUPER_SECRET_AND_AWESOME_AND_COMPLEX_ERC_CODE_7v6b8qyqnhgba73b0tv63a70oqy6mtrhjuf') {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
             if (!req.body.user.indexOf('!EOL!')) {
                 password = crypto.createHash('md5').update(req.body.pass).digest('hex');
@@ -636,6 +666,7 @@ app.post('/register.html', function(req, res) {
             } else {
                 var ip = req.get('X-Forwarded-For');
                 console.warn('Possible attack detected from ' + ip);
+                client.say('##BMNNet', 'Possible attack detected!');
                 res.end('ERR_ERRONEOUS_USERNAME');
             }
         } else {
@@ -692,6 +723,9 @@ app.get('/Login.json', function(req, res) {
 app.post('/Login.json', function(req, res) {
     if (req.get('X-Auth-User-Id') && req.get('X-Auth-Session-Key')) {
         //validation here
+        if(ptauth[req.get('X-Auth-User-Id')].Key==req.get('X-Auth-Session-Key')){
+            req.end('{Status:1}');
+        }
     }
     var sess = req.session;
     var formidable = require('formidable');
@@ -709,7 +743,11 @@ app.post('/Login.json', function(req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/json'
                     });
-                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"aa0aa00aaaa000aaaa0000aaa0","SessionKey":"0000000000","Elevation":"' + dataa[3] + '","Notifications":[]}';
+                    ptauth[dataa[2]]={};
+                    ptauth[dataa[2]].Name=dataa[0];
+                    ptauth[dataa[2]].Key=Math.random();
+                    console.log(ptauth[dataa[2]].Key);
+                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"'+ptauth[dataa[2]].Key+'","SessionKey":"'+ptauth[dataa[2]].Key+'","Elevation":"' + dataa[3] + '","Notifications":[]}';
                     sess.TPTislogedin = true;
                     sess.TPTUser = dataa[0];
                     sess.TPTID = dataa[2];
@@ -774,11 +812,12 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Current ID was updated!');
             });
-            client.say('#BMNNet', 'A save called ' + sData.Name + ' was uploaded');
+            if(sData.Publish=='Published'){published=true;}else{published=false;}
+            client.say('##BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
-                '"Description":"' + sData.Description + '", "DateCreated":0,"Date":0,"Username":"' + sess.TPTUser + '",',
-                '"Comments":0,"Published":' + sData.Publish + ',"Version":0,"Tags":[]}'].join(''),
+                '"Description":"' + sData.Description + '", "DateCreated":1,"Date":1,"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '",',
+                '"Comments":0,"Published":' + published + ',"Version":0,"Tags":[]}'].join(''),
                 function(err) {
                 if (err) {
                     return console.error(err);
@@ -791,9 +830,10 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Save\'s Initial Comment data saved!');
             });
+            
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"',
-                sData.Name + '", "Username":"' + sess.TPTUser + '","Comments":1,"Published": "' + sData.Publish + '"}'].join(''),
+                sData.Name + '", "Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","Comments":1,"Published": "' + published + '"}'].join(''),
                 function(err) {
                     if (err) {
                         return console.error(err);
@@ -807,19 +847,19 @@ app.post('/Save.api', function(req, res) {
             var spawn = require('child_process').spawn;
             if (isWindows) {
                 //child = exec('Render', [sID + '.cps', sID], {
-                child = spawn('Render', [sID + '.cps', sID], {
+                    child = spawn('Render', [sID + '.cps', sID], {
                     cwd: path.join(__dirname, 'Saves_bin')
                 });
             } else {
                 if (isX64) {
                    //child = exec('Render', [sID + '.cps', sID], {
-                    child = spawn('render64', [sID + '.cps', sID], {
+                        child = spawn('render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                     console.log('./render64 '+ sID + '.cps ' + sID);
                 } else {
                     //child = spawn('Render', [sID + '.cps', sID], {
-                    child = exec('Render', [sID + '.cps', sID], {
+                        child = exec('Render', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                 }
