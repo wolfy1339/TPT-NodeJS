@@ -47,7 +47,7 @@ app.use(session({
     cookie: {
         httpOnly: false
     }
- }));
+}));
 
  
 // view engine setup
@@ -65,23 +65,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
 // Generate a batch of ERCs
-for (ercn=0;ercn > 15; ercn++) {
-  ercs[ercn] = uuid.v4();
-  erclist = erclist + ercs[ercn];
+for (ercn = 0; ercn > 15; ercn++) {
+    ercs[ercn] = uuid.v4();
+    erclist = erclist + ercs[ercn];
 }
 // ERC Validation
 function validate_erc(erc) {
-    for (ercn=0; ercn > 15; ercn++) {
-       if (erc == ercs[ercn]) {
-           return true;
-       }
+    for (ercn = 0; ercn > 15; ercn++) {
+        if (erc == ercs[ercn]) {
+            return true;
+        }
     }
     return false;
 }
 /* app.use('/', routes);
 app.use('/users', users);*/
 app.all('/Startup.json', function(req, res) {
-    var sess = req.session;
     var filePath = path.join(__dirname, 'motd.txt');
 
     fs.readFile(filePath, {
@@ -106,7 +105,6 @@ app.all('/Startup.json', function(req, res) {
 
 // I'm not completely sure this will work, but it should
 app.get('/GetScript.api', function(req, res) {
-    var sess = req.session;
     var filePath = path.join(__dirname, 'Scripts', 'id_' + sanitize(req.query.Author) + sanitize(req.query.Filename) + '.lua');
     fs.readFile(filePath, {
         encoding: 'utf-8'
@@ -124,7 +122,6 @@ app.get('/GetScript.api', function(req, res) {
 });
 
 app.all('/Browse/Tags.json', function(req, res) {
-    var sess = req.session;
     res.writeHead(200, {
         'Content-Type': 'text/json'
     });
@@ -134,7 +131,6 @@ app.all('/Browse/Tags.json', function(req, res) {
 });
 
 app.all('/Browse.json', function(req, res) {
-    var sess = req.session;
     var filePath;
     if (!req.query.Search_Query) {
         filePath = path.join(__dirname, 'saves.txt');
@@ -157,7 +153,7 @@ app.all('/Browse.json', function(req, res) {
         if (req.query) {
             //begin of query proc
             if (req.query.Search_Query) {
-                if (req.query.Search_Query.indexOf('ID:') != -1 || req.query.Search_Query.indexOf('id:') != -1 ) {
+                if (req.query.Search_Query.indexOf('ID:') != -1 || req.query.Search_Query.indexOf('id:') != -1) {
                     var sID = req.query.Search_Query.split('ID:')[1] || req.query.Search_Query.split('id:')[1];
                     console.log(sID);
                     filePath = path.join(__dirname, 'Saves_1', 'save_' + sanitize(sID) + '.txt');
@@ -185,8 +181,6 @@ app.all('/Browse.json', function(req, res) {
 });
 
 app.all('/Browse/View.json', function(req, res) {
-    var sess = req.session;
-
     var filePath = path.join(__dirname, 'Saves', 'save_' + sanitize(req.query.ID) + '.txt');
     fs.readFile(filePath, {
         encoding: 'utf-8'
@@ -197,7 +191,7 @@ app.all('/Browse/View.json', function(req, res) {
                 'Content-Type': 'text/json'
             });
             //res.write('{"Count":517032, "Saves":[' + data + ']}');
-            res.write( data);
+            res.write(data);
             res.end();
         } else {
             console.error(err);
@@ -207,7 +201,6 @@ app.all('/Browse/View.json', function(req, res) {
 });
 
 app.get('/verify/:id', function(req, res) {
-    var sess = req.session;
     var id = req.params.id;
     var vidp = path.join(__dirname, 'vid', id + '.txt');
     if (fs.existsSync(vidp)) {
@@ -221,7 +214,7 @@ app.get('/verify/:id', function(req, res) {
             var Uname = dataa[0];
             var Hash = dataa[1];
             var uID = dataa[4];
-            fs.writeFile(path.join(__dirname, 'Users', Uname + '.txt'), Uname + '!EOL!' + Hash + '!EOL!' + uID + '!EOL!None!EOL!?!EOL!No' + ' biography set.', function(err) {
+            fs.writeFile(path.join(__dirname, 'Users', Uname + '.txt'), Uname + '!EOL!' + Hash + '!EOL!' + uID + '!EOL!None!EOL!?!EOL!No biography set.', function(err) {
                 if (err) {
                     return console.error(err);
                 }
@@ -299,7 +292,9 @@ app.all('/deploy', function(req, res) {
 app.get('/ercs.html', function(req, res) {
     var sess = req.session;
     if (sess.islogedin) {
-        res.render('erc', {erc:erclist});
+        res.render('erc', { 
+            erc: erclist
+        });
     } else {
         res.redirect('index.html');
     }
@@ -307,7 +302,6 @@ app.get('/ercs.html', function(req, res) {
 
 // I'm not completely sure this will work, but it should
 app.get('/Browse/Comments.json', function(req, res) {
-    var sess = req.session;
     var filePath = path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt');
     fs.readFile(filePath, {
         encoding: 'utf-8'
@@ -337,8 +331,8 @@ app.post('/Browse/Comments.json', function(req, res) {
             console.log(util.inspect(sess.TPT));
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
-                ['{"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","UserID":"'+ptauth[req.get('X-Auth-User-Id')]+'","Gravatar":"\/Avatars\/' + ptauth[req.get('X-Auth-User-Id')] + '_40.png","Text":"' + Data.Comment,
-                '","Timestamp":"1","FormattedUsername":"' + ptauth[req.get('X-Auth-User-Id')].Name + '"}, '].join(''),
+                ['{"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","UserID":"' + ptauth[req.get('X-Auth-User-Id')] + '","Gravatar":"\/Avatars\/' + ptauth[req.get('X-Auth-User-Id')] + '_40.png","Text":"' + Data.Comment,
+                    '","Timestamp":"1","FormattedUsername":"' + ptauth[req.get('X-Auth-User-Id')].Name + '"}, '].join(''),
                 function(err) {
                     if (err) {
                         return console.error(err);
@@ -448,14 +442,14 @@ app.get('/User.json', function(req, res) {
 
 app.get('/index.html', function(req, res) {
     var sess = req.session;
-    if(sess.islogedin){
+    if (sess.islogedin) {
         res.render('index', {
             islogedin: sess.islogedin,
             wtptislogedin: sess.wTPTislogedin,
             wtptusr: sess.wTPTUser
         });
     } else {
-        if(sess.wTPTislogedin){
+        if (sess.wTPTislogedin) {
             res.render('index', {
                 islogedin: false,
                 wtptislogedin: sess.wTPTislogedin,
@@ -473,14 +467,14 @@ app.get('/index.html', function(req, res) {
 
 app.get('/', function(req, res) {
     var sess = req.session;
-    if(sess.islogedin){
+    if (sess.islogedin) {
         res.render('index', {
             islogedin: sess.islogedin,
             wtptislogedin: sess.wTPTislogedin,
             wtptusr: sess.wTPTUser
         });
     } else {
-        if(sess.wTPTislogedin){
+        if (sess.wTPTislogedin) {
             res.render('index', {
                 islogedin: false,
                 wtptislogedin: sess.wTPTislogedin,
@@ -607,7 +601,9 @@ app.post('/passwd.html', function(req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
-    fs.readFile(vidp, {encoding: 'utf-8'}, function(err, data) {
+    fs.readFile(vidp, {
+        encoding: 'utf-8'
+    }, function(err, data) {
         if (err) {
             console.error(err);
         }
@@ -616,14 +612,14 @@ app.post('/passwd.html', function(req, res) {
         var Reg = dataa[5];
         var Bib = dataa[6];
         password = crypto.createHash('md5').update(req.body.pass).digest('hex');
-        fs.writeFile(path.join(__dirname, 'Users', sess.wTPTUser + '.txt'),
-        wTPTUser + '!EOL!' + crypto.createHash('md5').update(wTPTUser + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib, 
-        function(err) {
-            if (err) {
-                console.error(err);
-            }
-            console.log('User ' + sess.wTPTUser + ' changed their password');
-        });
+        fs.writeFile(path.join(__dirname, 'Users', sess.user + '.txt'),
+            + '!EOL!' + crypto.createHash('md5').update(sess.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib,
+            function (err) {
+                if (err) {
+                    console.error(err);
+                }
+                console.log('User ' + sess.user + ' changed their password');
+            });
     });
     res.end('done');
 });
@@ -656,13 +652,13 @@ app.post('/register.html', function(req, res) {
             if (!req.body.user.indexOf('!EOL!')) {
                 password = crypto.createHash('md5').update(req.body.pass).digest('hex');
                 fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
-                req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!None',
-                function(err) {
-                    if (err) {
-                        return console.error(err);
-                    }
-                    console.info('User ' + req.body.user + ' Registered!');
-                });
+                    req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!None',
+                    function(err) {
+                        if (err) {
+                            return console.error(err);
+                        }
+                        console.info('User ' + req.body.user + ' Registered!');
+                    });
             } else {
                 var ip = req.get('X-Forwarded-For');
                 console.warn('Possible attack detected from ' + ip);
@@ -709,7 +705,6 @@ app.post('/motd.html', function(req, res) {
 });
 
 app.get('/Login.json', function(req, res) {
-    var sess = req.session;
     res.writeHead(200, {
         'content-type': 'text/html'
     });
@@ -723,7 +718,7 @@ app.get('/Login.json', function(req, res) {
 app.post('/Login.json', function(req, res) {
     if (req.get('X-Auth-User-Id') && req.get('X-Auth-Session-Key')) {
         //validation here
-        if(ptauth[req.get('X-Auth-User-Id')].Key==req.get('X-Auth-Session-Key')){
+        if (ptauth[req.get('X-Auth-User-Id')].Key == req.get('X-Auth-Session-Key')) {
             req.end('{Status:1}');
         }
     }
@@ -743,15 +738,15 @@ app.post('/Login.json', function(req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'text/json'
                     });
-                    ptauth[dataa[2]]={};
-                    ptauth[dataa[2]].Name=dataa[0];
-                    ptauth[dataa[2]].Key=Math.random();
+                    ptauth[dataa[2]] = {};
+                    ptauth[dataa[2]].Name = dataa[0];
+                    ptauth[dataa[2]].Key = Math.random();
                     console.log(ptauth[dataa[2]].Key);
-                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"'+ptauth[dataa[2]].Key+'","SessionKey":"'+ptauth[dataa[2]].Key+'","Elevation":"' + dataa[3] + '","Notifications":[]}';
+                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"' + ptauth[dataa[2]].Key + '","SessionKey":"' + ptauth[dataa[2]].Key + '","Elevation":"' + dataa[3] + '","Notifications":[]}';
                     sess.TPTislogedin = true;
                     sess.TPTUser = dataa[0];
                     sess.TPTID = dataa[2];
-                    console.log(sess.TPTUser+' logged in!');
+                    console.log(sess.TPTUser + ' logged in!');
                     res.write(datats);
                     res.end();
                 } else {
@@ -768,7 +763,7 @@ app.post('/Login.json', function(req, res) {
                         });
                         sess.TPTislogedin = true;
                         sess.TPTUser = Data.Username;
-                        console.log(sess.TPTUser+'-tpt logged in!');
+                        console.log(sess.TPTUser + '-tpt logged in!');
                         //TPT.ID = dataa[2];
                         res.write(body);
                         res.end();
@@ -812,25 +807,29 @@ app.post('/Save.api', function(req, res) {
                 }
                 console.log('Current ID was updated!');
             });
-            if(sData.Publish=='Published'){published=true;}else{published=false;}
+            if (sData.Publish == 'Published') {
+                published = true;
+            } else {
+                published = false;
+            }
             client.say('##BMNNet', 'A save called ' + sData.Name + ' was uploaded');
             fs.writeFile(path.join(__dirname, 'Saves', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Favourite":false,"Score":1,"ScoreUp":1,"ScoreDown":0,"Views":1,"ShortName":"' + sData.Name + '","Name":"' + sData.Name + '",',
                 '"Description":"' + sData.Description + '", "DateCreated":1,"Date":1,"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '",',
                 '"Comments":0,"Published":' + published + ',"Version":0,"Tags":[]}'].join(''),
                 function(err) {
-                if (err) {
-                    return console.error(err);
-                }
-                console.log('Save data saved!');
-            });
+                    if (err) {
+                        return console.error(err);
+                    }
+                    console.log('Save data saved!');
+                });
             fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sID + '.txt'), '[', function(err) {
                 if (err) {
                     return console.error(err);
                 }
                 console.log('Save\'s Initial Comment data saved!');
             });
-            
+
             fs.writeFile(path.join(__dirname, 'Saves_1', 'save_' + sID + '.txt'), ['{"ID":' + sID + ',',
                 '"Created":1,"Updated":1,"Version":1,"Score":2,"ScoreUp":2,"ScoreDown":0,"Name":"' + sData.Name + '","ShortName":"',
                 sData.Name + '", "Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","Comments":1,"Published": "' + published + '"}'].join(''),
@@ -847,19 +846,19 @@ app.post('/Save.api', function(req, res) {
             var spawn = require('child_process').spawn;
             if (isWindows) {
                 //child = exec('Render', [sID + '.cps', sID], {
-                    child = spawn('Render', [sID + '.cps', sID], {
+                child = spawn('Render', [sID + '.cps', sID], {
                     cwd: path.join(__dirname, 'Saves_bin')
                 });
             } else {
                 if (isX64) {
-                   //child = exec('Render', [sID + '.cps', sID], {
-                        child = spawn('render64', [sID + '.cps', sID], {
+                    //child = exec('Render', [sID + '.cps', sID], {
+                    child = spawn('render64', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
-                    console.log('./render64 '+ sID + '.cps ' + sID);
+                    console.log('./render64 ' + sID + '.cps ' + sID);
                 } else {
                     //child = spawn('Render', [sID + '.cps', sID], {
-                        child = exec('Render', [sID + '.cps', sID], {
+                    child = exec('Render', [sID + '.cps', sID], {
                         cwd: path.join(__dirname, 'Saves_bin')
                     });
                 }
