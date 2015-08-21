@@ -248,9 +248,9 @@ app.post('/Browse/Report.json', function(req, res) {
     var formidable = require('formidable');
     var request = require('request');
     var form = new formidable.IncomingForm();
+	var ip = req.get('X-Forwarded-For')||req.ip;
     form.parse(req, function(err, Data) {
         if(ptauth[req.get('X-Auth-User-Id')].Key==req.get('X-Auth-Session-Key')){
-			var ip = req.get('X-Forwarded-For')||req.ip;
 			ReportFile.write(new Date().toSting + ':Report from UserID: '+req.get('X-Auth-User-Id')+". From IP: "+ip+"Report Submited for SaveID: "+req.query.ID+". Report Reason: "+Data.Reason);
 		} else {
 		req.end("Not logged in. Your IP has been logged, and the admins contacted.");
