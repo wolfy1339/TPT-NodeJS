@@ -37,7 +37,7 @@ client.addListener('error', function(message) {
 
 client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 
-var ReportFile = fs.createWriteStream('log.txt', {flags: "a"})
+var ReportFile = fs.createWriteStream('log.txt', {flags: "a"});
 var sess;
 app.use(session({
     name: 'PowderSession',
@@ -254,7 +254,7 @@ app.post('/Browse/Report.json', function(req, res) {
 			ReportFile.write(new Date().toSting + ':Report from UserID: '+req.get('X-Auth-User-Id')+". From IP: "+ip+"Report Submited for SaveID: "+req.query.ID+". Report Reason: "+Data.Reason);
 		} else {
 		req.end("Not logged in. Your IP has been logged, and the admins contacted.");
-		var ip = req.get('X-Forwarded-For')||req.ip;
+		//var ip = req.get('X-Forwarded-For')||req.ip;
         console.warn('Someone not logged in tried to manually report ' + ip);
         client.notice('+##BMNNet', 'Someone not logged in tried to manually report from '+ip);
 		}
