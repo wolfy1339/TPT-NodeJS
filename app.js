@@ -38,7 +38,7 @@ client.addListener('error', function(message) {
 
 client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 
-var ReportFile = fs.createWriteStream('log.txt', {flags: "a"});
+var ReportFile = fs.createWriteStream('log.txt', {flags: 'a'});
 var sess;
 app.use(session({
     name: 'PowderSession',
@@ -174,7 +174,7 @@ app.all('/Browse.json', function(req, res) {
                     res.write('{"Count":1, "Saves":[' + data + ']}');
                     res.end();
                 } else {
-                    res.end("{}");
+                    res.end('{}');
                     console.error(err);
                 }
 
@@ -682,7 +682,7 @@ app.post('/register.html', function(req, res) {
             } else {
                 ip = req.get('X-Forwarded-For') || req.ip;
                 console.warn('Possible attack detected from ' + ip);
-                client.notice('+##BMNNet', 'Possible attack detected! (from ' + ip + ")");
+                client.notice('+##BMNNet', 'Possible attack detected! (from %d)', ip);
                 res.end('ERR_ERRONEOUS_USERNAME');
             }
         } else {
