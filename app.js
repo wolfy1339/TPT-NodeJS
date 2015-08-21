@@ -9,6 +9,7 @@ var ercn = 0;
 var ercs = [];
 var favicon = require('serve-favicon');
 var fs = require('fs');
+var ip = req.get('X-Forwarded-For') || req.ip;
 var irc = require('irc');
 // Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
 var isWindows = process.env.iswin32 || false;
@@ -248,14 +249,11 @@ app.post('/Browse/Report.json', function(req, res) {
     var formidable = require('formidable');
     var request = require('request');
     var form = new formidable.IncomingForm();
-	var ip = req.get('X-Forwarded-For')||req.ip;
     form.parse(req, function(err, Data) {
         if(ptauth[req.get('X-Auth-User-Id')].Key==req.get('X-Auth-Session-Key')){
 			ReportFile.write(new Date().toSting + ':Report from UserID: '+req.get('X-Auth-User-Id')+". From IP: "+ip+"Report Submited for SaveID: "+req.query.ID+". Report Reason: "+Data.Reason);
-		    client.notice('+##BMNNet', 'New report to save: '+req.query.ID);
-        } else {
+		} else {
 		req.end("Not logged in. Your IP has been logged, and the admins contacted.");
-		//var ip = req.get('X-Forwarded-For')||req.ip;
         console.warn('Someone not logged in tried to manually report ' + ip);
         client.notice('+##BMNNet', 'Someone not logged in tried to manually report from '+ip);
 		}
@@ -283,9 +281,8 @@ app.all('/deploy', function(req, res) {
         var php = require('phpjs');
         var ipLow = php.ip2long('192.30.252.0');
         var ipHigh = php.ip2long('192.30.255.255');
-        // We use this header to detect the IP
-        var ip = php.ip2long(req.get('X-Forwarded-For'));
-        if (ip >= ipLow && ip <= ipHigh) {
+        var longIp = php.ip2long(ip);
+        if (longIp >= ipLow && longIp <= ipHigh) {
             if (isWindows) {
                 spawn('deploy.bat');
             } else {
@@ -304,7 +301,7 @@ app.all('/deploy', function(req, res) {
             });
             res.write('{Code: Error. Log in first.}');
             res.end();
-            console.log(req.ip);
+            console.log(ip);
         }
     }
 });
@@ -680,7 +677,6 @@ app.post('/register.html', function(req, res) {
                         console.info('User ' + req.body.user + ' Registered!');
                     });
             } else {
-                var ip = req.get('X-Forwarded-For');
                 console.warn('Possible attack detected from ' + ip);
                 client.notice('+##BMNNet', 'Possible attack detected! (from '+ip+")");
                 res.end('ERR_ERRONEOUS_USERNAME');
