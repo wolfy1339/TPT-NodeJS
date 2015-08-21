@@ -9,7 +9,7 @@ var ercn = 0;
 var ercs = [];
 var favicon = require('serve-favicon');
 var fs = require('fs');
-var ip = req.get('X-Forwarded-For') || req.ip;
+var ip;
 var irc = require('irc');
 // Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
 var isWindows = process.env.iswin32 || false;
@@ -249,6 +249,7 @@ app.post('/Browse/Report.json', function(req, res) {
     var formidable = require('formidable');
     var request = require('request');
     var form = new formidable.IncomingForm();
+    ip = req.get('X-Forwarded-For') || req.ip;
     form.parse(req, function(err, Data) {
         if(ptauth[req.get('X-Auth-User-Id')].Key == req.get('X-Auth-Session-Key')){
 			ReportFile.write(new Date().toString + ':Report from UserID: ' + req.get('X-Auth-User-Id') + '. From IP: ' + ip + 'Report Submited for SaveID: ' + req.query.ID + '. Report Reason: ' + Data.Reason);
@@ -280,6 +281,7 @@ app.all('/deploy', function(req, res) {
         process.exit(0);
     } else {
         var php = require('phpjs');
+        ip = req.get('X-Forwarded-For') || req.ip;
         var ipLow = php.ip2long('192.30.252.0');
         var ipHigh = php.ip2long('192.30.255.255');
         var longIp = php.ip2long(ip);
@@ -678,8 +680,9 @@ app.post('/register.html', function(req, res) {
                         console.info('User ' + req.body.user + ' Registered!');
                     });
             } else {
+                ip = req.get('X-Forwarded-For') || req.ip;
                 console.warn('Possible attack detected from ' + ip);
-                client.notice('+##BMNNet', 'Possible attack detected! (from '+ip+")");
+                client.notice('+##BMNNet', 'Possible attack detected! (from ' + ip + ")");
                 res.end('ERR_ERRONEOUS_USERNAME');
             }
         } else {
