@@ -252,7 +252,7 @@ app.post('/Browse/Report.json', function(req, res) {
     ip = req.get('X-Forwarded-For') || req.ip;
     form.parse(req, function(err, Data) {
         if(ptauth[req.get('X-Auth-User-Id')].Key == req.get('X-Auth-Session-Key')){
-			ReportFile.write(new Date().toString + ':Report from UserID: ' + req.get('X-Auth-User-Id') + '. From IP: ' + ip + 'Report Submited for SaveID: ' + req.query.ID + '. Report Reason: ' + Data.Reason+"\r\n");
+			ReportFile.write('Report from UserID: ' + req.get('X-Auth-User-Id') + '. From IP: ' + ip + 'Report Submited for SaveID: ' + req.query.ID + '. Report Reason: ' + Data.Reason+"\r\n");
 			client.notice('+##BMNNet', 'New report for save: %d', req.query.ID);
 		} else {
 		    req.end("Not logged in. Your IP has been logged, and the admins contacted.");
