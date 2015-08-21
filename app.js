@@ -254,9 +254,9 @@ app.post('/Browse/Report.json', function(req, res) {
         if(ptauth[req.get('X-Auth-User-Id')].Key == req.get('X-Auth-Session-Key')){
 			ReportFile.write('Report from UserID: ' + req.get('X-Auth-User-Id') + '. From IP: ' + ip + 'Report Submited for SaveID: ' + req.query.ID + '. Report Reason: ' + Data.Reason+"\r\n");
 			client.notice('+##BMNNet', 'New report for save: %d', req.query.ID);
-			req.end('{Status:1}');
+			res.end('{Status:1}');
 		} else {
-		    req.end("Not logged in. Your IP has been logged, and the admins contacted.");
+		    res.end("Not logged in. Your IP has been logged, and the admins contacted.");
             console.warn('Someone not logged in tried to manually report %d', ip);
             client.notice('+##BMNNet', 'Someone who is not logged in tried to manually report from %d', ip);
 		}
