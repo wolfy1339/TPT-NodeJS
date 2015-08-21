@@ -259,7 +259,6 @@ app.post('/Browse/Report.json', function(req, res) {
         client.notice('+##BMNNet', 'Someone not logged in tried to manually report from '+ip);
 		}
         });
-    });
 });
 /*
 app.all('/deploy', function(req, res) {
