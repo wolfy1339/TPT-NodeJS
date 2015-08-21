@@ -37,6 +37,7 @@ client.addListener('error', function(message) {
 
 client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 
+var ReportFile = fs.createWriteStream('log.txt', {flags: "a"})
 var sess;
 app.use(session({
     name: 'PowderSession',
@@ -167,11 +168,12 @@ app.all('/Browse.json', function(req, res) {
                 if (!err) {
                     console.log('Received data: ' + data);
                     res.writeHead(200, {
-                        'Content-Type': 'text/html'
+                        'Content-Type': 'text/json'
                     });
                     res.write('{"Count":1, "Saves":[' + data + ']}');
                     res.end();
                 } else {
+                    res.end("{}");
                     console.error(err);
                 }
 
@@ -240,6 +242,24 @@ app.get('/verify/:id', function(req, res) {
         res.end();
         console.log(vidp);
     }
+});
+app.post('/Browse/Report.json', function(req, res) {
+    var sess = req.session;
+    var formidable = require('formidable');
+    var request = require('request');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, Data) {
+        if(ptauth[req.get('X-Auth-User-Id')].Key==req.get('X-Auth-Session-Key')){
+			var ip = req.get('X-Forwarded-For')||req.ip;
+			logFile.write(new Date().toSting + ':Report from UserID: '+req.get('X-Auth-User-Id')+". From IP: "+ip+"Report Submited for SaveID: "+req.query.ID+". Report Reason: "+Data.Reason);
+		} else {
+		req.end("Not logged in. Your IP has been logged, and the admins contacted.");
+		var ip = req.get('X-Forwarded-For')||req.ip;
+        console.warn('Someone not logged in tried to manually report ' + ip);
+        client.notice('+##BMNNet', 'Someone not logged in tried to manually report from '+ip);
+		}
+        });
+    });
 });
 /*
 app.all('/deploy', function(req, res) {
@@ -662,7 +682,7 @@ app.post('/register.html', function(req, res) {
             } else {
                 var ip = req.get('X-Forwarded-For');
                 console.warn('Possible attack detected from ' + ip);
-                client.say('##BMNNet', 'Possible attack detected!');
+                client.notice('+##BMNNet', 'Possible attack detected! (from '+ip+")");
                 res.end('ERR_ERRONEOUS_USERNAME');
             }
         } else {
