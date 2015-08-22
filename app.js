@@ -251,7 +251,7 @@ app.post('/Browse/Report.json', function(req, res) {
     var form = new formidable.IncomingForm();
     ip = req.get('X-Forwarded-For') || req.ip;
     form.parse(req, function(err, Data) {
-        if((ptauth[req.get('X-Auth-User-Id')].Key||Math.random()) == (req.get('X-Auth-Session-Key')||false)){
+        if((ptauth[req.get('X-Auth-User-Id')]||Math.random()).Key == (req.get('X-Auth-Session-Key')||false)){
 			ReportFile.write('Report from UserID: ' + req.get('X-Auth-User-Id') + '. From IP: ' + ip + 'Report Submited for SaveID: ' + req.query.ID + '. Report Reason: ' + Data.Reason+"\r\n");
 			client.notice('+##BMNNet', 'New report for save: %d', req.query.ID);
 			res.send('{Status:1}');
