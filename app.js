@@ -69,8 +69,9 @@ app.use('/files', express.static(path.join(__dirname, 'uploads')));
 // Generate a batch of ERCs
 for (ercn = 0; ercn < 15; ercn++) {
     ercs[ercn] = uuid.v4();
-    //erclist = erclist + ercs[ercn];
+    erclist = erclist + ercs[ercn].toString();
 }
+console.log("List of ERCs: "+erclist)
 // ERC Validation
 function validate_erc(erc) {
     for (ercn = 0; ercn < 15; ercn++) {
