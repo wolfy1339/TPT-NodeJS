@@ -816,11 +816,11 @@ app.post('/Login.json', function(req, res) {
                     res.end();
                 });
             }
+        });
         }
         catch(err) {
             console.log(err);
         }
-        });
     });
 });
 
