@@ -67,13 +67,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
 // Generate a batch of ERCs
-for (ercn = 0; ercn > 15; ercn++) {
+for (ercn = 0; ercn < 15; ercn++) {
     ercs[ercn] = uuid.v4();
-    erclist = erclist + ercs[ercn];
+    //erclist = erclist + ercs[ercn];
 }
 // ERC Validation
 function validate_erc(erc) {
-    for (ercn = 0; ercn > 15; ercn++) {
+    for (ercn = 0; ercn < 15; ercn++) {
         if (erc == ercs[ercn]) {
             return true;
         }
