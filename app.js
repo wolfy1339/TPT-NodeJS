@@ -67,6 +67,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
 // Generate a batch of ERCs
+var erclist;
 for (ercn = 0; ercn < 15; ercn++) {
     ercs[ercn] = uuid.v4();
     erclist = erclist + ercs[ercn].toString();
@@ -74,8 +75,10 @@ for (ercn = 0; ercn < 15; ercn++) {
 console.log("List of ERCs: "+erclist)
 // ERC Validation
 function validate_erc(erc) {
+    if(erc==0){return false;}
     for (ercn = 0; ercn < 15; ercn++) {
         if (erc == ercs[ercn]) {
+            ercs[ercn]=0;
             return true;
         }
     }
@@ -560,7 +563,7 @@ app.post('/login.html', function(req, res) {
     var sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
-    if (req.body.pass == 'pass') {
+    if (req.body.pass == 'BMNNet!') {
         sess.islogedin = true;
         res.end('done');
     } else {
