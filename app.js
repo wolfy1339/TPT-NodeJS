@@ -72,10 +72,10 @@ for (ercn = 0; ercn < 15; ercn++) {
     ercs[ercn] = uuid.v4();
     erclist = erclist + ercs[ercn].toString();
 }
-console.log("List of ERCs: "+erclist)
+console.log("List of ERCs: "+erclist);
 // ERC Validation
 function validate_erc(erc) {
-    if(erc==0){return false;}
+    if(erc===0){return false;}
     for (ercn = 0; ercn < 15; ercn++) {
         if (erc == ercs[ercn]) {
             ercs[ercn]=0;
@@ -741,6 +741,7 @@ app.get('/Login.json', function(req, res) {
 });
 
 app.post('/Login.json', function(req, res) {
+    
     if (req.get('X-Auth-User-Id') && req.get('X-Auth-Session-Key')) {
         //validation here
         if (ptauth[req.get('X-Auth-User-Id')].Key == req.get('X-Auth-Session-Key')) {
@@ -752,6 +753,7 @@ app.post('/Login.json', function(req, res) {
     var request = require('request');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
+        try {
         var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
         fs.readFile(filePath, {
             encoding: 'utf-8'
@@ -814,6 +816,10 @@ app.post('/Login.json', function(req, res) {
                     res.end();
                 });
             }
+        }
+        catch(err) {
+            console.log(err);
+        }
         });
     });
 });
