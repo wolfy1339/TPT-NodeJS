@@ -11,16 +11,17 @@ var favicon = require('serve-favicon');
 var fs = require('fs');
 var ip;
 var irc = require('irc');
-// Some variables to tell if you are running the server on Linux or Windows and 64 bit/32 bit
 var isWindows = process.env.iswin32 || false;
-var isX64 = true;
+var isX64 = process.env.isx64 || true;
 var logger = require('morgan');
 var path = require('path');
 var password;
 var ptauth = {};
 var published;
 //var routes = require('./routes/index.js');
+var ReportFile = fs.createWriteStream('log.txt', {flags: 'a'});
 var sanitize = require('sanitize-filename');
+var sess;
 var session = require('express-session');
 //var users = require('./routes/users.js');
 var uuid = require('uuid');
@@ -38,8 +39,6 @@ client.addListener('error', function(message) {
 
 client.send('nickserv', 'identify', 'BMNBot', 'Powder!');
 
-var ReportFile = fs.createWriteStream('log.txt', {flags: 'a'});
-var sess;
 app.use(session({
     name: 'PowderSession',
     saveUninitialized: true,
@@ -75,7 +74,9 @@ for (ercn = 0; ercn < 15; ercn++) {
 console.log("List of ERCs: "+erclist);
 // ERC Validation
 function validate_erc(erc) {
-    if(erc===0){return false;}
+    if (erc===0) {
+        return false;
+    }
     for (ercn = 0; ercn < 15; ercn++) {
         if (erc == ercs[ercn]) {
             ercs[ercn]=0;
@@ -249,13 +250,13 @@ app.get('/verify/:id', function(req, res) {
     }
 });
 app.post('/Browse/Report.json', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     var formidable = require('formidable');
     var request = require('request');
     var form = new formidable.IncomingForm();
     ip = req.get('X-Forwarded-For') || req.ip;
     form.parse(req, function(err, Data) {
-        if((ptauth[req.get('X-Auth-User-Id')]||Math.random()).Key == (req.get('X-Auth-Session-Key')||false)){
+        if((ptauth[req.get('X-Auth-User-Id')] || Math.random()).Key == (req.get('X-Auth-Session-Key') || false)) {
 			ReportFile.write('Report from UserID: ' + req.get('X-Auth-User-Id') + '. From IP: ' + ip + 'Report Submited for SaveID: ' + req.query.ID + '. Report Reason: ' + Data.Reason+"\r\n");
 			client.notice('+##BMNNet', 'New report for save: %d', req.query.ID);
 			res.send('{Status:1}');
@@ -268,7 +269,7 @@ app.post('/Browse/Report.json', function(req, res) {
 });
 /*
 app.all('/deploy', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     var spawn = require('child_process').spawn;
     var child;
     if (sess.islogedin) {
@@ -315,7 +316,7 @@ app.all('/deploy', function(req, res) {
 });
 */
 app.get('/ercs.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (sess.islogedin) {
         res.render('erc', { 
             erc: erclist
@@ -347,7 +348,7 @@ app.get('/Browse/Comments.json', function(req, res) {
 
 // I'm not completely sure this will work, but it should
 app.post('/Browse/Comments.json', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     var formidable = require('formidable');
     var util = require('util');
     var form = new formidable.IncomingForm();
@@ -376,7 +377,7 @@ app.post('/Browse/Comments.json', function(req, res) {
 });
 
 app.get('/fp.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (sess.islogedin) {
         res.render('fp', {});
     } else {
@@ -385,7 +386,7 @@ app.get('/fp.html', function(req, res) {
 });
 
 app.get('/irc.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (sess.islogedin) {
         client.say('##BMNNet', req.query.msg);
         res.redirect('index.html');
@@ -395,13 +396,13 @@ app.get('/irc.html', function(req, res) {
 });
 
 app.get('/logout.html', function (req, res) {
-    var sess = req.session;
+    sess = req.session;
     res.redirect('index.html');
     sess.islogedin = false;
 });
 
 app.get('/profile.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
     var filePath = path.join(__dirname, 'Users', sanitize(req.query.Name) + '.txt');
     fs.readFile(filePath, {
@@ -425,7 +426,7 @@ app.get('/profile.html', function(req, res) {
 });
 
 app.post('/fp.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     if (sess.islogedin) {
@@ -443,7 +444,7 @@ app.post('/fp.html', function(req, res) {
 });
 
 app.get('/User.json', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     // req.query.Name.split('/')[0].split('\')[0] avoids users from doing unwanted thing with the path
     var filePath = path.join(__dirname, 'Users', sanitize(req.query.Name) + '.txt');
     fs.readFile(filePath, {
@@ -466,7 +467,7 @@ app.get('/User.json', function(req, res) {
 });
 
 app.get('/index.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (sess.islogedin) {
         res.render('index', {
             islogedin: sess.islogedin,
@@ -491,7 +492,7 @@ app.get('/index.html', function(req, res) {
 });
 
 app.get('/', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (sess.islogedin) {
         res.render('index', {
             islogedin: sess.islogedin,
@@ -517,7 +518,7 @@ app.get('/', function(req, res) {
 
 /*
 app.get('/index.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     res.render('index', {
         islogedin: sess.islogedin,
         wtptislogedin: sess.wTPTislogedin,
@@ -527,7 +528,7 @@ app.get('/index.html', function(req, res) {
 */
 
 app.get('/login.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (!sess.islogedin) {
         res.render('login', {});
     } else {
@@ -536,7 +537,7 @@ app.get('/login.html', function(req, res) {
 });
 
 app.get('/upload.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (!sess.islogedin) {
         res.render('upload', {});
     } else {
@@ -545,7 +546,7 @@ app.get('/upload.html', function(req, res) {
 });
 
 app.get('/upload.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (!sess.islogedin) {
         fs.readFile(req.files.file.path, function(err, data) {
             // ...
@@ -560,7 +561,7 @@ app.get('/upload.html', function(req, res) {
 });
 
 app.post('/login.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     if (req.body.pass == 'BMNNet!') {
@@ -572,7 +573,7 @@ app.post('/login.html', function(req, res) {
 });
 
 app.get('/usr_login.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (!sess.wTPTislogedin) {
         res.render('usr_login', {});
     } else {
@@ -581,7 +582,7 @@ app.get('/usr_login.html', function(req, res) {
 });
 
 app.post('/usr_login.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     var filePath = path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt');
@@ -614,7 +615,7 @@ app.post('/usr_login.html', function(req, res) {
 });
 
 app.get('/passwd.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (sess.wTPTislogedin) {
         res.render('passwd', {});
     } else {
@@ -623,7 +624,9 @@ app.get('/passwd.html', function(req, res) {
 });
 
 app.post('/passwd.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
+    var id = req.params.id;
+    var vidp = path.join(__dirname, 'vid', id + '.txt');
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     fs.readFile(vidp, {
@@ -650,7 +653,7 @@ app.post('/passwd.html', function(req, res) {
 });
 
 app.get('/register.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (!sess.islogedin) {
         res.render('register', {});
     } else {
@@ -659,7 +662,7 @@ app.get('/register.html', function(req, res) {
 });
 
 app.post('/register.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     var uID = fs.readFileSync('uID.txt', 'utf8');
@@ -703,7 +706,7 @@ app.post('/register.html', function(req, res) {
 });
 
 app.get('/motd.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     if (sess.islogedin) {
         res.render('motd', {});
     } else {
@@ -712,7 +715,7 @@ app.get('/motd.html', function(req, res) {
 });
 
 app.post('/motd.html', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     //In this we are assigning user to sess.user variable.
     //user comes from HTML page.
     if (sess.islogedin) {
@@ -748,7 +751,7 @@ app.post('/Login.json', function(req, res) {
             req.end('{Status:1}');
         }
     }
-    var sess = req.session;
+    sess = req.session;
     var formidable = require('formidable');
     var request = require('request');
     var form = new formidable.IncomingForm();
@@ -825,7 +828,7 @@ app.post('/Login.json', function(req, res) {
 });
 
 app.post('/Save.api', function(req, res) {
-    var sess = req.session;
+    sess = req.session;
     console.log(require('util').inspect(sess));
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
