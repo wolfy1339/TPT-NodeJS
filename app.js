@@ -754,28 +754,48 @@ app.post('/Login.json', function(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
         try {
-        var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
-        fs.readFile(filePath, {
-            encoding: 'utf-8'
-        }, function(err, data) {
-            if (!err) {
-                //Separate data in an array.
-                var dataa = data.split('!EOL!');
-                if (dataa[1] == Data.Hash) {
-                    res.writeHead(200, {
-                        'Content-Type': 'text/json'
-                    });
-                    ptauth[dataa[2]] = {};
-                    ptauth[dataa[2]].Name = dataa[0];
-                    ptauth[dataa[2]].Key = Math.random();
-                    console.log(ptauth[dataa[2]].Key);
-                    var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"' + ptauth[dataa[2]].Key + '","SessionKey":"' + ptauth[dataa[2]].Key + '","Elevation":"' + dataa[3] + '","Notifications":[]}';
-                    sess.TPTislogedin = true;
-                    sess.TPTUser = dataa[0];
-                    sess.TPTID = dataa[2];
-                    console.log(sess.TPTUser + ' logged in!');
-                    res.write(datats);
-                    res.end();
+            var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
+            fs.readFile(filePath, {
+                encoding: 'utf-8'
+            }, function(err, data) {
+                if (!err) {
+                    //Separate data in an array.
+                    var dataa = data.split('!EOL!');
+                    if (dataa[1] == Data.Hash) {
+                        res.writeHead(200, {
+                            'Content-Type': 'text/json'
+                        });
+                        ptauth[dataa[2]] = {};
+                        ptauth[dataa[2]].Name = dataa[0];
+                        ptauth[dataa[2]].Key = Math.random();
+                        console.log(ptauth[dataa[2]].Key);
+                        var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"' + ptauth[dataa[2]].Key + '","SessionKey":"' + ptauth[dataa[2]].Key + '","Elevation":"' + dataa[3] + '","Notifications":[]}';
+                        sess.TPTislogedin = true;
+                        sess.TPTUser = dataa[0];
+                        sess.TPTID = dataa[2];
+                        console.log(sess.TPTUser + ' logged in!');
+                        res.write(datats);
+                        res.end();
+                    } else {
+                        request.post({
+                            url: 'http://powdertoy.co.uk/Login.json',
+                            form: {
+                                Username: Data.Username,
+                                Hash: Data.Hash
+                            }
+                        }, function(err, httpResponse, body) {
+                            console.log(body);
+                            res.writeHead(200, {
+                            'Content-Type': 'text/json'
+                        });
+                            sess.TPTislogedin = true;
+                            sess.TPTUser = Data.Username;
+                            console.log(sess.TPTUser + '-tpt logged in!');
+                            //TPT.ID = dataa[2];
+                            res.write(body);
+                            res.end();
+                        });
+                    }
                 } else {
                     request.post({
                         url: 'http://powdertoy.co.uk/Login.json',
@@ -790,33 +810,13 @@ app.post('/Login.json', function(req, res) {
                         });
                         sess.TPTislogedin = true;
                         sess.TPTUser = Data.Username;
-                        console.log(sess.TPTUser + '-tpt logged in!');
+                        console.log(sess.TPTUser + ' logged in using TPT credentials!');
                         //TPT.ID = dataa[2];
                         res.write(body);
                         res.end();
                     });
                 }
-            } else {
-                request.post({
-                    url: 'http://powdertoy.co.uk/Login.json',
-                    form: {
-                        Username: Data.Username,
-                        Hash: Data.Hash
-                    }
-                }, function(err, httpResponse, body) {
-                    console.log(body);
-                    res.writeHead(200, {
-                        'Content-Type': 'text/json'
-                    });
-                    sess.TPTislogedin = true;
-                    sess.TPTUser = Data.Username;
-                    console.log(sess.TPTUser + ' logged in using TPT credentials!');
-                    //TPT.ID = dataa[2];
-                    res.write(body);
-                    res.end();
-                });
-            }
-        });
+            });
         }
         catch(err) {
             console.log(err);
