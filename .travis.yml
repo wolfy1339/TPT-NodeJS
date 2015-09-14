@@ -1,6 +1,11 @@
 language: node_js
 sudo: false
+node_js:
+  - 0.12
 script:
   - npm install jshint
+  - npm install jscs
   - jshint app.js
   - jshint app_static.js
+  - jscs app.js
+  - jscs app_static.js
