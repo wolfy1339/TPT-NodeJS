@@ -1,0 +1,7 @@
+{
+  "disallowMixedSpacesAndTabs": true,
+  "disallowTrailingWhitespace": true,
+  "requireCurlyBraces": true,
+  "requireSemicolons": true,
+  "validateQuoteMarks": "'"
+}
