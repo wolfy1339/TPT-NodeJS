@@ -1,0 +1,6 @@
+{
+  "browser" : false,
+  "es3"     : false,
+  "es5".    : true,
+  "node"    : true
+}
