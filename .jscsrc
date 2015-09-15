@@ -3,5 +3,14 @@
   "disallowTrailingWhitespace": true,
   "requireCurlyBraces": true,
   "requireSemicolons": true,
-  "validateQuoteMarks": "'"
+  "validateQuoteMarks": "'",
+  "disallowMultipleLineStrings": true,
+  "disallowSpaceBeforeSemicolon": true,
+  "disallowMultipleLineBreaks": true,
+  "disallowMultipleVarDecl": true,
+  "disallowKeywordsOnNewLine": ["else"],
+  "requirePaddingNewlinesBeforeKeywords": true,
+  "disallowNewlineBeforeBlockStatements": true,
+  "disallowSpaceBeforeComma": true,
+  "requireSpaceBetweenArguments": true
 }
