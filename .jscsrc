@@ -8,8 +8,7 @@
   "disallowSpaceBeforeSemicolon": true,
   "disallowMultipleLineBreaks": true,
   "disallowMultipleVarDecl": true,
-  "disallowKeywordsOnNewLine": ["else"],
-  "requirePaddingNewlinesBeforeKeywords": true,
+  "disallowKeywordsOnNewLine": ["else"]'
   "disallowNewlineBeforeBlockStatements": true,
   "disallowSpaceBeforeComma": true,
   "requireSpaceBetweenArguments": true
