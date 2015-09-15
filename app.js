@@ -50,7 +50,6 @@ app.use(session({
     }
 }));
 
- 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -71,7 +70,7 @@ for (ercn = 0; ercn < 15; ercn++) {
     ercs[ercn] = uuid.v4();
     erclist = erclist + ercs[ercn].toString();
 }
-console.log("List of ERCs: "+erclist);
+console.log('List of ERCs: ' + erclist);
 // ERC Validation
 function validate_erc(erc) {
     if (erc===0) {
@@ -257,14 +256,14 @@ app.post('/Browse/Report.json', function(req, res) {
     ip = req.get('X-Forwarded-For') || req.ip;
     form.parse(req, function(err, Data) {
         if((ptauth[req.get('X-Auth-User-Id')] || Math.random()).Key == (req.get('X-Auth-Session-Key') || false)) {
-			ReportFile.write('Report from UserID: ' + req.get('X-Auth-User-Id') + '. From IP: ' + ip + 'Report Submited for SaveID: ' + req.query.ID + '. Report Reason: ' + Data.Reason+"\r\n");
+            ReportFile.write('Report from UserID: ' + req.get('X-Auth-User-Id') + '. From IP: ' + ip + 'Report Submited for SaveID: ' + req.query.ID + '. Report Reason: ' + Data.Reason + '\r\n');
 			client.notice('+##BMNNet', 'New report for save: %d', req.query.ID);
 			res.send('{Status:1}');
-		} else {
-		    res.send("Not logged in. Your IP has been logged, and the admins contacted.");
+        } else {
+            res.send('Not logged in. Your IP has been logged, and the admins contacted.');
             console.warn('Someone not logged in tried to manually report %d', ip);
             client.notice('+##BMNNet', 'Someone who is not logged in tried to manually report from %d', ip);
-		}
+        }
     });
 });
 /*
@@ -318,7 +317,7 @@ app.all('/deploy', function(req, res) {
 app.get('/ercs.html', function(req, res) {
     sess = req.session;
     if (sess.islogedin) {
-        res.render('erc', { 
+        res.render('erc', {
             erc: erclist
         });
     } else {
@@ -744,7 +743,6 @@ app.get('/Login.json', function(req, res) {
 });
 
 app.post('/Login.json', function(req, res) {
-    
     if (req.get('X-Auth-User-Id') && req.get('X-Auth-Session-Key')) {
         //validation here
         if (ptauth[req.get('X-Auth-User-Id')].Key == req.get('X-Auth-Session-Key')) {
