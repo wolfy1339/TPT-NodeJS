@@ -6,9 +6,7 @@ var favicon = require('serve-favicon');
 var fs = require('fs');
 var logger = require('morgan');
 var path = require('path');
-var request = require('request');
-var routes = require('./routes/index.js');
-var users = require('./routes/users.js');
+var request = require('request')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
