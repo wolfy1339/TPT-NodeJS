@@ -73,12 +73,12 @@ for (ercn = 0; ercn < 15; ercn++) {
 console.log('List of ERCs: ' + erclist);
 // ERC Validation
 function validate_erc(erc) {
-    if (erc===0) {
+    if (erc === 0) {
         return false;
     }
     for (ercn = 0; ercn < 15; ercn++) {
         if (erc == ercs[ercn]) {
-            ercs[ercn]=0;
+            ercs[ercn] = 0;
             return true;
         }
     }
