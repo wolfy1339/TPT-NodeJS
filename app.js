@@ -539,14 +539,6 @@ app.get('/upload.html', function(req, res) {
     sess = req.session;
     if (!sess.islogedin) {
         res.render('upload', {});
-    } else {
-        res.redirect('index.html');
-    }
-});
-
-app.get('/upload.html', function(req, res) {
-    sess = req.session;
-    if (!sess.islogedin) {
         fs.readFile(req.files.file.path, function(err, data) {
             // ...
             var Path = __dirname + '/uploads/' + req.files.file.name;
