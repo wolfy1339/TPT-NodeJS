@@ -70,7 +70,7 @@ for (ercn = 0; ercn < 15; ercn++) {
     ercs[ercn] = uuid.v4();
     erclist = erclist + ercs[ercn].toString();
 }
-console.log('List of ERCs: ' + erclist);
+console.log('List of ERCs: ' + [erclist].join('\n'));
 // ERC Validation
 function validate_erc(erc) {
     if (erc === 0) {
@@ -632,7 +632,7 @@ app.post('/passwd.html', function(req, res) {
         var Bib = dataa[6];
         password = crypto.createHash('md5').update(req.body.pass).digest('hex');
         fs.writeFile(path.join(__dirname, 'Users', sess.user + '.txt'),
-            + '!EOL!' + crypto.createHash('md5').update(sess.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib,
+        sess.user + '!EOL!' + crypto.createHash('md5').update(sess.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib,
             function (err) {
                 if (err) {
                     console.error(err);
