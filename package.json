@@ -28,6 +28,5 @@
     "serve-favicon": "~2.3.0",
     "uuid": "~2.0.1",
     "wintersmith": "~2.21",
-    "wintersmith-liquid": "~0.0.2"
   }
 }
