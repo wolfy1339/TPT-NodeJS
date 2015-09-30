@@ -1,4 +1,6 @@
+// Define variables that *must* be before the other alphabetically sorted variables
 var express = require('express');
+// Define the rest of the variables below in alphabetical order
 var app = express();
 var bodyParser = require('body-parser');
 var child;
