@@ -4,7 +4,6 @@ var bodyParser = require('body-parser');
 var child;
 var cookieParser = require('cookie-parser');
 var crypto = require('crypto');
-var erclist;
 var ercn = 0;
 var ercs = [];
 var favicon = require('serve-favicon');
@@ -65,12 +64,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
 // Generate a batch of ERCs
-var erclist;
 for (ercn = 0; ercn < 15; ercn++) {
     ercs[ercn] = uuid.v4();
-    erclist = erclist + ercs[ercn].toString();
 }
-console.log('List of ERCs: ' + [erclist].join('\n'));
+var erclist = ercs.join('\n')
+console.log('List of ERCs: ' + erclist);
 // ERC Validation
 function validate_erc(erc) {
     if (erc === 0) {
