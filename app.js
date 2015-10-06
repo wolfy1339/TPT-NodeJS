@@ -10,6 +10,7 @@ var ercn = 0;
 var ercs = [];
 var favicon = require('serve-favicon');
 var fs = require('fs');
+var hashData;
 var ip;
 var irc = require('irc');
 var isWindows = process.env.iswin32 || false;
@@ -584,8 +585,9 @@ app.post('/usr_login.html', function(req, res) {
             //Separate data in an array.
             var dataa = data.split('!EOL!');
             password = crypto.createHash('md5').update(req.body.pass).digest('hex');
-            console.log('Attempt to login with hash: ' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex'));
-            if (dataa[1] == crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex')) {
+            hashData = crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex');
+            console.log('Attempt to login with hash: ' + crypto.createHash('sha256').update(hashData).digest('hex'));
+            if (dataa[1] == crypto.createHash('sha256').update(hashData).digest('hex')) {
                 res.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
@@ -632,8 +634,9 @@ app.post('/passwd.html', function(req, res) {
         var Reg = dataa[5];
         var Bib = dataa[6];
         password = crypto.createHash('md5').update(req.body.pass).digest('hex');
+        hashData = crypto.createHash('md5').update(sess.user + '-' + password).digest('hex');
         fs.writeFile(path.join(__dirname, 'Users', sess.user + '.txt'),
-        sess.user + '!EOL!' + crypto.createHash('md5').update(sess.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib,
+        sess.user + '!EOL!' + crypto.createHash('sha256').update(hashData).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib,
             function (err) {
                 if (err) {
                     console.error(err);
@@ -671,8 +674,9 @@ app.post('/register.html', function(req, res) {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
             if (req.body.user.indexOf('!EOL!') === -1) {
                 password = crypto.createHash('md5').update(req.body.pass).digest('hex');
+                hashData = crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex')
                 fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
-                    req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!None',
+                    req.body.user + '!EOL!' + crypto.createHash('sha256').update(hashData).digest('hex') + '!EOL!' + uID + '!EOL!None',
                     function(err) {
                         if (err) {
                             return console.error(err);
