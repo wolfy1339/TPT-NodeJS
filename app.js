@@ -26,6 +26,14 @@ var sess;
 var session = require('express-session');
 //var users = require('./routes/users.js');
 var uuid = require('uuid');
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk('localhost:27017/bmnnet');
+// Make our db accessible to our router
+app.use(function(req,res,next){
+    req.db = db;
+    next();
+});
 
 var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
     channels: ['##BMNNet'],
