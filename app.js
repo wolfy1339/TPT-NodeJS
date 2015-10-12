@@ -669,7 +669,7 @@ app.post('/register.html', function(req, res) {
     });
     if (validate_erc(req.body.erc) || req.body.erc == 'SUPER_SECRET_AND_AWESOME_AND_COMPLEX_ERC_CODE_7v6b8qyqnhgba73b0tv63a70oqy6mtrhjuf') {
         if (!fs.existsSync((path.join(__dirname, 'Users', sanitize(req.body.user) + '.txt')))) {
-            if (!req.body.user.indexOf('!EOL!')==-1) {
+            if (req.body.user.indexOf('!EOL!')!=-1) {
                 password = crypto.createHash('md5').update(req.body.pass).digest('hex');
                 fs.writeFile(path.join(__dirname, 'vid', req.body.user + '123abc' + '.txt'),
                     req.body.user + '!EOL!' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!None',
