@@ -584,7 +584,7 @@ app.post('/usr_login.html', function(req, res) {
             //Separate data in an array.
             var dataa = data.split('!EOL!');
             password = crypto.createHash('md5').update(req.body.pass).digest('hex');
-            console.log("Attempet to login with hash: "+crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex'))
+            console.log('Attempt to login with hash: ' + crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex'));
             if (dataa[1] == crypto.createHash('md5').update(req.body.user + '-' + password).digest('hex')) {
                 res.writeHead(200, {
                     'Content-Type': 'text/html'
