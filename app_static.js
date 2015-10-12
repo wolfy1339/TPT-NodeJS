@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 
+var routes = require('./routes/index.js');
 app.use('/', routes);
 
 app.use(express.static(__dirname + '/Saves_bin'));
