@@ -77,7 +77,7 @@ function validate_erc(erc) {
         return false;
     }
     for (ercn = 0; ercn < 15; ercn++) {
-        if (erc == ercs[ercn]) {
+        if (erc === ercs[ercn]) {
             ercs[ercn] = 0;
             return true;
         }
@@ -290,7 +290,7 @@ app.all('/deploy', function(req, res) {
         var ipLow = php.ip2long('192.30.252.0');
         var ipHigh = php.ip2long('192.30.255.255');
         var longIp = php.ip2long(ip);
-        if (longIp >= ipLow && longIp <= ipHigh) {
+        if (longIp >== ipLow && longIp <== ipHigh) {
             if (isWindows) {
                 spawn('deploy.bat');
             } else {
