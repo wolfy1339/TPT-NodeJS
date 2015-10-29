@@ -26,12 +26,18 @@ var sess;
 var session = require('express-session');
 //var users = require('./routes/users.js');
 var uuid = require('uuid');
-var mongo = require('mongodb');
-var monk = require('monk');
-var db = monk('localhost:27017/bmnnet');
+var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
+var url = 'mongodb://localhost:27017/BMNNet';
+
 // Make our db accessible to our router
 app.use(function(req,res,next){
-    req.db = db;
+    MongoClient.connect(url, function(err, db) {
+  req.db = db;
+  if(err){
+      console.error("[ERROR] Failed to connect to mongoDB server at "+url);
+  }
+});
     next();
 });
 
@@ -756,6 +762,12 @@ app.post('/Login.json', function(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
         try {
+            var userls =req.db.collection('Users').find( { "username": sanitize(Data.Username) } )
+   userls.each(function(err, doc) {
+      if (doc != null) {
+         console.dir(doc);
+	}
+   });
             var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
             fs.readFile(filePath, {
                 encoding: 'utf-8'
