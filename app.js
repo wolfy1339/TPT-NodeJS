@@ -32,12 +32,13 @@ var url = 'mongodb://localhost:27017/BMNNet';
 
 // Make our db accessible to our router
 app.use(function(req,res,next){
-    req.db=MongoClient.connect(url, function(err, db) {
-  return db;
+    MongoClient.connect(url, function(err, db) {
+  var pdb=db;
   if(err){
       console.error("[ERROR] Failed to connect to mongoDB server at "+url);
   }
 });
+req.db=pdb;
     next();
 });
 
