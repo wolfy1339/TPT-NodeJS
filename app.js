@@ -7,6 +7,7 @@ var child;
 var cookieParser = require('cookie-parser');
 var crypto = require('crypto');
 var ercn = 0;
+var pdb;
 var ercs = [];
 var favicon = require('serve-favicon');
 var fs = require('fs');
@@ -33,9 +34,10 @@ var url = 'mongodb://localhost:27017/BMNNet';
 // Make our db accessible to our router
 app.use(function(req,res,next){
     MongoClient.connect(url, function(err, db) {
-  var pdb=db;
   if(err){
       console.error("[ERROR] Failed to connect to mongoDB server at "+url);
+  } else {
+      var pdb=db;
   }
 });
 req.db=pdb;
