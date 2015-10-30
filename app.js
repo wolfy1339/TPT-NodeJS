@@ -37,10 +37,9 @@ app.use(function(req,res,next){
   if(err){
       console.error("[ERROR] Failed to connect to mongoDB server at "+url);
   } else {
-      var pdb=db;
+      req.db=db;
   }
 });
-req.db=pdb;
     next();
 });
 
