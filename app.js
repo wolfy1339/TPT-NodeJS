@@ -27,9 +27,8 @@ var sess;
 var session = require('express-session');
 //var users = require('./routes/users.js');
 var uuid = require('uuid');
-var MongoClient = require('mongodb').MongoClient;
-var ObjectId = require('mongodb').ObjectID;
-var url = 'mongodb://localhost:27017/BMNNet';
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/BMNNet');
 
 // Make our db accessible to our router
 app.use(function(req,res,next){
