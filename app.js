@@ -753,13 +753,6 @@ app.post('/Login.json', function(req, res) {
     var request = require('request');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
-        try {
-            var userls =req.db.collection('Users').find( { "username": sanitize(Data.Username) } )
-   userls.each(function(err, doc) {
-      if (doc != null) {
-         console.dir(doc);
-	}
-   });
    var iousr = new User({
   fullname: 'Iovoid',
   username: 'io',
