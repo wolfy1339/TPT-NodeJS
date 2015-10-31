@@ -31,7 +31,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/BMNNet');
 
 //Models
-var User = require('./app/models/user');
+var User = require('.(/Models/user');
 
 var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
     channels: ['##BMNNet'],
