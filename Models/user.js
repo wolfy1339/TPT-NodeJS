@@ -12,8 +12,8 @@ var userSchema = new Schema({
   fullname: String,
   elevation: String,
   birth: Date,
-  biography: String
-  website: String
+  biography: String,
+  website: String,
   created_at: Date
 });
 
