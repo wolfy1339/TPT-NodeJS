@@ -30,17 +30,8 @@ var uuid = require('uuid');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/BMNNet');
 
-// Make our db accessible to our router
-app.use(function(req,res,next){
-    MongoClient.connect(url, function(err, db) {
-  if(err){
-      console.error("[ERROR] Failed to connect to mongoDB server at "+url);
-  } else {
-      req.db=db;
-  }
-});
-    next();
-});
+//Models
+var User = require('./app/models/user');
 
 var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
     channels: ['##BMNNet'],
@@ -769,6 +760,22 @@ app.post('/Login.json', function(req, res) {
          console.dir(doc);
 	}
    });
+   var iousr = new User({
+  fullname: 'Iovoid',
+  username: 'io',
+  password: '5f61d06355cb0bbf9d6abd1f2e2c4d66' 
+});
+iousr.save(function(err) {
+  if (err) throw err;
+
+  console.log('User saved successfully!');
+});
+   User.find({ username: 'io' }, function(err, user) {
+  if (err) throw err;
+
+  // object of the user
+  console.log(user);
+});
             var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
             fs.readFile(filePath, {
                 encoding: 'utf-8'
