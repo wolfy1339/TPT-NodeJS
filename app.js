@@ -774,6 +774,7 @@ app.post('/Login.json', function(req, res) {
                                      res.writeHead(200, {
                                      'Content-Type': 'text/json'
                                     });
+                                     }
                             });
                         ptauth[dataa[2]] = {};
                         ptauth[dataa[2]].Name = dataa[0];
