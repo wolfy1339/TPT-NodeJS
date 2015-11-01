@@ -805,24 +805,7 @@ app.post('/Login.json', function(req, res) {
                             res.end();
                         });
                     }
-                } else {
-                    request.post({
-                        url: 'http://powdertoy.co.uk/Login.json',
-                        form: {
-                            Username: Data.Username,
-                            Hash: Data.Hash
-                        }
-                    }, function(err, httpResponse, body) {
-                        console.log(body);
-                        res.writeHead(200, {
-                            'Content-Type': 'text/json'
-                        });
-                        sess.TPTislogedin = true;
-                        sess.TPTUser = Data.Username;
-                        console.log(sess.TPTUser + ' logged in using TPT credentials!');
-                        //TPT.ID = dataa[2];
-                        res.write(body);
-                        res.end();
+                }
                     });
                 }
                 });
