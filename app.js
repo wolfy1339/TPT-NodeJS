@@ -753,22 +753,28 @@ app.post('/Login.json', function(req, res) {
     var request = require('request');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
-   User.find({ username: 'io' }, function(err, user) {
-  if (err) throw err;
-  // object of the user
-  console.log(user);
-});
             var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
             fs.readFile(filePath, {
                 encoding: 'utf-8'
             }, function(err, data) {
                 if (!err) {
                     //Separate data in an array.
+                    /*
                     var dataa = data.split('!EOL!');
                     if (dataa[1] == Data.Hash) {
                         res.writeHead(200, {
                             'Content-Type': 'text/json'
                         });
+                        */
+                           User.find({ username: Data.Username }, function(err, user) {
+                              if (err) throw err;
+                                  // object of the user
+                                     console.log(user);
+                                     if (user.password == Data.Hash) {
+                                     res.writeHead(200, {
+                                     'Content-Type': 'text/json'
+                                    });
+                            });
                         ptauth[dataa[2]] = {};
                         ptauth[dataa[2]].Name = dataa[0];
                         ptauth[dataa[2]].Key = Math.random();
