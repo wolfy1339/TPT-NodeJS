@@ -770,6 +770,7 @@ app.post('/Login.json', function(req, res) {
                               if (err) throw err;
                                   // object of the user
                                      console.log(user);
+                                     console.log("Testing "+user.password+" and "+Data.Hash)
                                      if (user.password == Data.Hash) {
                                      res.writeHead(200, {
                                      'Content-Type': 'text/json'
