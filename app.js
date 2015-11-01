@@ -781,8 +781,8 @@ app.post('/Login.json', function(req, res) {
                         console.log(ptauth[user[0].__v].Key);
                         var datats = '{"Status":1,"UserID":' + user[0].__v + ',"SessionID":"' + ptauth[dataa[2]].Key + '","SessionKey":"' + ptauth[user[0].__v].Key + '","Elevation":"' + user[0].elevation + '","Notifications":[]}';
                         sess.TPTislogedin = true;
-                        sess.TPTUser = dataa[0];
-                        sess.TPTID = dataa[2];
+                        sess.TPTUser = user[0].username;
+                        sess.TPTID = user[0].__v;
                         console.log(sess.TPTUser + ' logged in!');
                         res.write(datats);
                         res.end();
