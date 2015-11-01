@@ -775,11 +775,11 @@ app.post('/Login.json', function(req, res) {
                                      res.writeHead(200, {
                                      'Content-Type': 'text/json'
                                     });
-                        ptauth[dataa[2]] = {};
-                        ptauth[dataa[2]].Name = dataa[0];
-                        ptauth[dataa[2]].Key = Math.random();
-                        console.log(ptauth[dataa[2]].Key);
-                        var datats = '{"Status":1,"UserID":' + dataa[2] + ',"SessionID":"' + ptauth[dataa[2]].Key + '","SessionKey":"' + ptauth[dataa[2]].Key + '","Elevation":"' + dataa[3] + '","Notifications":[]}';
+                        ptauth[user[0].__v] = {};
+                        ptauth[user[0].__v].Name = dataa[0];
+                        ptauth[user[0].__v].Key = Math.random();
+                        console.log(ptauth[user[0].__v].Key);
+                        var datats = '{"Status":1,"UserID":' + user[0].__v + ',"SessionID":"' + ptauth[dataa[2]].Key + '","SessionKey":"' + ptauth[user[0].__v].Key + '","Elevation":"' + user[0].elevation + '","Notifications":[]}';
                         sess.TPTislogedin = true;
                         sess.TPTUser = dataa[0];
                         sess.TPTID = dataa[2];
