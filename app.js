@@ -833,9 +833,6 @@ iousr.save(function(err) {
                 }
             });
         });
-        catch(err) {
-            console.log(err);
-        }
     });
 });
 
