@@ -776,7 +776,7 @@ app.post('/Login.json', function(req, res) {
                                      'Content-Type': 'text/json'
                                     });
                         ptauth[user[0].__v] = {};
-                        ptauth[user[0].__v].Name = dataa[0];
+                        ptauth[user[0].__v].Name = user[0].username;
                         ptauth[user[0].__v].Key = Math.random();
                         console.log(ptauth[user[0].__v].Key);
                         var datats = '{"Status":1,"UserID":' + user[0].__v + ',"SessionID":"' + ptauth[dataa[2]].Key + '","SessionKey":"' + ptauth[user[0].__v].Key + '","Elevation":"' + user[0].elevation + '","Notifications":[]}';
