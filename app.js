@@ -760,12 +760,10 @@ app.post('/Login.json', function(req, res) {
 });
 iousr.save(function(err) {
   if (err) throw err;
-
   console.log('User saved successfully!');
 });
    User.find({ username: 'io' }, function(err, user) {
   if (err) throw err;
-
   // object of the user
   console.log(user);
 });
@@ -833,7 +831,7 @@ iousr.save(function(err) {
                 }
             });
         });
-    });
+    //});
 });
 
 app.post('/Save.api', function(req, res) {
