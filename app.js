@@ -754,7 +754,7 @@ app.post('/Login.json', function(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
    var iousr = new User({
-  fullname: 'Iovoid',
+  fullname: 'Io',
   username: 'io',
   password: '5f61d06355cb0bbf9d6abd1f2e2c4d66' 
 });
@@ -832,7 +832,7 @@ iousr.save(function(err) {
                     });
                 }
             });
-        }
+        });
         catch(err) {
             console.log(err);
         }
