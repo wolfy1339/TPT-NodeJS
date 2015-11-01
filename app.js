@@ -774,8 +774,10 @@ app.post('/Login.json', function(req, res) {
                                      res.writeHead(200, {
                                      'Content-Type': 'text/json'
                                     });
+                                    loginsuccess=true
                                      }
                             });
+                        if(loginsuccess){
                         ptauth[dataa[2]] = {};
                         ptauth[dataa[2]].Name = dataa[0];
                         ptauth[dataa[2]].Key = Math.random();
