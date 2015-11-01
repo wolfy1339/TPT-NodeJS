@@ -753,15 +753,6 @@ app.post('/Login.json', function(req, res) {
     var request = require('request');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
-   var iousr = new User({
-  fullname: 'Io',
-  username: 'io',
-  password: '5f61d06355cb0bbf9d6abd1f2e2c4d66' 
-});
-iousr.save(function(err) {
-  if (err) throw err;
-  console.log('User saved successfully!');
-});
    User.find({ username: 'io' }, function(err, user) {
   if (err) throw err;
   // object of the user
