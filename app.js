@@ -7,7 +7,6 @@ var child;
 var cookieParser = require('cookie-parser');
 var crypto = require('crypto');
 var ercn = 0;
-var pdb;
 var ercs = [];
 var favicon = require('serve-favicon');
 var fs = require('fs');
@@ -15,23 +14,23 @@ var ip;
 var irc = require('irc');
 var isWindows = process.env.iswin32 || false;
 var isX64 = process.env.isx64 || true;
+var mongoose = require('mongoose');
 var logger = require('morgan');
 var path = require('path');
 var password;
+var pdb;
 var ptauth = {};
 var published;
 //var routes = require('./routes/index.js');
-var ReportFile = fs.createWriteStream('log.txt', {flags: 'a'});
+var ReportFile = fs.createWriteStream('log.txt', {
+    flags: 'a'
+});
 var sanitize = require('sanitize-filename');
 var sess;
 var session = require('express-session');
 //var users = require('./routes/users.js');
+var User = require('./Models/user'); // Models
 var uuid = require('uuid');
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/BMNNet');
-
-//Models
-var User = require('./Models/user');
 
 var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
     channels: ['##BMNNet'],
@@ -39,6 +38,8 @@ var client = new irc.Client('irc.freenode.net', 'BMNNetBot', {
     password: 'Powder!',
     sasl: true
 });
+
+mongoose.connect('mongodb://localhost:27017/BMNNet');
 
 client.addListener('error', function(message) {
     console.error('error: ', message);
@@ -261,10 +262,10 @@ app.post('/Browse/Report.json', function(req, res) {
     var form = new formidable.IncomingForm();
     ip = req.get('X-Forwarded-For') || req.ip;
     form.parse(req, function(err, Data) {
-        if((ptauth[req.get('X-Auth-User-Id')] || Math.random()).Key == (req.get('X-Auth-Session-Key') || false)) {
+        if ((ptauth[req.get('X-Auth-User-Id')] || Math.random()).Key == (req.get('X-Auth-Session-Key') || false)) {
             ReportFile.write('Report from UserID: ' + req.get('X-Auth-User-Id') + '. From IP: ' + ip + 'Report Submited for SaveID: ' + req.query.ID + '. Report Reason: ' + Data.Reason + '\r\n');
-			client.notice('+##BMNNet', 'New report for save: %d', req.query.ID);
-			res.send('{Status:1}');
+            client.notice('+##BMNNet', 'New report for save: %d', req.query.ID);
+            res.send('{Status:1}');
         } else {
             res.send('Not logged in. Your IP has been logged, and the admins contacted.');
             console.warn('Someone not logged in tried to manually report %d', ip);
@@ -361,8 +362,7 @@ app.post('/Browse/Comments.json', function(req, res) {
         if (!err) {
             console.log(util.inspect(sess.TPT));
             var prevdata = fs.readFileSync(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), 'utf8');
-            fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata +
-                ['{"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","UserID":"' + ptauth[req.get('X-Auth-User-Id')] + '","Gravatar":"\/Avatars\/' + ptauth[req.get('X-Auth-User-Id')] + '_40.png","Text":"' + Data.Comment,
+            fs.writeFile(path.join(__dirname, 'Comments', 'id_' + sanitize(req.query.ID) + '.txt'), prevdata + ['{"Username":"' + ptauth[req.get('X-Auth-User-Id')].Name + '","UserID":"' + ptauth[req.get('X-Auth-User-Id')] + '","Gravatar":"\/Avatars\/' + ptauth[req.get('X-Auth-User-Id')] + '_40.png","Text":"' + Data.Comment,
                     '","Timestamp":"1","FormattedUsername":"' + ptauth[req.get('X-Auth-User-Id')].Name + '"}, '].join(''),
                 function(err) {
                     if (err) {
@@ -400,7 +400,7 @@ app.get('/irc.html', function(req, res) {
     }
 });
 
-app.get('/logout.html', function (req, res) {
+app.get('/logout.html', function(req, res) {
     sess = req.session;
     res.redirect('index.html');
     sess.islogedin = false;
@@ -639,8 +639,8 @@ app.post('/passwd.html', function(req, res) {
         var Bib = dataa[6];
         password = crypto.createHash('md5').update(req.body.pass).digest('hex');
         fs.writeFile(path.join(__dirname, 'Users', sess.user + '.txt'),
-        sess.user + '!EOL!' + crypto.createHash('md5').update(sess.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib,
-            function (err) {
+            sess.user + '!EOL!' + crypto.createHash('md5').update(sess.user + '-' + password).digest('hex') + '!EOL!' + uID + '!EOL!' + Reg + '!EOL!' + Bib,
+            function(err) {
                 if (err) {
                     console.error(err);
                 }
@@ -753,65 +753,65 @@ app.post('/Login.json', function(req, res) {
     var request = require('request');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, Data) {
-            var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
-            fs.readFile(filePath, {
-                encoding: 'utf-8'
-            }, function(err, data) {
-                if (!err) {
-                    //Separate data in an array.
-                    /*
-                    var dataa = data.split('!EOL!');
-                    if (dataa[1] == Data.Hash) {
-                        res.writeHead(200, {
-                            'Content-Type': 'text/json'
-                        });
-                        */
-                           User.find({ username: Data.Username }, function(err, user) {
-                              if (err) throw err;
-                                  // object of the user
-                                     console.log(user);
-                                     console.log("Testing "+user[0].password+" and "+Data.Hash)
-                                     if (user[0].password == Data.Hash) {
-                                     res.writeHead(200, {
-                                     'Content-Type': 'text/json'
-                                    });
-                        ptauth[user[0].__v] = {};
-                        ptauth[user[0].__v].Name = user[0].username;
-                        ptauth[user[0].__v].Key = Math.random();
-                        console.log(ptauth[user[0].__v].Key);
-                        var datats = '{"Status":1,"UserID":' + user[0].__v + ',"SessionID":"' + ptauth[user[0].__v].Key + '","SessionKey":"' + ptauth[user[0].__v].Key + '","Elevation":"' + user[0].elevation + '","Notifications":[]}';
-                        sess.TPTislogedin = true;
-                        sess.TPTUser = user[0].username;
-                        sess.TPTID = user[0].__v;
-                        console.log(sess.TPTUser + ' logged in!');
-                        res.write(datats);
-                        res.end();
-                    } else {
-                        request.post({
-                            url: 'http://powdertoy.co.uk/Login.json',
-                            form: {
-                                Username: Data.Username,
-                                Hash: Data.Hash
-                            }
-                        }, function(err, httpResponse, body) {
-                            console.log(body);
+        var filePath = path.join(__dirname, 'Users', sanitize(Data.Username) + '.txt');
+        fs.readFile(filePath, {
+            encoding: 'utf-8'
+        }, function(err, data) {
+            if (!err) {
+                //Separate data in an array.
+                /*
+                var dataa = data.split('!EOL!');
+                if (dataa[1] == Data.Hash) {
+                    res.writeHead(200, {
+                        'Content-Type': 'text/json'
+                    });
+                    */
+                    User.find({
+                        username: Data.Username
+                    }, function(err, user) {
+                        if (err) {throw err;}
+                        // object of the user
+                        console.log(user);
+                        console.log('Testing %d and %d', user[0].password, Data.Hash);
+                        if (user[0].password == Data.Hash) {
                             res.writeHead(200, {
-                            'Content-Type': 'text/json'
-                        });
+                                'Content-Type': 'text/json'
+                            });
+                            ptauth[user[0].__v] = {};
+                            ptauth[user[0].__v].Name = user[0].username;
+                            ptauth[user[0].__v].Key = Math.random();
+                            console.log(ptauth[user[0].__v].Key);
+                            var datats = '{"Status":1,"UserID":' + user[0].__v + ',"SessionID":"' + ptauth[user[0].__v].Key + '","SessionKey":"' + ptauth[user[0].__v].Key + '","Elevation":"' + user[0].elevation + '","Notifications":[]}';
                             sess.TPTislogedin = true;
-                            sess.TPTUser = Data.Username;
-                            console.log(sess.TPTUser + '-tpt logged in!');
-                            //TPT.ID = dataa[2];
-                            res.write(body);
+                            sess.TPTUser = user[0].username;
+                            sess.TPTID = user[0].__v;
+                            console.log(sess.TPTUser + ' logged in!');
+                            res.write(datats);
                             res.end();
-                        });
-                    }
-                           });
-                    
+                        } else {
+                            request.post({
+                                url: 'http://powdertoy.co.uk/Login.json',
+                                form: {
+                                    Username: Data.Username,
+                                    Hash: Data.Hash
+                                }
+                            }, function(err, httpResponse, body) {
+                                console.log(body);
+                                res.writeHead(200, {
+                                    'Content-Type': 'text/json'
+                                });
+                                sess.TPTislogedin = true;
+                                sess.TPTUser = Data.Username;
+                                console.log(sess.TPTUser + '-tpt logged in!');
+                                //TPT.ID = dataa[2];
+                                res.write(body);
+                                res.end();
+                            });
+                        }
+                    });
                 }
-                });
-    }
-        );
+            });
+        });
     //});
 });
 
