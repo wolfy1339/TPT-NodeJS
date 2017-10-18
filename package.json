@@ -38,7 +38,7 @@
     "sanitize-filename": "~1.6.1",
     "serve-favicon": "~2.4.5",
     "uuid": "~3.1.0",
-    "snyk": "^1.42.6"
+    "snyk": "^1.43.0"
   },
   "snyk": true
 }

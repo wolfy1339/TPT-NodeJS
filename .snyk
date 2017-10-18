@@ -1,6 +1,27 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.7.1
-ignore: {}
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  'npm:fresh:20170908':
+    - phpjs > send > fresh:
+        reason: None given
+        expires: '2017-11-17T10:43:23.771Z'
+  'npm:growl:20160721':
+    - phpjs > mocha > growl:
+        reason: None given
+        expires: '2017-11-17T10:43:23.771Z'
+  'npm:mime:20170907':
+    - phpjs > send > mime:
+        reason: None given
+        expires: '2017-11-17T10:43:23.771Z'
+  'npm:send:20140912':
+    - phpjs > send:
+        reason: None given
+        expires: '2017-11-17T10:43:23.771Z'
+  'npm:send:20151103':
+    - phpjs > send:
+        reason: None given
+        expires: '2017-11-17T10:43:23.771Z'
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   'npm:minimatch:20160620':
@@ -11,3 +32,6 @@ patch:
   'npm:uglify-js:20151024':
     - jade > transformers > uglify-js:
         patched: '2017-10-12T03:57:40.731Z'
+  'npm:uglify-js:20150824':
+    - jade > transformers > uglify-js:
+        patched: '2017-10-18T10:43:23.773Z'
